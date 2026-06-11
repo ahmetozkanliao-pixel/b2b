@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+@theme {
+  /* Ana marka — koyu lacivert (güven, kurumsal) */
+  --color-primary-50: #f0f4fa;
+  --color-primary-100: #dce4f2;
+  --color-primary-200: #b8c9e3;
+  --color-primary-300: #8aa3cc;
+  --color-primary-400: #5c7aad;
+  --color-primary-500: #3d5a8c;
+  --color-primary-600: #2a4470;
+  --color-primary-700: #1e3358;
+  --color-primary-800: #162644;
+  --color-primary-900: #0f1a30;
+  --color-primary-950: #0a1120;
+
+  /* Vurgu — teal (modern, güvenilir) */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+
+  /* İkincil vurgu — sıcak amber (CTA alternatif) */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-primary-900;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-hero {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-950) 0%,
+      var(--color-primary-900) 40%,
+      #0f2a3d 100%
+    );
+  }
+
+  .gradient-brand {
+    background: linear-gradient(135deg, var(--color-brand-600), var(--color-brand-500));
+  }
+
+  .glass {
+    @apply border border-white/10 bg-white/5 backdrop-blur-md;
+  }
+
+  .shadow-soft {
+    box-shadow: 0 1px 3px rgba(15, 26, 48, 0.06), 0 4px 16px rgba(15, 26, 48, 0.04);
+  }
+
+  .shadow-card {
+    box-shadow: 0 0 0 1px rgba(15, 26, 48, 0.04), 0 2px 8px rgba(15, 26, 48, 0.06);
+  }
+
+  .shadow-card-hover {
+    box-shadow: 0 0 0 1px rgba(15, 26, 48, 0.06), 0 8px 24px rgba(15, 26, 48, 0.1);
+  }
+
+  .section-label {
+    @apply text-sm font-semibold uppercase tracking-wider text-brand-600;
+  }
+
+  .hero-gradient-text {
+    background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 40%, #99f6e4 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hero-shimmer 4s ease-in-out infinite;
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: hero-float 8s ease-in-out infinite;
+  }
+
+  .hero-orb-delay-1 { animation-delay: -2s; }
+  .hero-orb-delay-2 { animation-delay: -4s; }
+  .hero-orb-delay-3 { animation-delay: -6s; }
+
+  .hero-fade-up {
+    animation: hero-fade-up 0.7s ease-out both;
+  }
+
+  .hero-fade-up-1 { animation-delay: 0.1s; }
+  .hero-fade-up-2 { animation-delay: 0.25s; }
+  .hero-fade-up-3 { animation-delay: 0.4s; }
+  .hero-fade-up-4 { animation-delay: 0.55s; }
+  .hero-fade-up-5 { animation-delay: 0.7s; }
+  .hero-fade-up-6 { animation-delay: 0.85s; }
+
+  .hero-pulse-ring {
+    animation: hero-pulse-ring 2s ease-out infinite;
+  }
+
+  .hero-grid-move {
+    animation: hero-grid-move 20s linear infinite;
+  }
+
+  @keyframes hero-shimmer {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+  }
+
+  @keyframes hero-float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -20px) scale(1.05); }
+    66% { transform: translate(-15px, 10px) scale(0.95); }
+  }
+
+  @keyframes hero-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+
+  @keyframes hero-grid-move {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-orb,
+    .hero-fade-up,
+    .hero-pulse-ring,
+    .hero-grid-move,
+    .hero-gradient-text {
+      animation: none;
+    }
+    .hero-fade-up {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

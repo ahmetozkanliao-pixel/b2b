@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: Geliştirme Sunucusu",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Statik Ön İzleme (preview.html)",
+      "type": "chrome",
+      "request": "launch",
+      "file": "${workspaceFolder}/preview.html"
+    },
+    {
+      "name": "Next.js: localhost:3000",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Siteyi Başlat ve Aç",
+      "configurations": ["Next.js: Geliştirme Sunucusu", "Next.js: localhost:3000"],
+      "stopAll": true
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B2B Üretim Platformu — Ön İzleme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #0f172a; background: #f8fafc; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #e5e7eb; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: .5rem; font-weight: 600; font-size: 1.1rem; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; }
+    nav { display: flex; gap: 1.5rem; }
+    nav a { font-size: .875rem; font-weight: 500; color: #475569; }
+    nav a:hover { color: #2a4470; }
+    .header-actions { display: flex; gap: .75rem; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .5rem 1rem; border-radius: 10px; font-size: .875rem; font-weight: 600; border: none; cursor: pointer; transition: .15s; }
+    .btn-primary { background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-outline { background: #fff; color: #334155; border: 1px solid #e2e8f0; }
+    .btn-outline:hover { background: #f8fafc; }
+    .btn-accent { background: #162644; color: #fff; }
+    .btn-accent:hover { background: #1e3358; }
+    .btn-lg { padding: .75rem 1.5rem; font-size: 1rem; }
+
+    /* Hero */
+    .hero { background: linear-gradient(135deg, #0a1120 0%, #0f1a30 40%, #0f2a3d 100%); color: #fff; padding: 6rem 0; text-align: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: .5rem; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); padding: .375rem 1rem; border-radius: 999px; font-size: .875rem; color: #5eead4; margin-bottom: 1.5rem; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 700; line-height: 1.15; max-width: 800px; margin: 0 auto; }
+    .hero p { margin-top: 1.5rem; font-size: 1.125rem; color: #cbd5e1; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .hero-actions { margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* Stats bar */
+    .stats-bar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 2rem 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; }
+    .stat-num { font-size: 1.75rem; font-weight: 700; color: #14b8a6; }
+    .stat-label { font-size: .8rem; color: #6b7280; margin-top: .25rem; }
+
+    /* Section */
+    section { padding: 4rem 0; }
+    .section-title { font-size: 1.875rem; font-weight: 700; text-align: center; }
+    .section-sub { text-align: center; color: #6b7280; margin-top: .5rem; margin-bottom: 2.5rem; }
+
+    /* Steps */
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .step-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; }
+    .step-num { font-size: .75rem; font-weight: 600; color: #0d9488; margin-bottom: .5rem; }
+    .step-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; }
+    .step-card p { font-size: .875rem; color: #6b7280; line-height: 1.5; }
+
+    /* Listings */
+    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .listing-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; transition: box-shadow .2s; }
+    .listing-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .badge { display: inline-block; padding: .125rem .625rem; border-radius: 999px; font-size: .75rem; font-weight: 500; background: #ccfbf1; color: #0f766e; }
+    .listing-card h3 { font-size: 1.05rem; font-weight: 600; margin: .75rem 0; }
+    .listing-meta { font-size: .8rem; color: #6b7280; display: flex; flex-direction: column; gap: .25rem; }
+    .link { color: #0d9488; font-size: .875rem; font-weight: 600; margin-top: 1rem; display: inline-block; }
+
+    /* Trust */
+    .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .trust-item { display: flex; align-items: center; gap: .75rem; padding: 1rem; background: #f9fafb; border-radius: 10px; }
+    .trust-icon { width: 40px; height: 40px; background: #dbeafe; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+    /* Pricing */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .price-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; }
+    .price-card.featured { border-color: #14b8a6; box-shadow: 0 0 0 2px rgba(20,184,166,.3); }
+    .price-card h3 { font-size: 1.25rem; font-weight: 600; }
+    .price { font-size: 2rem; font-weight: 700; margin: .75rem 0; }
+    .price-card ul { list-style: none; margin: 1rem 0; }
+    .price-card li { font-size: .875rem; color: #4b5563; padding: .375rem 0; }
+    .price-card li::before { content: "✓ "; color: #22c55e; font-weight: 600; }
+
+    /* Footer */
+    footer { background: #0a1120; color: #94a3b8; padding: 3rem 0 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; }
+    .footer-grid h4 { font-size: .875rem; font-weight: 600; margin-bottom: .75rem; }
+    .footer-grid a { display: block; font-size: .8rem; color: #6b7280; padding: .25rem 0; }
+    .footer-grid h4 { color: #fff; }
+    .footer-grid a:hover { color: #2dd4bf; }
+    .copyright { text-align: center; font-size: .8rem; color: #64748b; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.05); }
+
+    /* Preview banner */
+    .preview-banner { background: #ecfdf5; border-bottom: 1px solid #99f6e4; padding: .875rem; text-align: center; font-size: .875rem; color: #115e59; }
+    .preview-banner strong { font-weight: 600; }
+
+    @media (max-width: 768px) {
+      nav, .header-actions .btn-outline { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-banner">
+    <strong>Statik Ön İzleme</strong> — Canlı site için terminalde <code>npm run dev</code> çalıştırın, ardından tarayıcıda
+    <a href="http://localhost:3000" style="color:#0d9488;font-weight:600">http://localhost:3000</a> adresini açın.
+    (Hata alırsanız: <code>npm run dev:clean</code>)
+  </div>
+
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <div class="logo-icon">B2B</div>
+        Üretim Platformu
+      </div>
+      <nav>
+        <a href="#">İlanlar</a>
+        <a href="#">Nasıl Çalışır</a>
+        <a href="#">Haberler</a>
+        <a href="#">İletişim</a>
+      </nav>
+      <div class="header-actions">
+        <a href="#" class="btn btn-outline">Giriş Yap</a>
+        <a href="#" class="btn btn-primary">Kayıt Ol</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">🏭 Türkiye'nin B2B Üretim Platformu</div>
+      <h1>Üretici Firmalar ile Kurumsal Firmaları Tek Platformda Buluşturuyoruz</h1>
+      <p>İhtiyacınızı yayınlayın, doğrulanmış üreticilerden teklifler alın.</p>
+      <div class="hero-actions">
+        <button class="btn btn-accent btn-lg">Talep Oluştur →</button>
+        <button class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)">Üretici Olarak Katıl</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="container stats-grid">
+      <div><div class="stat-num">2.400+</div><div class="stat-label">Doğrulanmış Üretici</div></div>
+      <div><div class="stat-num">8.500+</div><div class="stat-label">Aktif İlan</div></div>
+      <div><div class="stat-num">1.200+</div><div class="stat-label">Kurumsal Firma</div></div>
+      <div><div class="stat-num">%94</div><div class="stat-label">Eşleşme Başarı Oranı</div></div>
+    </div>
+  </div>
+
+  <section style="background:#f9fafb">
+    <div class="container">
+      <h2 class="section-title">Nasıl Çalışır?</h2>
+      <p class="section-sub">6 basit adımda ihtiyacınızı karşılayın</p>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">Adım 1</div><h3>Kurumsal firma kayıt olur</h3><p>Platforma ücretsiz kayıt olun ve firma profilinizi oluşturun.</p></div>
+        <div class="step-card"><div class="step-num">Adım 2</div><h3>İhtiyacını ilan olarak yayınlar</h3><p>Ürün veya hizmet ihtiyacınızı detaylı bir ilan olarak paylaşın.</p></div>
+        <div class="step-card"><div class="step-num">Adım 3</div><h3>Üreticiler ilana başvurur</h3><p>Doğrulanmış üretici firmalar ilanınıza başvuru yapar.</p></div>
+        <div class="step-card"><div class="step-num">Adım 4</div><h3>Kurumsal firma üreticiyi seçer</h3><p>Gelen başvuruları inceleyin ve en uygun üreticiyi onaylayın.</p></div>
+        <div class="step-card"><div class="step-num">Adım 5</div><h3>Taraflar görüşmeye başlar</h3><p>Onay sonrası güvenli mesajlaşma ve dosya paylaşımı aktif olur.</p></div>
+        <div class="step-card"><div class="step-num">Adım 6</div><h3>İş anlaşması gerçekleşir</h3><p>Teklif paylaşımı ve süreç yönetimi ile iş birliğinizi tamamlayın.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2 class="section-title">Son İlanlar</h2>
+      <p class="section-sub">En güncel üretim talepleri</p>
+      <div class="listings-grid">
+        <div class="listing-card">
+          <span class="badge">Metal İşleme</span>
+          <h3>Paslanmaz Çelik Boru Üretimi</h3>
+          <div class="listing-meta">
+            <span>📍 İstanbul</span>
+            <span>📅 1 Haziran 2026</span>
+            <span>💰 ₺50.000 - ₺150.000</span>
+          </div>
+          <a href="#" class="link">Detay Gör →</a>
+        </div>
+        <div class="listing-card">
+          <span class="badge">Plastik Enjeksiyon</span>
+          <h3>Plastik Enjeksiyon Kalıp Üretimi</h3>
+          <div class="listing-meta">
+            <span>📍 Bursa</span>
+            <span>📅 28 Mayıs 2026</span>
+            <span>💰 ₺25.000 - ₺80.000</span>
+          </div>
+          <a href="#" class="link">Detay Gör →</a>
+        </div>
+        <div class="listing-card">
+          <span class="badge">Tekstil Üretimi</span>
+          <h3>Tekstil Kumaş Tedariki</h3>
+          <div class="listing-meta">
+            <span>📍 İzmir</span>
+            <span>📅 25 Mayıs 2026</span>
+            <span>💰 ₺100.000 - ₺300.000</span>
+          </div>
+          <a href="#" class="link">Detay Gör →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#f9fafb">
+    <div class="container">
+      <h2 class="section-title">Güven Unsurları</h2>
+      <div class="trust-grid" style="margin-top:2rem">
+        <div class="trust-item"><div class="trust-icon">🛡️</div><span>Onaylı Firma Sistemi</span></div>
+        <div class="trust-item"><div class="trust-icon">🔒</div><span>KVKK Uyumlu</span></div>
+        <div class="trust-item"><div class="trust-icon">💬</div><span>Güvenli Mesajlaşma</span></div>
+        <div class="trust-item"><div class="trust-icon">👁️</div><span>Şeffaf Süreç Yönetimi</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2 class="section-title">Üyelik Paketleri</h2>
+      <p class="section-sub">Talep Sahibi Firma</p>
+      <div class="pricing-grid" style="margin-bottom:2.5rem">
+        <div class="price-card">
+          <h3>Ücretsiz</h3>
+          <div class="price">Ücretsiz</div>
+          <ul><li>Aylık 3 ilan</li><li>Temel destek</li><li>Başvuru yönetimi</li></ul>
+          <button class="btn btn-outline" style="width:100%">Ücretsiz Başla</button>
+        </div>
+        <div class="price-card featured">
+          <h3>Pro</h3>
+          <div class="price">₺499<span style="font-size:.875rem;font-weight:400;color:#6b7280">/ay</span></div>
+          <ul><li>Sınırsız ilan</li><li>Öncelikli destek</li><li>Gelişmiş raporlar</li></ul>
+          <button class="btn btn-primary" style="width:100%">Pro'ya Geç</button>
+        </div>
+      </div>
+      <p class="section-sub">Üretici Firma</p>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Basic</h3>
+          <div class="price">₺299<span style="font-size:.875rem;font-weight:400;color:#6b7280">/ay</span></div>
+          <ul><li>Aylık 10 başvuru</li><li>Temel profil</li></ul>
+          <button class="btn btn-outline" style="width:100%">Basic Başla</button>
+        </div>
+        <div class="price-card featured">
+          <h3>Premium</h3>
+          <div class="price">₺799<span style="font-size:.875rem;font-weight:400;color:#6b7280">/ay</span></div>
+          <ul><li>Sınırsız başvuru</li><li>Doğrulanmış üretici rozeti</li><li>İhale bildirimleri</li></ul>
+          <button class="btn btn-primary" style="width:100%">Premium'a Geç</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:.75rem"><div class="logo-icon">B2B</div> Üretim Platformu</div>
+        <p style="font-size:.8rem;color:#6b7280">Üretici firmalar ile kurumsal firmaları tek platformda buluşturuyoruz.</p>
+      </div>
+      <div><h4>Platform</h4><a href="#">İlanlar</a><a href="#">Nasıl Çalışır</a><a href="#">Üyelik</a></div>
+      <div><h4>Kurumsal</h4><a href="#">Hakkımızda</a><a href="#">Haberler</a><a href="#">İletişim</a></div>
+      <div><h4>Yasal</h4><a href="#">KVKK</a><a href="#">Gizlilik</a><a href="#">Kullanım Şartları</a></div>
+    </div>
+    <div class="container copyright">© 2026 B2B Üretim ve Tedarik Platformu. Tüm hakları saklıdır.</div>
+  </footer>
+
+</body>
+</html>
