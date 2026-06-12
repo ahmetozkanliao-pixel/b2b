@@ -8,14 +8,31 @@ import { createClient } from "@/lib/supabase/client";
 interface CompanyApprovalActionsProps {
   companyId: string;
   ownerId: string;
+  isDemo?: boolean;
 }
 
-export function CompanyApprovalActions({ companyId, ownerId }: CompanyApprovalActionsProps) {
+export function CompanyApprovalActions({
+  companyId,
+  ownerId,
+  isDemo = false,
+}: CompanyApprovalActionsProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleAction(status: "approved" | "rejected") {
     setLoading(true);
+
+    if (isDemo) {
+      const res = await fetch("/api/demo/admin/companies", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ companyId, status }),
+      });
+      if (res.ok) router.refresh();
+      setLoading(false);
+      return;
+    }
+
     const supabase = createClient();
 
     await supabase

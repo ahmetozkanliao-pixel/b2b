@@ -1,0 +1,22 @@
+---
+description: Her kod değişikliğinden sonra siteyi doğrula
+alwaysApply: true
+---
+
+# Değişiklik Sonrası Site Kontrolü
+
+Kod değişikliği yaptıktan sonra (özellikle özellik ekleme veya düzeltme) siteyi mutlaka doğrula:
+
+1. **Build kontrolü**: `npm run build` — tip/lint hatası varsa düzelt
+2. **Dev sunucu kontrolü** (çalışıyorsa):
+   - `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000` → 200 beklenir
+   - Gerekirse değişen sayfayı da kontrol et
+3. **500 / beyaz ekran görülürse**:
+   ```bash
+   lsof -ti:3000,3001 | xargs kill -9 2>/dev/null
+   rm -rf .next
+   npm run dev
+   ```
+   veya `npm run dev:clean`
+
+Kullanıcıya kısa özet ver: build geçti mi, site ayakta mı, sorun varsa ne yapıldı.

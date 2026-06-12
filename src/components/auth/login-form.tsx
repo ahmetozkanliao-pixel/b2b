@@ -39,7 +39,7 @@ export function LoginForm() {
       return;
     }
 
-    router.push(credentials.email === DEMO_ACCOUNTS.admin.email ? "/admin/haberler" : "/dashboard");
+    router.push(credentials.email === DEMO_ACCOUNTS.admin.email ? "/admin" : "/dashboard");
     router.refresh();
   }
 
@@ -55,7 +55,7 @@ export function LoginForm() {
     });
 
     if (demoRes.ok) {
-      router.push(email === DEMO_ACCOUNTS.admin.email ? "/admin/haberler" : "/dashboard");
+      router.push(email === DEMO_ACCOUNTS.admin.email ? "/admin" : "/dashboard");
       router.refresh();
       return;
     }

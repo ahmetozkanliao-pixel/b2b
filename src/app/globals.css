@@ -40,8 +40,17 @@
     scroll-behavior: smooth;
   }
 
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply overflow-x-hidden bg-slate-50 text-slate-900 antialiased;
   }
 
   ::selection {
@@ -85,6 +94,75 @@
 
   .section-label {
     @apply text-sm font-semibold uppercase tracking-wider text-brand-600;
+  }
+
+  .editorial-label {
+    @apply text-[11px] font-medium uppercase tracking-[0.28em] text-brand-600;
+  }
+
+  .font-display {
+    font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  }
+
+  .editorial-heading {
+    font-family: var(--font-display), Georgia, "Times New Roman", serif;
+    @apply text-balance font-light leading-[1.08] tracking-tight text-slate-900;
+  }
+
+  .editorial-heading-light {
+    font-family: var(--font-display), Georgia, "Times New Roman", serif;
+    @apply text-balance font-light leading-[1.08] tracking-tight text-white;
+  }
+
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .scroll-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-indicator {
+    animation: scroll-bounce 2.2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(6px); opacity: 1; }
+  }
+
+  .chapter-fade-in {
+    animation: chapter-fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes chapter-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .home-experience .chapter-section {
+    scroll-margin-top: 0;
+  }
+
+  .chapter-nav-rail {
+    max-height: min(80vh, 520px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .chapter-nav-rail::-webkit-scrollbar {
+    display: none;
   }
 
   .hero-gradient-text {
@@ -163,12 +241,17 @@
     .hero-fade-up,
     .hero-pulse-ring,
     .hero-grid-move,
-    .hero-gradient-text {
+    .hero-gradient-text,
+    .scroll-indicator {
       animation: none;
     }
-    .hero-fade-up {
+    .hero-fade-up,
+    .scroll-reveal,
+    .chapter-fade-in {
       opacity: 1;
       transform: none;
+      transition: none;
+      animation: none;
     }
   }
 }

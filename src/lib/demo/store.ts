@@ -1,6 +1,9 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
-import type { Company, Listing, Message, NewsArticle, Notification, PortfolioItem } from "@/types";
+import type { Category, Company, Listing, Message, NewsArticle, Notification, PortfolioItem } from "@/types";
+import { isInlineImageData, processLogoField } from "./logo-storage";
+import { isInlineImageData as isListingInlineImage, processListingImageField } from "./listing-image-storage";
+import { slugify } from "@/lib/utils";
 import { createInitialDemoStore } from "./seed";
 import type { DemoApplication, DemoChatRoom, DemoSettings, DemoStore } from "./types";
 
@@ -29,13 +32,120 @@ function ensureStore(): DemoStore {
   if (!store.catalogs) store.catalogs = createInitialDemoStore().catalogs;
   if (!store.portfolio) store.portfolio = createInitialDemoStore().portfolio;
   if (!store.news) store.news = createInitialDemoStore().news;
+  if (!store.categories) store.categories = createInitialDemoStore().categories;
 
   mergeProducerSeedData(store);
+  mergeCategoriesSeed(store);
   mergeNewsSeedData(store);
   mergeListingSeedData(store);
   mergeProfileSeedData(store);
+  mergeShowcaseSeedData(store);
+  migrateInlineLogos(store);
+  migrateInlineListingImages(store);
+  migrateLegacyCategoryIds(store);
 
   return store;
+}
+
+function migrateInlineListingImages(store: DemoStore) {
+  let changed = false;
+
+  for (const listing of store.listings) {
+    if (!isListingInlineImage(listing.image_url)) continue;
+    try {
+      listing.image_url = processListingImageField(listing.id, listing.image_url);
+      changed = true;
+    } catch {
+      listing.image_url = null;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  }
+}
+
+const LEGACY_CATEGORY_MAP: Record<string, string> = {
+  "cat-1": "sub-metal-sheet",
+  "cat-2": "sub-plastic-injection",
+  "cat-3": "sub-textile-knit",
+  "cat-4": "sub-electronics-pcb",
+  "cat-5": "sub-food-process",
+  "cat-6": "sub-furniture-cabinet",
+  "cat-7": "sub-pack-flex",
+  "cat-8": "sub-other-general",
+};
+
+function migrateLegacyCategoryIds(store: DemoStore) {
+  let changed = false;
+
+  for (const listing of store.listings) {
+    if (listing.category_id && LEGACY_CATEGORY_MAP[listing.category_id]) {
+      listing.category_id = LEGACY_CATEGORY_MAP[listing.category_id];
+      listing.category = store.categories.find((c) => c.id === listing.category_id);
+      changed = true;
+    }
+  }
+
+  for (const company of Object.values(store.companies)) {
+    if (!company.category_ids?.length) continue;
+    const migrated = company.category_ids.map((id) => LEGACY_CATEGORY_MAP[id] || id);
+    if (JSON.stringify(migrated) !== JSON.stringify(company.category_ids)) {
+      company.category_ids = migrated;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  }
+}
+
+function mergeCategoriesSeed(store: DemoStore) {
+  const seedCategories = createInitialDemoStore().categories;
+  const existingIds = new Set(store.categories.map((c) => c.id));
+  let changed = false;
+
+  for (const seed of seedCategories) {
+    if (!existingIds.has(seed.id)) {
+      store.categories.push(seed);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  }
+}
+
+function mergeShowcaseSeedData(store: DemoStore) {
+  const initial = createInitialDemoStore();
+  for (const [id, seedCompany] of Object.entries(initial.companies)) {
+    if (!store.companies[id]) {
+      store.companies[id] = seedCompany;
+    }
+  }
+}
+
+function migrateInlineLogos(store: DemoStore) {
+  let changed = false;
+
+  for (const [companyId, company] of Object.entries(store.companies)) {
+    if (!isInlineImageData(company.logo_url)) continue;
+
+    try {
+      company.logo_url = processLogoField(companyId, company.logo_url);
+      changed = true;
+    } catch {
+      company.logo_url = null;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  }
 }
 
 function mergeNewsSeedData(store: DemoStore) {
@@ -167,6 +277,14 @@ export function getDemoListingById(id: string): Listing | null {
   return listing ?? null;
 }
 
+export function getDemoListingForOwner(listingId: string, companyId: string): Listing | null {
+  const store = ensureStore();
+  const listing = store.listings.find(
+    (l) => l.id === listingId && l.company_id === companyId
+  );
+  return listing ?? null;
+}
+
 export function hasDemoApplication(listingId: string, applicantId: string) {
   const store = ensureStore();
   return store.applications.some(
@@ -188,10 +306,24 @@ export function addDemoListing(listing: Listing) {
   return listing;
 }
 
+export function updateDemoListing(listingId: string, data: Partial<Listing>) {
+  const store = ensureStore();
+  const index = store.listings.findIndex((l) => l.id === listingId);
+  if (index === -1) return null;
+  store.listings[index] = { ...store.listings[index], ...data };
+  saveStore(store);
+  return store.listings[index];
+}
+
 // Company
 export function getDemoCompany(companyId: string): Company | null {
   const store = ensureStore();
   return store.companies[companyId] ?? null;
+}
+
+export function getPublicDemoCompanies(): Company[] {
+  const store = ensureStore();
+  return Object.values(store.companies);
 }
 
 export function updateDemoCompany(companyId: string, data: Partial<Company>) {
@@ -255,6 +387,11 @@ export function getDemoApplications(companyId: string): DemoApplication[] {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
+export function getDemoApplicationById(applicationId: string): DemoApplication | null {
+  const store = ensureStore();
+  return store.applications.find((a) => a.id === applicationId) ?? null;
+}
+
 export function updateDemoApplication(
   applicationId: string,
   data: Partial<DemoApplication>
@@ -266,6 +403,23 @@ export function updateDemoApplication(
   store.applications[index] = { ...store.applications[index], ...data };
   saveStore(store);
   return store.applications[index];
+}
+
+export function closeListingAfterDeal(listingId: string, agreedApplicationId: string) {
+  const store = ensureStore();
+  const listing = store.listings.find((l) => l.id === listingId);
+  if (listing) {
+    listing.status = "closed";
+  }
+
+  for (const app of store.applications.filter((a) => a.listing_id === listingId)) {
+    if (app.id === agreedApplicationId) continue;
+    if (app.status === "pending") app.status = "rejected";
+    else if (app.status === "approved") app.status = "no_agreement";
+  }
+
+  saveStore(store);
+  return listing;
 }
 
 export function addDemoChatRoom(room: DemoChatRoom) {
@@ -289,6 +443,11 @@ export function getDemoChatRoom(roomId: string) {
   return store.chatRooms.find((r) => r.id === roomId) ?? null;
 }
 
+export function getDemoChatRoomByApplicationId(applicationId: string) {
+  const store = ensureStore();
+  return store.chatRooms.find((r) => r.application_id === applicationId) ?? null;
+}
+
 export function getDemoMessages(roomId: string): Message[] {
   const store = ensureStore();
   return store.messages
@@ -296,11 +455,79 @@ export function getDemoMessages(roomId: string): Message[] {
     .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 }
 
+export interface DemoChatPreview {
+  id: string;
+  partnerName: string;
+  listingTitle: string;
+  lastMessage: string | null;
+  lastMessageAt: string;
+  unread: number;
+}
+
+export function getDemoChatPreview(
+  companyId: string,
+  userId: string,
+  role: "demand_owner" | "producer",
+  limit = 3
+): DemoChatPreview[] {
+  const rooms = getDemoChatRooms(companyId, role);
+
+  return rooms
+    .map((room) => {
+      const messages = getDemoMessages(room.id);
+      const last = messages[messages.length - 1];
+      const unread = messages.filter((m) => !m.is_read && m.sender_id !== userId).length;
+      const partnerName = role === "producer" ? room.demand_company_name : room.producer_name;
+
+      let lastMessage = last?.content ?? null;
+      if (!lastMessage && last?.type === "offer") lastMessage = "Teklif gönderildi";
+      if (!lastMessage && last?.type === "file") lastMessage = last.file_name || "Dosya gönderildi";
+
+      return {
+        id: room.id,
+        partnerName,
+        listingTitle: room.listing_title,
+        lastMessage,
+        lastMessageAt: last?.created_at ?? room.created_at,
+        unread,
+      };
+    })
+    .sort((a, b) => new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime())
+    .slice(0, limit);
+}
+
+export function getDemoChatUnreadCount(
+  companyId: string,
+  userId: string,
+  role: "demand_owner" | "producer"
+) {
+  return getDemoChatRooms(companyId, role).reduce((sum, room) => {
+    const unread = getDemoMessages(room.id).filter(
+      (m) => !m.is_read && m.sender_id !== userId
+    ).length;
+    return sum + unread;
+  }, 0);
+}
+
 export function addDemoMessage(message: Message) {
   const store = ensureStore();
   store.messages.push(message);
   saveStore(store);
   return message;
+}
+
+export function markDemoMessagesAsRead(roomId: string, userId: string) {
+  const store = ensureStore();
+  let changed = false;
+
+  for (const msg of store.messages) {
+    if (msg.room_id === roomId && msg.sender_id !== userId && !msg.is_read) {
+      msg.is_read = true;
+      changed = true;
+    }
+  }
+
+  if (changed) saveStore(store);
 }
 
 // Notifications
@@ -316,6 +543,33 @@ export function addDemoNotification(notification: Notification) {
   store.notifications.unshift(notification);
   saveStore(store);
   return notification;
+}
+
+export function notifyMatchingProducersForListing(listing: Listing) {
+  if (listing.status !== "active" || !listing.category_id) return 0;
+
+  const store = ensureStore();
+  let count = 0;
+
+  for (const company of Object.values(store.companies)) {
+    if (company.type !== "producer" || company.status !== "approved") continue;
+    if (!company.category_ids?.includes(listing.category_id)) continue;
+    if (!company.owner_id) continue;
+
+    addDemoNotification({
+      id: createId("notif"),
+      user_id: company.owner_id,
+      type: "new_listing_match",
+      title: "Kategorinize Uygun Yeni İlan",
+      message: `"${listing.title}" ilanı üretim kategorilerinize uygun.`,
+      link: `/ilanlar/${listing.id}`,
+      is_read: false,
+      created_at: new Date().toISOString(),
+    });
+    count += 1;
+  }
+
+  return count;
 }
 
 export function markDemoNotificationRead(notificationId: string, userId: string) {
@@ -415,6 +669,137 @@ export function deleteDemoNews(id: string) {
   return true;
 }
 
+// Categories
+export function getDemoCategories(): Category[] {
+  const store = ensureStore();
+  return [...store.categories].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+}
+
+function syncListingCategoryRefs(store: DemoStore, categoryId: string) {
+  const category = store.categories.find((c) => c.id === categoryId);
+  if (!category) return;
+
+  for (const listing of store.listings) {
+    if (listing.category_id === categoryId) {
+      listing.category = category;
+    }
+  }
+}
+
+function isCategoryInUse(store: DemoStore, id: string): string | null {
+  if (store.listings.some((l) => l.category_id === id)) {
+    return "Bu kategori ilanlarda kullanılıyor.";
+  }
+  if (Object.values(store.companies).some((c) => c.category_ids?.includes(id))) {
+    return "Bu kategori firmalarda kullanılıyor.";
+  }
+  return null;
+}
+
+export function addDemoCategory(data: {
+  name: string;
+  slug?: string;
+  parent_id?: string | null;
+}): { ok: true; category: Category } | { ok: false; error: string } {
+  const store = ensureStore();
+  const name = data.name.trim();
+  if (!name) return { ok: false, error: "Kategori adı zorunludur." };
+
+  const slug = (data.slug?.trim() || slugify(name)).toLowerCase();
+  if (store.categories.some((c) => c.slug === slug)) {
+    return { ok: false, error: "Bu slug zaten kullanılıyor." };
+  }
+
+  if (data.parent_id) {
+    const parent = store.categories.find((c) => c.id === data.parent_id);
+    if (!parent || parent.parent_id) {
+      return { ok: false, error: "Geçerli bir ana kategori seçin." };
+    }
+  }
+
+  const category: Category = {
+    id: createId(data.parent_id ? "sub" : "main"),
+    name,
+    slug,
+    icon: null,
+    parent_id: data.parent_id || null,
+    sort_order: store.categories.length,
+    is_active: true,
+  };
+
+  store.categories.push(category);
+  saveStore(store);
+  return { ok: true, category };
+}
+
+export function updateDemoCategory(
+  id: string,
+  data: { name?: string; slug?: string; parent_id?: string | null }
+): { ok: true; category: Category } | { ok: false; error: string } {
+  const store = ensureStore();
+  const index = store.categories.findIndex((c) => c.id === id);
+  if (index === -1) return { ok: false, error: "Kategori bulunamadı." };
+
+  const current = store.categories[index];
+
+  if (data.name !== undefined) {
+    const name = data.name.trim();
+    if (!name) return { ok: false, error: "Kategori adı zorunludur." };
+    current.name = name;
+  }
+
+  if (data.slug !== undefined) {
+    const slug = data.slug.trim().toLowerCase();
+    if (!slug) return { ok: false, error: "Slug zorunludur." };
+    if (store.categories.some((c) => c.slug === slug && c.id !== id)) {
+      return { ok: false, error: "Bu slug zaten kullanılıyor." };
+    }
+    current.slug = slug;
+  }
+
+  if (data.parent_id !== undefined) {
+    if (data.parent_id === id) {
+      return { ok: false, error: "Kategori kendi alt kategorisi olamaz." };
+    }
+    if (data.parent_id) {
+      const parent = store.categories.find((c) => c.id === data.parent_id);
+      if (!parent || parent.parent_id) {
+        return { ok: false, error: "Geçerli bir ana kategori seçin." };
+      }
+      if (store.categories.some((c) => c.parent_id === id)) {
+        return { ok: false, error: "Alt kategorisi olan bir kategori, alt kategori yapılamaz." };
+      }
+      current.parent_id = data.parent_id;
+    } else {
+      current.parent_id = null;
+    }
+  }
+
+  store.categories[index] = current;
+  syncListingCategoryRefs(store, id);
+  saveStore(store);
+  return { ok: true, category: current };
+}
+
+export function deleteDemoCategory(
+  id: string
+): { ok: true } | { ok: false; error: string } {
+  const store = ensureStore();
+  const category = store.categories.find((c) => c.id === id);
+  if (!category) return { ok: false, error: "Kategori bulunamadı." };
+
+  if (store.categories.some((c) => c.parent_id === id)) {
+    return { ok: false, error: "Önce alt kategorileri silmelisiniz." };
+  }
+
+  const inUse = isCategoryInUse(store, id);
+  if (inUse) return { ok: false, error: inUse };
+
+  store.categories = store.categories.filter((c) => c.id !== id);
+  saveStore(store);
+  return { ok: true };
+}
+
 // Stats
 export function getDemoDashboardStats(
   companyId: string,
@@ -446,4 +831,40 @@ export function getDemoDashboardStats(
     activeChats: rooms.length,
     unreadNotifications: notifications.filter((n) => !n.is_read).length,
   };
+}
+
+export function getDemoAdminStats() {
+  const store = ensureStore();
+  const companies = Object.values(store.companies).filter((c) => c.id !== "admin-company-001");
+
+  return {
+    totalCompanies: companies.length,
+    pendingCompanies: companies.filter((c) => c.status === "pending").length,
+    approvedCompanies: companies.filter((c) => c.status === "approved").length,
+    demandOwners: companies.filter((c) => c.type === "demand_owner").length,
+    producers: companies.filter((c) => c.type === "producer").length,
+    totalListings: store.listings.length,
+    activeListings: store.listings.filter((l) => l.status === "active").length,
+    closedListings: store.listings.filter((l) => l.status === "closed").length,
+    totalApplications: store.applications.length,
+    pendingApplications: store.applications.filter((a) => a.status === "pending").length,
+    totalNews: store.news.length,
+    publishedNews: store.news.filter((n) => n.is_published !== false).length,
+    totalMessages: store.messages.length,
+    activeChats: store.chatRooms.length,
+  };
+}
+
+export function getAllDemoCompaniesAdmin(): Company[] {
+  const store = ensureStore();
+  return Object.values(store.companies)
+    .filter((c) => c.id !== "admin-company-001")
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+}
+
+export function getAllDemoListingsAdmin(): Listing[] {
+  const store = ensureStore();
+  return [...store.listings].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
 }

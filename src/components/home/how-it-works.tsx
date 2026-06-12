@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Shield,
 } from "lucide-react";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { cn } from "@/lib/utils";
 
 const steps = [
@@ -237,24 +238,24 @@ function PhasePills() {
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-white py-24">
+    <section id="nasil-calisir" className="relative overflow-hidden bg-white py-28 sm:py-32">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(20,184,166,0.06),transparent_60%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <p className="section-label">Süreç</p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Nasıl Çalışır?
+        <ScrollReveal className="text-center">
+          <p className="editorial-label">Süreç</p>
+          <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
+            Nasıl çalışır?
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-500">
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-500 sm:text-lg">
             6 basit adımda talep sahibi ile üreticiyi buluşturuyoruz
           </p>
-        </div>
+        </ScrollReveal>
 
-        <div className="mt-12">
+        <ScrollReveal delay={120} className="mt-16">
           <FlowDiagram />
           <PhasePills />
-        </div>
+        </ScrollReveal>
 
         {/* Mobil: yatay özet şerit */}
         <div className="mb-10 flex items-center justify-center gap-3 overflow-x-auto pb-2 lg:hidden">
@@ -287,9 +288,8 @@ export function HowItWorks() {
           </div>
         </div>
 
-        {/* Adım listesi — 2 sütun desktop */}
         <div className="mx-auto max-w-5xl lg:grid lg:grid-cols-2 lg:gap-x-12">
-          <div>
+          <ScrollReveal delay={80}>
             {steps.slice(0, 3).map((step, i) => (
               <StepCard
                 key={step.title}
@@ -298,8 +298,8 @@ export function HowItWorks() {
                 isLast={i === 2}
               />
             ))}
-          </div>
-          <div>
+          </ScrollReveal>
+          <ScrollReveal delay={160}>
             {steps.slice(3).map((step, i) => (
               <StepCard
                 key={step.title}
@@ -308,7 +308,7 @@ export function HowItWorks() {
                 isLast={i === 2}
               />
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

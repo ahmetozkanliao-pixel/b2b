@@ -9,9 +9,9 @@ import {
   Mail,
   Calendar,
   Users,
-  BadgeCheck,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { VerifiedBadge } from "@/components/ui/verified-badge";
 import { CategoryBadges } from "@/components/ui/category-badges";
 import { ShareProfileButton } from "@/components/profile/share-profile-button";
 import { getCategoriesByIds } from "@/lib/categories";
@@ -60,14 +60,15 @@ export function CompanyProfileView({
         <div className="relative -mt-16 mb-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex items-end gap-4">
-              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-white shadow-card">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-white shadow-card">
                 {company.logo_url ? (
                   <Image
                     src={company.logo_url}
                     alt={company.name}
                     width={80}
                     height={80}
-                    className="rounded-xl object-cover"
+                    className="h-full w-full rounded-xl object-cover"
+                    unoptimized
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center rounded-xl gradient-brand text-2xl font-bold text-white">
@@ -78,12 +79,10 @@ export function CompanyProfileView({
               <div className="pb-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{company.name}</h1>
-                  {company.verified && (
-                    <Badge variant="success" className="gap-1">
-                      <BadgeCheck className="h-3 w-3" />
-                      Doğrulanmış
-                    </Badge>
-                  )}
+                  <VerifiedBadge
+                    verified={company.verified}
+                    type={isProducer ? "producer" : "demand"}
+                  />
                 </div>
                 {company.tagline && (
                   <p className="mt-1 text-slate-500">{company.tagline}</p>

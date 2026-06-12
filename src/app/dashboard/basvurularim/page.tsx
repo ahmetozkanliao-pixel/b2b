@@ -12,6 +12,8 @@ const statusMap: Record<string, { label: string; variant: "default" | "success" 
   approved: { label: "Onaylandı", variant: "success" },
   rejected: { label: "Reddedildi", variant: "danger" },
   withdrawn: { label: "Geri Çekildi", variant: "default" },
+  agreed: { label: "Anlaşıldı", variant: "success" },
+  no_agreement: { label: "Anlaşılamadı", variant: "default" },
 };
 
 export default async function MyApplicationsPage() {
@@ -68,7 +70,9 @@ export default async function MyApplicationsPage() {
                         </p>
                       )}
                     </div>
-                    {app.status === "approved" && (
+                    {(app.status === "approved" ||
+                      app.status === "agreed" ||
+                      app.status === "no_agreement") && (
                       <Link
                         href="/dashboard/mesajlar"
                         className="text-sm font-medium text-primary-600 hover:text-primary-700"

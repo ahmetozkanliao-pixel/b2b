@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/get-session";
+import { createClient } from "@/lib/supabase/server";
+import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/dashboard/sidebar";
+import { getDemoUserById } from "@/lib/demo/session";
 
 export default async function DashboardLayout({
   children,
@@ -13,14 +16,33 @@ export default async function DashboardLayout({
     redirect("/giris");
   }
 
-  const role = session.role;
+  const demoUser = session.isDemo ? getDemoUserById(session.id) : null;
+  let companyName = demoUser?.company.name;
+
+  if (!companyName && !session.isDemo) {
+    const supabase = await createClient();
+    const { data: company } = await supabase
+      .from("companies")
+      .select("name")
+      .eq("owner_id", session.id)
+      .maybeSingle();
+    companyName = company?.name ?? undefined;
+  }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar role={role} />
-      <main className="flex-1 overflow-auto">
-        <div className="p-6 lg:p-8">{children}</div>
-      </main>
+    <div className="min-h-screen bg-slate-50">
+      <Header />
+      <div className="flex pt-[4.25rem]">
+        <Sidebar
+          role={session.role}
+          userName={session.full_name}
+          userEmail={session.email}
+          companyName={companyName}
+        />
+        <main className="flex-1 overflow-auto">
+          <div className="p-6 lg:p-8">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }

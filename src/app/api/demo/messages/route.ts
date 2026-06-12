@@ -7,6 +7,7 @@ import {
   createId,
   getDemoChatRoom,
   getDemoMessages,
+  markDemoMessagesAsRead,
 } from "@/lib/demo/store";
 
 export async function GET(request: Request) {
@@ -65,4 +66,30 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ ok: true, message });
+}
+
+export async function PATCH(request: Request) {
+  if (!isDemoMode()) {
+    return NextResponse.json({ error: "Demo modu aktif değil." }, { status: 400 });
+  }
+
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Yetkisiz." }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const { roomId } = body as { roomId: string };
+
+  if (!roomId) {
+    return NextResponse.json({ error: "roomId gerekli." }, { status: 400 });
+  }
+
+  const room = getDemoChatRoom(roomId);
+  if (!room) {
+    return NextResponse.json({ error: "Oda bulunamadı." }, { status: 404 });
+  }
+
+  markDemoMessagesAsRead(roomId, session.id);
+  return NextResponse.json({ ok: true });
 }

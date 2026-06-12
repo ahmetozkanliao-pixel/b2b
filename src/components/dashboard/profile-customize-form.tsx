@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { ImageUploadField } from "@/components/ui/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CopyProfileLink } from "@/components/profile/share-profile-button";
@@ -24,6 +25,7 @@ export function ProfileCustomizeForm({ company, isDemo = false }: ProfileCustomi
   const [form, setForm] = useState({
     slug: company.slug || slugify(company.name),
     tagline: company.tagline || "",
+    logo_url: company.logo_url || "",
     cover_image_url: company.cover_image_url || "",
     founded_year: company.founded_year?.toString() || "",
     employee_count: company.employee_count || "",
@@ -44,6 +46,7 @@ export function ProfileCustomizeForm({ company, isDemo = false }: ProfileCustomi
     const payload = {
       slug: form.slug || slugify(company.name),
       tagline: form.tagline || null,
+      logo_url: form.logo_url || null,
       cover_image_url: form.cover_image_url || null,
       founded_year: form.founded_year ? Number(form.founded_year) : null,
       employee_count: form.employee_count || null,
@@ -104,6 +107,14 @@ export function ProfileCustomizeForm({ company, isDemo = false }: ProfileCustomi
             value={form.tagline}
             onChange={(e) => updateField("tagline", e.target.value)}
             placeholder="Firmanızı tek cümleyle tanıtın"
+          />
+
+          <ImageUploadField
+            id="profile_logo_url"
+            label="Firma Logosu"
+            value={form.logo_url}
+            onChange={(value) => updateField("logo_url", value)}
+            hint="Profil sayfanızın üst kısmında görünür."
           />
 
           <Input

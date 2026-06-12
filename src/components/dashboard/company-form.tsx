@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { VerifiedBadge } from "@/components/ui/verified-badge";
 import { CategorySelect } from "@/components/ui/category-select";
 import { CategoryBadges } from "@/components/ui/category-badges";
+import { ImageUploadField } from "@/components/ui/image-upload-field";
 import { getCategoriesByIds } from "@/lib/categories";
 import { createClient } from "@/lib/supabase/client";
 import type { Category, Company } from "@/types";
@@ -31,11 +32,13 @@ export function CompanyForm({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const isProducer = role === "producer";
 
   const [form, setForm] = useState({
     name: company?.name || "",
     description: company?.description || "",
+    logo_url: company?.logo_url || "",
     website: company?.website || "",
     city: company?.city || "",
     phone: company?.phone || "",
@@ -59,9 +62,11 @@ export function CompanyForm({
 
     setLoading(true);
     setSuccess(false);
+    setError(null);
 
     const payload = {
       ...form,
+      logo_url: form.logo_url || null,
       ...(isProducer ? { category_ids: categoryIds } : {}),
     };
 
@@ -75,6 +80,9 @@ export function CompanyForm({
       if (res.ok) {
         setSuccess(true);
         router.refresh();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Kayıt başarısız.");
       }
       setLoading(false);
       return;
@@ -102,11 +110,12 @@ export function CompanyForm({
   return (
     <Card>
       <CardContent>
-        {company?.verified && (
-          <div className="mb-4">
-            <Badge variant="success">Doğrulanmış Firma</Badge>
-          </div>
-        )}
+        <div className="mb-4">
+          <VerifiedBadge
+            verified={company?.verified}
+            type={isProducer ? "producer" : "demand"}
+          />
+        </div>
 
         {isProducer && selectedCategories.length > 0 && (
           <div className="mb-4">
@@ -131,13 +140,21 @@ export function CompanyForm({
             rows={3}
           />
 
+          <ImageUploadField
+            id="logo_url"
+            label="Firma Logosu"
+            value={form.logo_url}
+            onChange={(value) => updateField("logo_url", value)}
+            hint="PNG veya JPG, en fazla 1 MB. Profil sayfanızda görünür."
+          />
+
           {isProducer && categories.length > 0 && (
             <CategorySelect
               categories={categories}
               selected={categoryIds}
               onChange={setCategoryIds}
               label="Üretim Kategorileri"
-              hint="Hangi alanlarda üretim yaptığınızı seçin. Sadece eşleşen kategorideki ilanları görürsünüz."
+              hint="Ana kategori altındaki üretim alanlarınızı seçin. İlan eşleşmesi alt kategorilere göre yapılır."
               required
             />
           )}
@@ -182,6 +199,10 @@ export function CompanyForm({
             onChange={(e) => updateField("address", e.target.value)}
             rows={2}
           />
+
+          {error && (
+            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>
+          )}
 
           {success && (
             <p className="rounded-lg bg-green-50 p-3 text-sm text-green-600">

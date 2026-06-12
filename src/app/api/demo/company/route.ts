@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/get-session";
 import { isDemoMode } from "@/lib/demo/config";
+import { processLogoField } from "@/lib/demo/logo-storage";
 import { getDemoCompany, updateDemoCompany } from "@/lib/demo/store";
 
 export async function GET() {
@@ -42,6 +43,15 @@ export async function PATCH(request: Request) {
 
   if (!canUsePublicProfile(existing) && body.profile_public === true) {
     body.profile_public = false;
+  }
+
+  if ("logo_url" in body) {
+    try {
+      body.logo_url = processLogoField(session.companyId, body.logo_url);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Logo kaydedilemedi.";
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
   }
 
   const company = updateDemoCompany(session.companyId, body);

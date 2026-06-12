@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ExternalLink, Crown, Lock } from "lucide-react";
 import { getSession } from "@/lib/auth/get-session";
-import { DEMO_CATEGORIES } from "@/lib/demo/config";
+import { getAppCategories } from "@/lib/get-categories";
 import { getDemoCompany, getDemoPortfolio } from "@/lib/demo/store";
 import { createClient } from "@/lib/supabase/server";
 import { CompanyForm } from "@/components/dashboard/company-form";
@@ -19,7 +19,7 @@ export default async function CompanyPage() {
 
   let company = null;
   let portfolio: PortfolioItem[] = [];
-  let categories: Category[] = DEMO_CATEGORIES;
+  const categories: Category[] = await getAppCategories();
 
   if (session.isDemo && session.companyId) {
     company = getDemoCompany(session.companyId);
@@ -42,12 +42,6 @@ export default async function CompanyPage() {
       portfolio = items || [];
     }
 
-    const { data: dbCategories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order");
-    categories = dbCategories || [];
   }
 
   const isProducer = session.role === "producer";

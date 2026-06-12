@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { getSession } from "@/lib/auth/get-session";
-import { getCategoriesByIds } from "@/lib/categories";
-import { DEMO_CATEGORIES } from "@/lib/demo/config";
+import { getCategoriesByIds, getCategoryLabel } from "@/lib/categories";
+import { getAppCategories } from "@/lib/get-categories";
 import { getDemoCompany, getDemoListings, getDemoListingsForProducer } from "@/lib/demo/store";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CategoryBadges } from "@/components/ui/category-badges";
+import { ListingActions } from "@/components/listings/listing-actions";
 import { Plus, Filter } from "lucide-react";
 import { formatDate, formatBudget } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ const statusLabels: Record<string, { label: string; variant: "default" | "succes
 
 export default async function MyListingsPage() {
   const session = await getSession();
+  const categories = await getAppCategories();
   const isProducer = session?.role === "producer";
 
   if (isProducer) {
@@ -27,7 +29,7 @@ export default async function MyListingsPage() {
       ? getDemoListingsForProducer(session.companyId)
       : [];
 
-    const producerCategories = DEMO_CATEGORIES;
+    const producerCategories = categories;
     let producerCompany = session?.companyId && session.isDemo
       ? getDemoCompany(session.companyId)
       : null;
@@ -92,8 +94,10 @@ export default async function MyListingsPage() {
                 <CardContent className="flex items-center justify-between gap-4">
                   <div>
                     <div className="mb-1 flex flex-wrap items-center gap-2">
-                      {listing.category && (
-                        <Badge variant="info">{listing.category.name}</Badge>
+                      {listing.category_id && (
+                        <Badge variant="info">
+                          {getCategoryLabel(categories, listing.category_id)}
+                        </Badge>
                       )}
                     </div>
                     <h3 className="font-semibold text-gray-900">{listing.title}</h3>
@@ -161,13 +165,15 @@ export default async function MyListingsPage() {
             const status = statusLabels[listing.status] || statusLabels.draft;
             return (
               <Card key={listing.id} hover>
-                <CardContent className="flex items-center justify-between">
+                <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <h3 className="font-semibold text-gray-900">{listing.title}</h3>
                       <Badge variant={status.variant}>{status.label}</Badge>
-                      {listing.category && (
-                        <Badge variant="info">{listing.category.name}</Badge>
+                      {listing.category_id && (
+                        <Badge variant="info">
+                          {getCategoryLabel(categories, listing.category_id)}
+                        </Badge>
                       )}
                     </div>
                     <p className="mt-1 text-sm text-gray-500">
@@ -175,6 +181,11 @@ export default async function MyListingsPage() {
                       {formatBudget(listing.budget_min, listing.budget_max)}
                     </p>
                   </div>
+                  <ListingActions
+                    listingId={listing.id}
+                    status={listing.status}
+                    isDemo={session?.isDemo}
+                  />
                 </CardContent>
               </Card>
             );

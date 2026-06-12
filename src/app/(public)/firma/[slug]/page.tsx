@@ -4,7 +4,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { CompanyProfileView } from "@/components/profile/company-profile-view";
 import { canUsePublicProfile } from "@/lib/membership";
-import { isDemoMode, DEMO_CATEGORIES } from "@/lib/demo/config";
+import { isDemoMode } from "@/lib/demo/config";
+import { getAppCategories } from "@/lib/get-categories";
 import {
   getDemoCompanyBySlug,
   getDemoPortfolio,
@@ -44,6 +45,7 @@ export default async function CompanyProfilePage({
   const session = await getSession();
 
   if (isDemoMode()) {
+    const categories = await getAppCategories();
     const company = getDemoCompanyBySlug(slug);
     if (!company || company.profile_public === false || !canUsePublicProfile(company)) notFound();
 
@@ -70,7 +72,7 @@ export default async function CompanyProfilePage({
         <CompanyProfileView
           company={company}
           portfolio={portfolio}
-          categories={DEMO_CATEGORIES}
+          categories={categories}
           isOwner={isOwner}
           activeListingsCount={activeListingsCount}
         />

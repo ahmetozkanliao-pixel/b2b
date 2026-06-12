@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const display = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "600"],
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +30,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <body className={`${plusJakarta.className} font-sans`}>{children}</body>
+      <body className={`${plusJakarta.className} ${display.variable} font-sans antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

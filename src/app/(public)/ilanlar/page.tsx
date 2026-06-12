@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { isDemoMode } from "@/lib/demo/config";
 import { getDemoListings } from "@/lib/demo/store";
 import { createClient } from "@/lib/supabase/server";
+import { getAppCategories } from "@/lib/get-categories";
 import { ListingCard } from "@/components/home/listing-card";
 
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ListingsPage() {
+  const categories = await getAppCategories();
   let listings = isDemoMode() ? getDemoListings() : [];
 
   if (!isDemoMode()) {
@@ -30,7 +32,7 @@ export default async function ListingsPage() {
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {listings.length > 0 ? (
           listings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
+            <ListingCard key={listing.id} listing={listing} categories={categories} />
           ))
         ) : (
           <p className="col-span-full py-12 text-center text-gray-500">

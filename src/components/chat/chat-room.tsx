@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Paperclip, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
 import { formatRelativeDate, formatCurrency } from "@/lib/utils";
 import type { Message } from "@/types";
 
@@ -19,35 +18,72 @@ export function ChatRoom({ roomId, currentUserId, initialMessages, isDemo = fals
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
 
   useEffect(() => {
     if (isDemo) return;
 
-    const channel = supabase
-      .channel(`room:${roomId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `room_id=eq.${roomId}`,
-        },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new as Message]);
-        }
-      )
-      .subscribe();
+    let cleanup: (() => void) | undefined;
+
+    import("@/lib/supabase/client").then(({ createClient }) => {
+      const supabase = createClient();
+      const channel = supabase
+        .channel(`room:${roomId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: `room_id=eq.${roomId}`,
+          },
+          (payload) => {
+            setMessages((prev) => [...prev, payload.new as Message]);
+          }
+        )
+        .subscribe();
+
+      cleanup = () => {
+        supabase.removeChannel(channel);
+      };
+    });
 
     return () => {
-      supabase.removeChannel(channel);
+      cleanup?.();
     };
-  }, [roomId, supabase, isDemo]);
+  }, [roomId, isDemo]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    async function markAsRead() {
+      if (isDemo) {
+        await fetch("/api/demo/messages", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomId }),
+        });
+      } else {
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        await supabase
+          .from("messages")
+          .update({ is_read: true })
+          .eq("room_id", roomId)
+          .neq("sender_id", currentUserId)
+          .eq("is_read", false);
+      }
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.sender_id !== currentUserId ? { ...msg, is_read: true } : msg
+        )
+      );
+    }
+
+    markAsRead();
+  }, [roomId, currentUserId, isDemo]);
 
   async function sendMessage() {
     if (!newMessage.trim()) return;
@@ -69,7 +105,8 @@ export function ChatRoom({ roomId, currentUserId, initialMessages, isDemo = fals
       return;
     }
 
-    await supabase.from("messages").insert({
+    const { createClient } = await import("@/lib/supabase/client");
+    await createClient().from("messages").insert({
       room_id: roomId,
       sender_id: currentUserId,
       type: "text",
@@ -85,18 +122,24 @@ export function ChatRoom({ roomId, currentUserId, initialMessages, isDemo = fals
       <div className="flex-1 space-y-4 overflow-y-auto p-4">
         {messages.map((msg) => {
           const isOwn = msg.sender_id === currentUserId;
+          const isUnread = !isOwn && !msg.is_read;
           return (
             <div
               key={msg.id}
               className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                className={`relative max-w-[70%] rounded-2xl px-4 py-2 ${
                   isOwn
                     ? "bg-primary-600 text-white"
-                    : "bg-gray-100 text-gray-900"
+                    : isUnread
+                      ? "border-2 border-brand-400 bg-brand-50 text-gray-900"
+                      : "bg-gray-100 text-gray-900"
                 }`}
               >
+                {isUnread && (
+                  <span className="absolute -right-1 -top-1 flex h-3 w-3 rounded-full bg-brand-500 ring-2 ring-white" />
+                )}
                 {msg.type === "offer" && msg.offer_amount && (
                   <div className="mb-1 rounded-lg bg-white/20 px-3 py-2 text-sm font-semibold">
                     Teklif: {formatCurrency(msg.offer_amount)}

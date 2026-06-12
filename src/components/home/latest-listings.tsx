@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ListingCard } from "./listing-card";
 import { Button } from "@/components/ui/button";
+import { ChapterSection } from "@/components/home/chapter-section";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import type { Listing } from "@/types";
 
 const demoListings: Listing[] = [
@@ -59,33 +61,39 @@ const demoListings: Listing[] = [
 
 export function LatestListings() {
   return (
-    <section className="bg-slate-50 py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+    <ChapterSection id="ilanlar" variant="light" className="!min-h-0">
+      <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <ScrollReveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>
-            <p className="section-label">İlanlar</p>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Son İlanlar
-            </h2>
-            <p className="mt-2 text-lg text-slate-500">En güncel üretim talepleri</p>
+            <p className="editorial-label">06 — İlanlar</p>
+            <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">Son ilanlar</h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-slate-500 sm:text-lg">
+              En güncel üretim talepleri
+            </p>
           </div>
           <Link href="/ilanlar" className="hidden sm:block">
-            <Button variant="outline">Tümünü Gör</Button>
+            <Button variant="outline" className="rounded-full px-6 uppercase tracking-wider">
+              Tümünü Gör
+            </Button>
           </Link>
-        </div>
+        </ScrollReveal>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {demoListings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
+        <ScrollReveal delay={120} className="mt-14">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {demoListings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        </ScrollReveal>
 
-        <div className="mt-8 text-center sm:hidden">
+        <div className="mt-10 text-center sm:hidden">
           <Link href="/ilanlar">
-            <Button variant="outline">Tümünü Gör</Button>
+            <Button variant="outline" className="rounded-full px-6">
+              Tümünü Gör
+            </Button>
           </Link>
         </div>
       </div>
-    </section>
+    </ChapterSection>
   );
 }

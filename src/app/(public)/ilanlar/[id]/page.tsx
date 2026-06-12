@@ -4,7 +4,8 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth/get-session";
 import { isDemoMode } from "@/lib/demo/config";
 import { DEMO_DEMAND_USER } from "@/lib/demo/config";
-import { producerMatchesListing } from "@/lib/categories";
+import { getCategoryLabel, producerMatchesListing } from "@/lib/categories";
+import { getAppCategories } from "@/lib/get-categories";
 import { getDemoCompany, getDemoListingById, getDemoMonthlyApplicationCount, hasDemoApplication } from "@/lib/demo/store";
 import { canProducerApply, canUsePublicProfile, getRemainingApplications, PRODUCER_FREE_MONTHLY_APPLICATION_LIMIT } from "@/lib/membership";
 import { createClient } from "@/lib/supabase/server";
@@ -43,6 +44,7 @@ export default async function ListingDetailPage({
 }) {
   const { id } = await params;
   const session = await getSession();
+  const categories = await getAppCategories();
 
   if (isDemoMode()) {
     const listing = getDemoListingById(id);
@@ -78,8 +80,17 @@ export default async function ListingDetailPage({
         </Link>
 
         <div className="mb-6">
-          {listing.category && <Badge variant="info">{listing.category.name}</Badge>}
+          {listing.category_id && (
+            <Badge variant="info">{getCategoryLabel(categories, listing.category_id)}</Badge>
+          )}
           <h1 className="mt-3 text-3xl font-bold text-gray-900">{listing.title}</h1>
+          {listing.image_url && (
+            <img
+              src={listing.image_url}
+              alt={listing.title}
+              className="mt-4 max-h-80 w-full rounded-xl object-cover"
+            />
+          )}
           <p className="mt-2 text-gray-500">
             {company && canUsePublicProfile(company) ? (
               <Link href={getCompanyProfilePath(company)} className="font-medium text-brand-600 hover:text-brand-700">

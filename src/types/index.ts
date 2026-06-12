@@ -2,7 +2,13 @@ export type UserRole = "demand_owner" | "producer" | "admin";
 export type CompanyType = "demand_owner" | "producer";
 export type CompanyStatus = "pending" | "approved" | "rejected" | "suspended";
 export type ListingStatus = "draft" | "active" | "closed" | "cancelled";
-export type ApplicationStatus = "pending" | "approved" | "rejected" | "withdrawn";
+export type ApplicationStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "withdrawn"
+  | "agreed"
+  | "no_agreement";
 export type MessageType = "text" | "file" | "image" | "pdf" | "offer";
 
 export interface Profile {
@@ -57,6 +63,9 @@ export interface Category {
   name: string;
   slug: string;
   icon: string | null;
+  parent_id?: string | null;
+  sort_order?: number;
+  is_active?: boolean;
 }
 
 export interface Listing {
@@ -71,6 +80,7 @@ export interface Listing {
   delivery_time: string | null;
   city: string | null;
   application_deadline: string | null;
+  image_url?: string | null;
   status: ListingStatus;
   view_count: number;
   created_at: string;

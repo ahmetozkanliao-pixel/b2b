@@ -2,20 +2,25 @@ import Link from "next/link";
 import { MapPin, Calendar, Wallet, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getCategoryLabel } from "@/lib/categories";
 import { formatDate, formatBudget } from "@/lib/utils";
-import type { Listing } from "@/types";
+import type { Category, Listing } from "@/types";
 
 interface ListingCardProps {
   listing: Listing;
+  categories?: Category[];
 }
 
-export function ListingCard({ listing }: ListingCardProps) {
+export function ListingCard({ listing, categories }: ListingCardProps) {
+  const categoryLabel = categories
+    ? getCategoryLabel(categories, listing.category_id)
+    : listing.category?.name;
   return (
     <Card hover className="group">
       <CardContent>
         <div className="mb-4 flex items-start justify-between gap-2">
-          {listing.category && (
-            <Badge variant="brand">{listing.category.name}</Badge>
+          {(listing.category_id || listing.category) && categoryLabel && (
+            <Badge variant="brand">{categoryLabel}</Badge>
           )}
         </div>
 

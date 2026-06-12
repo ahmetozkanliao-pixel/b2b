@@ -1,4 +1,4 @@
-import type { Application, Company, Message, Notification, NewsArticle, PortfolioItem } from "@/types";
+import type { Application, Category, Company, Message, Notification, NewsArticle, PortfolioItem } from "@/types";
 
 export interface DemoProducer {
   id: string;
@@ -52,4 +52,5 @@ export interface DemoStore {
   catalogs: DemoCatalog[];
   portfolio: PortfolioItem[];
   news: NewsArticle[];
+  categories: Category[];
 }
