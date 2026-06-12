@@ -5,26 +5,33 @@ import { isInlineImageData, processLogoField } from "./logo-storage";
 import { isInlineImageData as isListingInlineImage, processListingImageField } from "./listing-image-storage";
 import { slugify } from "@/lib/utils";
 import { DEMO_USERS } from "./config";
+import { getDemoDataDir, isDemoMemoryStore } from "./paths";
 import { createInitialDemoStore, DEFAULT_DEMO_SETTINGS } from "./seed";
 import type { DemoApplication, DemoChatRoom, DemoRegisteredUser, DemoSettings, DemoStore } from "./types";
 import type { UserRole } from "@/types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = getDemoDataDir();
 const STORE_FILE = path.join(DATA_DIR, "demo-store.json");
 
-function ensureStore(): DemoStore {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
+const memoryStoreGlobal = globalThis as typeof globalThis & {
+  __b2bDemoStore?: DemoStore;
+};
 
-  if (!existsSync(STORE_FILE)) {
-    const initial = createInitialDemoStore();
-    writeFileSync(STORE_FILE, JSON.stringify(initial, null, 2), "utf-8");
-    return initial;
-  }
+function loadInitialStore(): DemoStore {
+  const initial = createInitialDemoStore();
+  mergeProducerSeedData(initial);
+  mergeCategoriesSeed(initial);
+  mergeNewsSeedData(initial);
+  mergeListingSeedData(initial);
+  mergeProfileSeedData(initial);
+  mergeShowcaseSeedData(initial);
+  migrateInlineLogos(initial);
+  migrateInlineListingImages(initial);
+  migrateLegacyCategoryIds(initial);
+  return initial;
+}
 
-  const raw = readFileSync(STORE_FILE, "utf-8");
-  const store = JSON.parse(raw) as DemoStore;
-
-  // Eski store dosyalarına yeni alanları ekle
+function hydrateStore(store: DemoStore): DemoStore {
   if (!store.applications) store.applications = createInitialDemoStore().applications;
   if (!store.chatRooms) store.chatRooms = createInitialDemoStore().chatRooms;
   if (!store.messages) store.messages = createInitialDemoStore().messages;
@@ -50,6 +57,38 @@ function ensureStore(): DemoStore {
   return store;
 }
 
+function ensureStore(): DemoStore {
+  if (memoryStoreGlobal.__b2bDemoStore) {
+    return memoryStoreGlobal.__b2bDemoStore;
+  }
+
+  if (isDemoMemoryStore()) {
+    const initial = loadInitialStore();
+    memoryStoreGlobal.__b2bDemoStore = initial;
+    return initial;
+  }
+
+  try {
+    if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
+
+    if (!existsSync(STORE_FILE)) {
+      const initial = loadInitialStore();
+      writeFileSync(STORE_FILE, JSON.stringify(initial, null, 2), "utf-8");
+      memoryStoreGlobal.__b2bDemoStore = initial;
+      return initial;
+    }
+
+    const raw = readFileSync(STORE_FILE, "utf-8");
+    const store = hydrateStore(JSON.parse(raw) as DemoStore);
+    memoryStoreGlobal.__b2bDemoStore = store;
+    return store;
+  } catch {
+    const initial = loadInitialStore();
+    memoryStoreGlobal.__b2bDemoStore = initial;
+    return initial;
+  }
+}
+
 function migrateInlineListingImages(store: DemoStore) {
   let changed = false;
 
@@ -64,9 +103,7 @@ function migrateInlineListingImages(store: DemoStore) {
     }
   }
 
-  if (changed) {
-    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
-  }
+  if (changed) saveStore(store);
 }
 
 const LEGACY_CATEGORY_MAP: Record<string, string> = {
@@ -100,9 +137,7 @@ function migrateLegacyCategoryIds(store: DemoStore) {
     }
   }
 
-  if (changed) {
-    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
-  }
+  if (changed) saveStore(store);
 }
 
 function mergeCategoriesSeed(store: DemoStore) {
@@ -117,9 +152,7 @@ function mergeCategoriesSeed(store: DemoStore) {
     }
   }
 
-  if (changed) {
-    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
-  }
+  if (changed) saveStore(store);
 }
 
 function mergeShowcaseSeedData(store: DemoStore) {
@@ -146,9 +179,7 @@ function migrateInlineLogos(store: DemoStore) {
     }
   }
 
-  if (changed) {
-    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
-  }
+  if (changed) saveStore(store);
 }
 
 function mergeNewsSeedData(store: DemoStore) {
@@ -246,8 +277,15 @@ function mergeProducerSeedData(store: DemoStore) {
 }
 
 function saveStore(store: DemoStore) {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  memoryStoreGlobal.__b2bDemoStore = store;
+  if (isDemoMemoryStore()) return;
+
+  try {
+    if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
+    writeFileSync(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  } catch {
+    // Yerel dosya yazımı başarısızsa bellek içi kopya kullanılmaya devam eder.
+  }
 }
 
 export function createId(prefix: string) {

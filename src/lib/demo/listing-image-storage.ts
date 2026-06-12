@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import path from "path";
+import { getDemoDataDir, isDemoMemoryStore } from "./paths";
 
-const IMAGE_DIR = path.join(process.cwd(), "data", "listing-images");
 const MAX_BYTES = 500 * 1024;
 
 const MIME: Record<string, string> = {
@@ -11,6 +11,21 @@ const MIME: Record<string, string> = {
   webp: "image/webp",
   gif: "image/gif",
 };
+
+const imageMemoryGlobal = globalThis as typeof globalThis & {
+  __b2bDemoListingImages?: Map<string, { buffer: Buffer; contentType: string }>;
+};
+
+function getImageDir() {
+  return path.join(getDemoDataDir(), "listing-images");
+}
+
+function getImageMemory() {
+  if (!imageMemoryGlobal.__b2bDemoListingImages) {
+    imageMemoryGlobal.__b2bDemoListingImages = new Map();
+  }
+  return imageMemoryGlobal.__b2bDemoListingImages;
+}
 
 export function getDemoListingImageApiPath(listingId: string) {
   return `/api/demo/listing-image/${listingId}`;
@@ -34,23 +49,37 @@ export function saveDemoListingImage(listingId: string, dataUrl: string): string
     throw new Error("Görsel çok büyük. Daha küçük bir görsel deneyin.");
   }
 
-  if (!existsSync(IMAGE_DIR)) {
-    mkdirSync(IMAGE_DIR, { recursive: true });
+  if (isDemoMemoryStore()) {
+    getImageMemory().set(listingId, {
+      buffer,
+      contentType: MIME[ext] ?? "image/jpeg",
+    });
+    return getDemoListingImageApiPath(listingId);
+  }
+
+  const imageDir = getImageDir();
+  if (!existsSync(imageDir)) {
+    mkdirSync(imageDir, { recursive: true });
   }
 
   removeExistingImages(listingId);
-  writeFileSync(path.join(IMAGE_DIR, `${listingId}.${ext}`), buffer);
+  writeFileSync(path.join(imageDir, `${listingId}.${ext}`), buffer);
 
   return getDemoListingImageApiPath(listingId);
 }
 
 export function readDemoListingImage(listingId: string): { buffer: Buffer; contentType: string } | null {
-  if (!existsSync(IMAGE_DIR)) return null;
+  if (isDemoMemoryStore()) {
+    return getImageMemory().get(listingId) ?? null;
+  }
 
-  for (const file of readdirSync(IMAGE_DIR)) {
+  const imageDir = getImageDir();
+  if (!existsSync(imageDir)) return null;
+
+  for (const file of readdirSync(imageDir)) {
     if (!file.startsWith(`${listingId}.`)) continue;
     const ext = file.split(".").pop()?.toLowerCase() ?? "jpg";
-    const buffer = readFileSync(path.join(IMAGE_DIR, file));
+    const buffer = readFileSync(path.join(imageDir, file));
     return {
       buffer,
       contentType: MIME[ext] ?? "image/jpeg",
@@ -61,11 +90,12 @@ export function readDemoListingImage(listingId: string): { buffer: Buffer; conte
 }
 
 function removeExistingImages(listingId: string) {
-  if (!existsSync(IMAGE_DIR)) return;
+  const imageDir = getImageDir();
+  if (!existsSync(imageDir)) return;
 
-  for (const file of readdirSync(IMAGE_DIR)) {
+  for (const file of readdirSync(imageDir)) {
     if (file.startsWith(`${listingId}.`)) {
-      unlinkSync(path.join(IMAGE_DIR, file));
+      unlinkSync(path.join(imageDir, file));
     }
   }
 }

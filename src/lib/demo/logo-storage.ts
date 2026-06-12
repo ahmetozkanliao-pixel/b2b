@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import path from "path";
+import { getDemoDataDir, isDemoMemoryStore } from "./paths";
 
-const LOGO_DIR = path.join(process.cwd(), "data", "logos");
 const MAX_BYTES = 200 * 1024;
 
 const MIME: Record<string, string> = {
@@ -11,6 +11,21 @@ const MIME: Record<string, string> = {
   webp: "image/webp",
   gif: "image/gif",
 };
+
+const logoMemoryGlobal = globalThis as typeof globalThis & {
+  __b2bDemoLogos?: Map<string, { buffer: Buffer; contentType: string }>;
+};
+
+function getLogoDir() {
+  return path.join(getDemoDataDir(), "logos");
+}
+
+function getLogoMemory() {
+  if (!logoMemoryGlobal.__b2bDemoLogos) {
+    logoMemoryGlobal.__b2bDemoLogos = new Map();
+  }
+  return logoMemoryGlobal.__b2bDemoLogos;
+}
 
 export function getDemoLogoApiPath(companyId: string) {
   return `/api/demo/logo/${companyId}`;
@@ -34,27 +49,45 @@ export function saveDemoLogo(companyId: string, dataUrl: string): string {
     throw new Error("Logo çok büyük. Daha küçük bir görsel deneyin.");
   }
 
-  if (!existsSync(LOGO_DIR)) {
-    mkdirSync(LOGO_DIR, { recursive: true });
+  if (isDemoMemoryStore()) {
+    getLogoMemory().set(companyId, {
+      buffer,
+      contentType: MIME[ext] ?? "image/jpeg",
+    });
+    return getDemoLogoApiPath(companyId);
+  }
+
+  const logoDir = getLogoDir();
+  if (!existsSync(logoDir)) {
+    mkdirSync(logoDir, { recursive: true });
   }
 
   removeExistingLogos(companyId);
-  writeFileSync(path.join(LOGO_DIR, `${companyId}.${ext}`), buffer);
+  writeFileSync(path.join(logoDir, `${companyId}.${ext}`), buffer);
 
   return getDemoLogoApiPath(companyId);
 }
 
 export function deleteDemoLogo(companyId: string) {
+  if (isDemoMemoryStore()) {
+    getLogoMemory().delete(companyId);
+    return;
+  }
   removeExistingLogos(companyId);
 }
 
 export function readDemoLogo(companyId: string): { buffer: Buffer; contentType: string } | null {
-  if (!existsSync(LOGO_DIR)) return null;
+  if (isDemoMemoryStore()) {
+    return getLogoMemory().get(companyId) ?? null;
+  }
 
-  for (const file of readdirSync(LOGO_DIR)) {
+  const logoDir = getLogoDir();
+  if (!existsSync(logoDir)) return null;
+
+  for (const file of readdirSync(logoDir)) {
     if (!file.startsWith(`${companyId}.`)) continue;
     const ext = file.split(".").pop()?.toLowerCase() ?? "jpg";
-    const buffer = readFileSync(path.join(LOGO_DIR, file));
+    const buffer = readFileSync(path.join(logoDir, file));
     return {
       buffer,
       contentType: MIME[ext] ?? "image/jpeg",
@@ -65,11 +98,12 @@ export function readDemoLogo(companyId: string): { buffer: Buffer; contentType: 
 }
 
 function removeExistingLogos(companyId: string) {
-  if (!existsSync(LOGO_DIR)) return;
+  const logoDir = getLogoDir();
+  if (!existsSync(logoDir)) return;
 
-  for (const file of readdirSync(LOGO_DIR)) {
+  for (const file of readdirSync(logoDir)) {
     if (file.startsWith(`${companyId}.`)) {
-      unlinkSync(path.join(LOGO_DIR, file));
+      unlinkSync(path.join(logoDir, file));
     }
   }
 }
