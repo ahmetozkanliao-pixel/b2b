@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ListingCard } from "./listing-card";
 import { Button } from "@/components/ui/button";
 import { ChapterSection } from "@/components/home/chapter-section";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { useI18n } from "@/components/i18n/i18n-provider";
 import type { Listing } from "@/types";
 
 const demoListings: Listing[] = [
@@ -60,20 +63,25 @@ const demoListings: Listing[] = [
 ];
 
 export function LatestListings() {
+  const { t } = useI18n();
+
   return (
     <ChapterSection id="ilanlar" variant="light" className="!min-h-0">
+      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
       <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
         <ScrollReveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>
-            <p className="editorial-label">06 — İlanlar</p>
-            <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">Son ilanlar</h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-slate-500 sm:text-lg">
-              En güncel üretim talepleri
+            <p className="editorial-label">{t("home.listings.label")}</p>
+            <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
+              {t("home.listings.title")}
+            </h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-neutral-400 sm:text-lg">
+              {t("home.listings.subtitle2")}
             </p>
           </div>
           <Link href="/ilanlar" className="hidden sm:block">
-            <Button variant="outline" className="rounded-full px-6 uppercase tracking-wider">
-              Tümünü Gör
+            <Button variant="outline" className="rounded-lg px-6">
+              {t("home.listings.viewAllShort")}
             </Button>
           </Link>
         </ScrollReveal>
@@ -89,7 +97,7 @@ export function LatestListings() {
         <div className="mt-10 text-center sm:hidden">
           <Link href="/ilanlar">
             <Button variant="outline" className="rounded-full px-6">
-              Tümünü Gör
+              {t("home.listings.viewAllShort")}
             </Button>
           </Link>
         </div>

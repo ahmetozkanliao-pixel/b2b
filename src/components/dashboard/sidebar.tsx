@@ -11,6 +11,8 @@ import {
   getPanelNavLinks,
   isPanelNavLinkActive,
 } from "@/lib/panel-nav-links";
+import { useI18n } from "@/components/i18n/i18n-provider";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import type { UserRole } from "@/types";
 
 interface SidebarProps {
@@ -32,6 +34,7 @@ function getInitials(name: string) {
 export function Sidebar({ role, userName, userEmail, companyName }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useI18n();
   const links = getPanelNavLinks(role);
 
   async function handleLogout() {
@@ -43,32 +46,36 @@ export function Sidebar({ role, userName, userEmail, companyName }: SidebarProps
   }
 
   return (
-    <aside className="sticky top-[4.25rem] hidden h-[calc(100vh-4.25rem)] w-64 shrink-0 flex-col border-r border-slate-200/80 bg-white lg:flex">
-      <div className="flex h-[4.25rem] items-center border-b border-slate-200/80 px-5">
+    <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 flex-col border-r border-white/10 bg-black lg:flex">
+      <div className="flex h-14 items-center border-b border-white/10 px-4">
         <Logo size="sm" showText={false} />
-        <span className="ml-2 font-semibold text-slate-900">Panel</span>
+        <span className="ml-2 text-sm font-medium text-neutral-300">{t("common.panel")}</span>
+      </div>
+
+      <div className="px-3 pt-3">
+        <LanguageSwitcher transparent />
       </div>
 
       {userName && (
         <Link
           href={role === "admin" ? "/admin" : "/dashboard/firma"}
-          className="mx-4 mt-4 flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 transition-colors hover:border-brand-200 hover:bg-brand-50/50"
+          className="mx-3 mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 transition-colors hover:border-white/20 hover:bg-white/[0.06]"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full gradient-brand text-sm font-bold text-white">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white text-xs font-semibold text-black">
             {getInitials(userName)}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-slate-900">{userName}</p>
+            <p className="truncate text-sm font-medium text-white">{userName}</p>
             {companyName ? (
-              <p className="truncate text-xs text-brand-600">{companyName}</p>
+              <p className="truncate text-xs text-neutral-500">{companyName}</p>
             ) : (
-              <p className="truncate text-xs text-slate-500">{userEmail}</p>
+              <p className="truncate text-xs text-neutral-500">{userEmail}</p>
             )}
           </div>
         </Link>
       )}
 
-      <nav className="flex-1 space-y-1 p-4">
+      <nav className="flex-1 space-y-0.5 p-3">
         {links.map((link) => {
           const isActive = isPanelNavLinkActive(pathname, link.href);
 
@@ -77,26 +84,26 @@ export function Sidebar({ role, userName, userEmail, companyName }: SidebarProps
               key={link.href}
               href={link.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
                 isActive
-                  ? "bg-brand-50 text-brand-700"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-white/10 text-white"
+                  : "text-neutral-400 hover:bg-white/5 hover:text-white"
               )}
             >
-              <link.icon className={cn("h-5 w-5", isActive && "text-brand-600")} />
-              {link.label}
+              <link.icon className="h-4 w-4 shrink-0" />
+              {t(link.labelKey)}
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-slate-200/80 p-4">
+      <div className="border-t border-white/10 p-3">
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
         >
-          <LogOut className="h-5 w-5" />
-          Çıkış Yap
+          <LogOut className="h-4 w-4" />
+          {t("common.logout")}
         </button>
       </div>
     </aside>

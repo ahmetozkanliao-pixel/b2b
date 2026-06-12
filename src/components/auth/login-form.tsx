@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { Building2, Factory, Shield } from "lucide-react";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 const DEMO_ACCOUNTS = {
   demand: { email: "demo@talep.com", password: "Talep2026!" },
@@ -15,11 +16,20 @@ const DEMO_ACCOUNTS = {
 };
 
 export function LoginForm() {
+  const { t } = useI18n();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [info, setInfo] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("verified") === "1") {
+      setInfo("E-posta adresiniz doğrulandı. Artık giriş yapabilirsiniz.");
+    }
+  }, [searchParams]);
 
   async function loginWithDemo(credentials: { email: string; password: string }) {
     setError("");
@@ -34,7 +44,8 @@ export function LoginForm() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError(data.error || "Giriş başarısız.");
+      setError(data.error || t("auth.loginFailed"));
+      setInfo("");
       setLoading(false);
       return;
     }
@@ -57,6 +68,14 @@ export function LoginForm() {
     if (demoRes.ok) {
       router.push(email === DEMO_ACCOUNTS.admin.email ? "/admin" : "/dashboard");
       router.refresh();
+      setLoading(false);
+      return;
+    }
+
+    const demoData = await demoRes.json().catch(() => ({}));
+    if (demoRes.status !== 400 || demoData.error !== "Demo modu aktif değil.") {
+      setError(demoData.error || t("auth.invalidCredentials"));
+      setLoading(false);
       return;
     }
 
@@ -67,7 +86,7 @@ export function LoginForm() {
     });
 
     if (authError) {
-      setError("E-posta veya şifre hatalı.");
+      setError(t("auth.invalidCredentials"));
       setLoading(false);
       return;
     }
@@ -79,15 +98,15 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-xl border border-primary-200 bg-primary-50/50 p-4">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-primary-800">
-            <Building2 className="h-4 w-4 text-primary-600" />
-            Talep Sahibi
+        <div className="gradient-box rounded-lg p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
+            <Building2 className="h-4 w-4 text-neutral-400" />
+            {t("auth.demoDemand")}
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
-            <strong className="text-slate-800">{DEMO_ACCOUNTS.demand.email}</strong>
+          <p className="text-xs leading-relaxed text-neutral-400">
+            <strong className="text-neutral-200">{DEMO_ACCOUNTS.demand.email}</strong>
             <br />
-            Şifre: <strong className="text-slate-800">{DEMO_ACCOUNTS.demand.password}</strong>
+            {t("auth.password")}: <strong className="text-neutral-200">{DEMO_ACCOUNTS.demand.password}</strong>
           </p>
           <Button
             type="button"
@@ -97,41 +116,41 @@ export function LoginForm() {
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.demand)}
             disabled={loading}
           >
-            Talep Sahibi Giriş
+            {t("auth.demoLoginDemand")}
           </Button>
         </div>
 
-        <div className="rounded-xl border border-brand-200 bg-brand-50/50 p-4">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-800">
-            <Factory className="h-4 w-4 text-brand-600" />
-            Üretici Firma
+        <div className="gradient-box rounded-lg p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
+            <Factory className="h-4 w-4 text-neutral-400" />
+            {t("auth.demoProducerCompany")}
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
-            <strong className="text-slate-800">{DEMO_ACCOUNTS.producer.email}</strong>
+          <p className="text-xs leading-relaxed text-neutral-400">
+            <strong className="text-neutral-200">{DEMO_ACCOUNTS.producer.email}</strong>
             <br />
-            Şifre: <strong className="text-slate-800">{DEMO_ACCOUNTS.producer.password}</strong>
+            {t("auth.password")}: <strong className="text-neutral-200">{DEMO_ACCOUNTS.producer.password}</strong>
           </p>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="mt-3 w-full border-brand-200 hover:border-brand-300 hover:bg-brand-50"
+            className="mt-3 w-full"
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.producer)}
             disabled={loading}
           >
-            Üretici Giriş
+            {t("auth.demoLoginProducer")}
           </Button>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 sm:col-span-2 lg:col-span-1">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800">
-            <Shield className="h-4 w-4 text-slate-600" />
-            Admin
+        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:col-span-2 lg:col-span-1">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
+            <Shield className="h-4 w-4 text-neutral-400" />
+            {t("auth.demoAdmin")}
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
-            <strong className="text-slate-800">{DEMO_ACCOUNTS.admin.email}</strong>
+          <p className="text-xs leading-relaxed text-neutral-400">
+            <strong className="text-neutral-200">{DEMO_ACCOUNTS.admin.email}</strong>
             <br />
-            Şifre: <strong className="text-slate-800">{DEMO_ACCOUNTS.admin.password}</strong>
+            {t("auth.password")}: <strong className="text-neutral-200">{DEMO_ACCOUNTS.admin.password}</strong>
           </p>
           <Button
             type="button"
@@ -141,14 +160,14 @@ export function LoginForm() {
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.admin)}
             disabled={loading}
           >
-            Admin Giriş
+            {t("auth.demoLoginAdmin")}
           </Button>
         </div>
       </div>
 
       <Input
         id="email"
-        label="E-posta"
+        label={t("auth.email")}
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -157,7 +176,7 @@ export function LoginForm() {
       />
       <Input
         id="password"
-        label="Şifre"
+        label={t("auth.passwordField")}
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -165,18 +184,22 @@ export function LoginForm() {
         required
       />
 
+      {info && (
+        <p className="rounded-lg border border-white/10 bg-white/5 p-3 text-sm text-neutral-300">{info}</p>
+      )}
+
       {error && (
-        <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">{error}</p>
+        <p className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>
       )}
 
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
+        {loading ? t("auth.signingIn") : t("auth.loginButton")}
       </Button>
 
-      <p className="text-center text-sm text-slate-500">
-        Hesabınız yok mu?{" "}
-        <Link href="/kayit" className="font-semibold text-brand-600 hover:text-brand-700">
-          Kayıt olun
+      <p className="text-center text-sm text-neutral-500">
+        {t("auth.noAccount")}{" "}
+        <Link href="/kayit" className="font-medium text-white hover:text-neutral-300">
+          {t("auth.registerLink")}
         </Link>
       </p>
     </form>

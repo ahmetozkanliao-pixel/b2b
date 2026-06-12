@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { DEMO_SESSION_COOKIE, DEMO_USERS, type DemoUser } from "./config";
+import { DEMO_SESSION_COOKIE, type DemoUser } from "./config";
+import { findDemoUser, getDemoUserById } from "./user-lookup";
 
 export interface DemoSession {
   userId: string;
@@ -9,15 +10,7 @@ export interface DemoSession {
   companyId: string;
 }
 
-export function findDemoUser(email: string, password: string) {
-  return DEMO_USERS.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-  );
-}
-
-export function getDemoUserById(id: string) {
-  return DEMO_USERS.find((u) => u.id === id);
-}
+export { findDemoUser, getDemoUserById };
 
 export function createDemoSession(user: DemoUser): DemoSession {
   return {

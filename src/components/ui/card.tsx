@@ -4,14 +4,18 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
+  variant?: "light" | "dark";
 }
 
-export function Card({ children, className, hover }: CardProps) {
+export function Card({ children, className, hover, variant = "dark" }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-slate-200/80 bg-white shadow-card",
-        hover && "transition-all duration-200 hover:border-slate-300/80 hover:shadow-card-hover",
+        "rounded-xl text-neutral-100",
+        variant === "dark"
+          ? "gradient-box shadow-card"
+          : "border border-neutral-200 bg-white text-neutral-900 shadow-card",
+        hover && "gradient-box-hover",
         className
       )}
     >
@@ -29,5 +33,14 @@ export function CardContent({ children, className }: { children: React.ReactNode
 }
 
 export function CardFooter({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("border-t border-slate-100 p-6", className)}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        "border-t border-transparent p-6 [border-image:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)_1]",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }

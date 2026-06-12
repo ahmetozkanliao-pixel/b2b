@@ -313,6 +313,7 @@ export const DEFAULT_DEMO_SETTINGS: DemoSettings = {
 
 export function createInitialDemoStore(): DemoStore {
   return {
+    registeredUsers: [],
     listings: [...DEMO_LISTINGS_SEED],
     applications: [...DEMO_APPLICATIONS_SEED],
     chatRooms: [...DEMO_CHAT_ROOMS_SEED],

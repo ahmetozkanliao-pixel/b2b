@@ -1,4 +1,16 @@
-import type { Application, Category, Company, Message, Notification, NewsArticle, PortfolioItem } from "@/types";
+import type { Application, Category, Company, Message, Notification, NewsArticle, PortfolioItem, UserRole } from "@/types";
+
+export interface DemoRegisteredUser {
+  id: string;
+  email: string;
+  password: string;
+  full_name: string;
+  role: UserRole;
+  company_id: string;
+  email_verified: boolean;
+  verification_token: string;
+  created_at: string;
+}
 
 export interface DemoProducer {
   id: string;
@@ -42,6 +54,7 @@ export interface DemoSettings {
 }
 
 export interface DemoStore {
+  registeredUsers: DemoRegisteredUser[];
   listings: import("@/types").Listing[];
   applications: DemoApplication[];
   chatRooms: DemoChatRoom[];

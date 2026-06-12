@@ -1,37 +1,40 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
+import { AppProviders } from "@/components/i18n/app-providers";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getTranslator } from "@/lib/i18n/get-dictionary";
 import "./globals.css";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  variable: "--font-display",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = getTranslator(locale);
 
-export const metadata: Metadata = {
-  title: {
-    default: "B2B Üretim ve Tedarik Platformu",
-    template: "%s | B2B Üretim Platformu",
-  },
-  description:
-    "Üretici firmalar ile kurumsal firmaları tek platformda buluşturuyoruz. İhtiyacınızı yayınlayın, doğrulanmış üreticilerden teklifler alın.",
-  keywords: ["B2B", "üretim", "tedarik", "ihale", "üretici", "kurumsal"],
-};
+  return {
+    title: {
+      default: t("meta.siteTitle"),
+      template: t("meta.siteTemplate"),
+    },
+    description: t("meta.description"),
+    keywords: ["B2B", "production", "supply", "manufacturing", "corporate"],
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+
   return (
-    <html lang="tr">
-      <body className={`${plusJakarta.className} ${display.variable} font-sans antialiased`}>
-        {children}
+    <html lang={locale}>
+      <body className={`${inter.className} ${inter.variable} font-sans antialiased`}>
+        <AppProviders initialLocale={locale}>{children}</AppProviders>
       </body>
     </html>
   );

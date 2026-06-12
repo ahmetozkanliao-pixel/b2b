@@ -73,7 +73,7 @@ export default async function ListingDetailPage({
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         <Link
           href="/dashboard/ilanlar"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           İlanlara Dön
@@ -93,7 +93,7 @@ export default async function ListingDetailPage({
           )}
           <p className="mt-2 text-gray-500">
             {company && canUsePublicProfile(company) ? (
-              <Link href={getCompanyProfilePath(company)} className="font-medium text-brand-600 hover:text-brand-700">
+              <Link href={getCompanyProfilePath(company)} className="font-medium text-white hover:text-neutral-300">
                 {company.name}
               </Link>
             ) : (
@@ -140,7 +140,7 @@ export default async function ListingDetailPage({
         </Card>
 
         {isProducer && categoryMatch && !alreadyApplied && remaining !== null && (
-          <p className="mb-4 text-sm text-slate-500">
+          <p className="mb-4 text-sm text-neutral-500">
             Bu ay kalan teklif hakkınız: <strong>{remaining}</strong> / {PRODUCER_FREE_MONTHLY_APPLICATION_LIMIT}
           </p>
         )}
@@ -168,7 +168,7 @@ export default async function ListingDetailPage({
               </p>
               <Link
                 href="/dashboard/ayarlar"
-                className="mt-3 inline-block font-medium text-brand-600 hover:text-brand-700"
+                className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
               >
                 Pro&apos;ya yükselt — sınırsız teklif →
               </Link>
@@ -184,7 +184,7 @@ export default async function ListingDetailPage({
               </p>
               <Link
                 href="/dashboard/firma"
-                className="mt-3 inline-block font-medium text-primary-600 hover:text-primary-700"
+                className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
               >
                 Kategorilerinizi Güncelleyin →
               </Link>
@@ -198,7 +198,7 @@ export default async function ListingDetailPage({
               <p className="text-gray-600">Bu ilana zaten başvurdunuz.</p>
               <Link
                 href="/dashboard/basvurularim"
-                className="mt-3 inline-block font-medium text-primary-600 hover:text-primary-700"
+                className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
               >
                 Başvurularımı Gör →
               </Link>
@@ -212,7 +212,7 @@ export default async function ListingDetailPage({
               <p className="text-gray-500">Başvurmak için üretici olarak giriş yapın.</p>
               <Link
                 href="/giris"
-                className="mt-3 inline-block font-medium text-primary-600 hover:text-primary-700"
+                className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
               >
                 Giriş Yap →
               </Link>
@@ -287,7 +287,7 @@ export default async function ListingDetailPage({
           {company && canUsePublicProfile(company) ? (
             <Link
               href={getCompanyProfilePath(company)}
-              className="font-medium text-brand-600 hover:text-brand-700"
+              className="font-medium text-white hover:text-neutral-300"
             >
               {company.name}
             </Link>
@@ -352,7 +352,7 @@ export default async function ListingDetailPage({
         <Card>
           <CardContent className="py-8 text-center">
             <p className="text-gray-500">Başvurmak için üretici olarak giriş yapın.</p>
-            <a href="/giris" className="mt-3 inline-block text-primary-600 hover:text-primary-700 font-medium">
+            <a href="/giris" className="mt-3 inline-block font-medium text-white hover:text-neutral-300">
               Giriş Yap →
             </a>
           </CardContent>

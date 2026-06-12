@@ -54,38 +54,38 @@ function PlanCard({
     <Card
       className={cn(
         "relative",
-        plan.highlighted && "border-brand-300 ring-2 ring-brand-500/20 shadow-card-hover"
+        plan.highlighted && "border-white/20 ring-1 ring-white/10"
       )}
     >
       {plan.highlighted && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="inline-flex items-center gap-1 rounded-full gradient-brand px-3 py-1 text-xs font-semibold text-white">
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white">
             <Sparkles className="h-3 w-3" />
             Popüler
           </span>
         </div>
       )}
       <CardHeader>
-        <h3 className="text-xl font-semibold text-slate-900">{plan.name}</h3>
+        <h3 className="text-xl font-medium text-white">{plan.name}</h3>
         <div className="mt-2">
-          <span className="text-3xl font-bold text-slate-900">
+          <span className="text-3xl font-semibold text-white">
             {plan.price === 0 ? "Ücretsiz" : formatCurrency(plan.price)}
           </span>
-          {plan.price > 0 && <span className="text-sm text-slate-500">/ay</span>}
+          {plan.price > 0 && <span className="text-sm text-neutral-500">/ay</span>}
         </div>
       </CardHeader>
       <CardContent>
         <ul className="space-y-3">
           {plan.features.map((feature) => (
-            <li key={feature} className="flex items-center gap-2.5 text-sm text-slate-600">
-              <Check className="h-4 w-4 shrink-0 text-brand-600" />
+            <li key={feature} className="flex items-center gap-2.5 text-sm text-neutral-400">
+              <Check className="h-4 w-4 shrink-0 text-neutral-300" />
               {feature}
             </li>
           ))}
         </ul>
         <Link href={`/kayit?tip=${type === "demand" ? "talep" : "uretici"}`} className="mt-6 block">
           <Button
-            variant={plan.highlighted ? "brand" : "outline"}
+            variant={plan.highlighted ? "primary" : "outline"}
             className="w-full"
           >
             {plan.cta}
@@ -98,23 +98,25 @@ function PlanCard({
 
 export function Pricing() {
   return (
-    <section className="bg-slate-50 py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="public-content chapter-bg-light section-divider relative overflow-hidden py-24">
+      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 section-ambient-bottom" aria-hidden />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="section-label">Fiyatlandırma</p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <p className="editorial-label">Fiyatlandırma</p>
+          <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl">
             Üyelik Paketleri
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-500">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-neutral-400">
             İhtiyacınıza uygun planı seçin, istediğiniz zaman yükseltin
           </p>
         </div>
 
         <div className="mt-16">
-          <h3 className="mb-2 text-center text-lg font-semibold text-slate-700">
+          <h3 className="mb-2 text-center text-lg font-medium text-neutral-300">
             Talep Sahibi Firma
           </h3>
-          <p className="mb-6 text-center text-sm text-slate-500">
+          <p className="mb-6 text-center text-sm text-neutral-500">
             Tamamen ücretsiz — herhangi bir ücret alınmaz
           </p>
           <div className="mx-auto max-w-sm">
@@ -125,7 +127,7 @@ export function Pricing() {
         </div>
 
         <div className="mt-16">
-          <h3 className="mb-6 text-center text-lg font-semibold text-slate-700">
+          <h3 className="mb-6 text-center text-lg font-medium text-neutral-300">
             Üretici Firma
           </h3>
           <div className="mx-auto grid max-w-2xl gap-6 sm:grid-cols-2">

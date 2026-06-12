@@ -17,42 +17,42 @@ import type { UserRole } from "@/types";
 
 export interface PanelNavLink {
   href: string;
-  label: string;
+  labelKey: string;
   icon: LucideIcon;
 }
 
 const demandLinks: PanelNavLink[] = [
-  { href: "/dashboard", label: "Genel Bakış", icon: LayoutDashboard },
-  { href: "/dashboard/ilanlar", label: "İlanlarım", icon: FileText },
-  { href: "/dashboard/basvurular", label: "Başvurular", icon: Send },
-  { href: "/dashboard/mesajlar", label: "Mesajlar", icon: MessageCircle },
-  { href: "/dashboard/bildirimler", label: "Bildirimler", icon: Bell },
-  { href: "/dashboard/firma", label: "Firma Profili", icon: Building2 },
-  { href: "/dashboard/ayarlar", label: "Ayarlar", icon: Settings },
+  { href: "/dashboard", labelKey: "panel.nav.overview", icon: LayoutDashboard },
+  { href: "/dashboard/ilanlar", labelKey: "panel.nav.myListings", icon: FileText },
+  { href: "/dashboard/basvurular", labelKey: "panel.nav.applications", icon: Send },
+  { href: "/dashboard/mesajlar", labelKey: "panel.nav.messages", icon: MessageCircle },
+  { href: "/dashboard/bildirimler", labelKey: "panel.nav.notifications", icon: Bell },
+  { href: "/dashboard/firma", labelKey: "panel.nav.companyProfile", icon: Building2 },
+  { href: "/dashboard/ayarlar", labelKey: "panel.nav.settings", icon: Settings },
 ];
 
 const producerLinks: PanelNavLink[] = [
-  { href: "/dashboard", label: "Genel Bakış", icon: LayoutDashboard },
-  { href: "/dashboard/ilanlar", label: "İlanları Keşfet", icon: FileText },
-  { href: "/dashboard/basvurularim", label: "Başvurularım", icon: Send },
-  { href: "/dashboard/mesajlar", label: "Mesajlar", icon: MessageCircle },
-  { href: "/dashboard/bildirimler", label: "Bildirimler", icon: Bell },
-  { href: "/dashboard/firma", label: "Firma Profili", icon: Building2 },
-  { href: "/dashboard/katalog", label: "Katalog", icon: FileText },
-  { href: "/dashboard/raporlar", label: "Raporlar", icon: BarChart3 },
-  { href: "/dashboard/ayarlar", label: "Ayarlar", icon: Settings },
+  { href: "/dashboard", labelKey: "panel.nav.overview", icon: LayoutDashboard },
+  { href: "/dashboard/ilanlar", labelKey: "panel.nav.exploreListings", icon: FileText },
+  { href: "/dashboard/basvurularim", labelKey: "panel.nav.myApplications", icon: Send },
+  { href: "/dashboard/mesajlar", labelKey: "panel.nav.messages", icon: MessageCircle },
+  { href: "/dashboard/bildirimler", labelKey: "panel.nav.notifications", icon: Bell },
+  { href: "/dashboard/firma", labelKey: "panel.nav.companyProfile", icon: Building2 },
+  { href: "/dashboard/katalog", labelKey: "panel.nav.catalog", icon: FileText },
+  { href: "/dashboard/raporlar", labelKey: "panel.nav.reports", icon: BarChart3 },
+  { href: "/dashboard/ayarlar", labelKey: "panel.nav.settings", icon: Settings },
 ];
 
 const adminLinks: PanelNavLink[] = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users },
-  { href: "/admin/firmalar", label: "Firma Onayı", icon: Building2 },
-  { href: "/admin/ilanlar", label: "İlan Yönetimi", icon: FileText },
-  { href: "/admin/kategoriler", label: "Kategoriler", icon: Tags },
-  { href: "/admin/haberler", label: "Haberler", icon: Newspaper },
-  { href: "/admin/uyelik", label: "Üyelik Paketleri", icon: CreditCard },
-  { href: "/admin/raporlar", label: "Raporlar", icon: BarChart3 },
-  { href: "/admin/ayarlar", label: "Site Ayarları", icon: Settings },
+  { href: "/admin", labelKey: "panel.nav.dashboard", icon: LayoutDashboard },
+  { href: "/admin/kullanicilar", labelKey: "panel.nav.users", icon: Users },
+  { href: "/admin/firmalar", labelKey: "panel.nav.companyApproval", icon: Building2 },
+  { href: "/admin/ilanlar", labelKey: "panel.nav.listingManagement", icon: FileText },
+  { href: "/admin/kategoriler", labelKey: "panel.nav.categories", icon: Tags },
+  { href: "/admin/haberler", labelKey: "panel.nav.news", icon: Newspaper },
+  { href: "/admin/uyelik", labelKey: "panel.nav.membership", icon: CreditCard },
+  { href: "/admin/raporlar", labelKey: "panel.nav.reports", icon: BarChart3 },
+  { href: "/admin/ayarlar", labelKey: "panel.nav.siteSettings", icon: Settings },
 ];
 
 export function getPanelNavLinks(role: UserRole): PanelNavLink[] {

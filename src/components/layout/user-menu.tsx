@@ -15,6 +15,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import type { UserRole } from "@/types";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 interface SessionUser {
   id: string;
@@ -25,12 +26,6 @@ interface SessionUser {
   companySlug: string | null;
   dashboardPath: string;
 }
-
-const roleLabels: Record<UserRole, string> = {
-  demand_owner: "Talep Sahibi",
-  producer: "Üretici",
-  admin: "Admin",
-};
 
 function getInitials(name: string) {
   return name
@@ -46,6 +41,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ transparent = false }: UserMenuProps) {
+  const { t } = useI18n();
   const [user, setUser] = useState<SessionUser | null>(null);
   const [totalUnread, setTotalUnread] = useState(0);
   const [open, setOpen] = useState(false);
@@ -135,7 +131,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
               : "text-slate-600 hover:text-primary-800"
           )}
         >
-          Giriş
+          {t("nav.login")}
         </Link>
         <Link href="/kayit">
           <span
@@ -146,7 +142,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
                 : "gradient-brand text-white shadow-soft hover:opacity-90"
             )}
           >
-            Kayıt Ol
+            {t("nav.register")}
           </span>
         </Link>
       </>
@@ -183,7 +179,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
               transparent ? "text-white/60" : "text-slate-500"
             )}
           >
-            {roleLabels[user.role]}
+            {t(`roles.${user.role}`)}
           </span>
         </span>
         <ChevronDown
@@ -196,26 +192,26 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xl shadow-slate-900/10">
-          <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-3">
-            <p className="truncate text-sm font-semibold text-slate-900">{user.full_name}</p>
-            <p className="truncate text-xs text-slate-500">{user.email}</p>
+        <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-xl border border-white/10 bg-neutral-950 shadow-xl">
+          <div className="border-b border-white/10 bg-white/[0.03] px-4 py-3">
+            <p className="truncate text-sm font-medium text-white">{user.full_name}</p>
+            <p className="truncate text-xs text-neutral-500">{user.email}</p>
             {user.companyName && (
-              <p className="mt-1 truncate text-xs font-medium text-brand-600">{user.companyName}</p>
+              <p className="mt-1 truncate text-xs font-medium text-neutral-400">{user.companyName}</p>
             )}
           </div>
           <div className="p-2">
             <MenuLink
               href={user.dashboardPath}
               icon={LayoutDashboard}
-              label="Panele Git"
+              label={t("nav.goToPanel")}
               onClick={() => setOpen(false)}
             />
             {user.role !== "admin" && (
               <MenuLink
                 href="/dashboard/mesajlar"
                 icon={MessageCircle}
-                label="Mesajlar"
+                label={t("nav.messages")}
                 badge={totalUnread > 0 ? totalUnread : undefined}
                 onClick={() => setOpen(false)}
               />
@@ -223,32 +219,32 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
             <MenuLink
               href="/dashboard/firma"
               icon={Building2}
-              label="Firma Profili"
+              label={t("nav.companyProfile")}
               onClick={() => setOpen(false)}
             />
             {user.companySlug && (
               <MenuLink
                 href={`/firma/${user.companySlug}`}
                 icon={User}
-                label="Profili Görüntüle"
+                label={t("nav.viewProfile")}
                 onClick={() => setOpen(false)}
               />
             )}
             <MenuLink
               href="/dashboard/ayarlar"
               icon={Settings}
-              label="Ayarlar"
+              label={t("nav.settings")}
               onClick={() => setOpen(false)}
             />
           </div>
-          <div className="border-t border-slate-100 p-2">
+          <div className="border-t border-white/10 p-2">
             <button
               type="button"
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
             >
               <LogOut className="h-4 w-4" />
-              Çıkış Yap
+              {t("common.logout")}
             </button>
           </div>
         </div>
@@ -274,12 +270,12 @@ function MenuLink({
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
     >
-      <Icon className="h-4 w-4 text-slate-400" />
+      <Icon className="h-4 w-4 text-neutral-500" />
       <span className="flex-1">{label}</span>
       {badge !== undefined && (
-        <span className="rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold text-white">
+        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
           {badge}
         </span>
       )}

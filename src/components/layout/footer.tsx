@@ -1,64 +1,53 @@
+"use client";
+
 import Link from "next/link";
-import { Shield, Lock, MessageSquare, Eye } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
-
-const footerLinks = {
-  platform: [
-    { href: "/ilanlar", label: "İlanlar" },
-    { href: "/nasil-calisir", label: "Nasıl Çalışır" },
-    { href: "/uyelik", label: "Üyelik Paketleri" },
-  ],
-  kurumsal: [
-    { href: "/hakkimizda", label: "Hakkımızda" },
-    { href: "/haberler", label: "Haberler" },
-    { href: "/iletisim", label: "İletişim" },
-  ],
-  yasal: [
-    { href: "/kvkk", label: "KVKK" },
-    { href: "/gizlilik-politikasi", label: "Gizlilik Politikası" },
-    { href: "/kullanim-sartlari", label: "Kullanım Şartları" },
-    { href: "/sss", label: "SSS" },
-  ],
-};
-
-const trustItems = [
-  { icon: Shield, label: "Onaylı Firma Sistemi" },
-  { icon: Lock, label: "KVKK Uyumlu" },
-  { icon: MessageSquare, label: "Güvenli Mesajlaşma" },
-  { icon: Eye, label: "Şeffaf Süreç" },
-];
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 export function Footer() {
-  return (
-    <footer className="bg-primary-950 text-slate-300">
-      <div className="border-b border-white/5">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-10 sm:grid-cols-4 sm:px-6 lg:px-8">
-          {trustItems.map((item) => (
-            <div key={item.label} className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600/20">
-                <item.icon className="h-5 w-5 text-brand-400" />
-              </div>
-              <span className="text-sm font-medium text-slate-300">{item.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+  const { t } = useI18n();
 
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  const footerLinks = {
+    platform: [
+      { href: "/ilanlar", label: t("nav.listings") },
+      { href: "/nasil-calisir", label: t("nav.howItWorks") },
+      { href: "/uyelik", label: t("nav.membership") },
+    ],
+    kurumsal: [
+      { href: "/hakkimizda", label: t("nav.about") },
+      { href: "/haberler", label: t("nav.news") },
+      { href: "/iletisim", label: t("nav.contact") },
+    ],
+    yasal: [
+      { href: "/kvkk", label: t("nav.kvkk") },
+      { href: "/gizlilik-politikasi", label: t("nav.privacy") },
+      { href: "/kullanim-sartlari", label: t("nav.terms") },
+      { href: "/sss", label: t("nav.faq") },
+    ],
+  };
+
+  return (
+    <footer className="border-t border-white/10 bg-black text-neutral-400">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
             <Logo size="sm" variant="light" href="/" />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
-              Üretici firmalar ile kurumsal firmaları güvenli ve şeffaf bir ortamda buluşturuyoruz.
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-500">
+              {t("footer.description")}
             </p>
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold text-white">Platform</h3>
+            <h3 className="mb-4 font-mono text-xs uppercase tracking-wider text-neutral-500">
+              {t("footer.platform")}
+            </h3>
             <ul className="space-y-2.5">
               {footerLinks.platform.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-brand-400">
+                  <Link
+                    href={link.href}
+                    className="text-sm text-neutral-400 transition-colors hover:text-white"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -67,11 +56,16 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold text-white">Kurumsal</h3>
+            <h3 className="mb-4 font-mono text-xs uppercase tracking-wider text-neutral-500">
+              {t("footer.corporate")}
+            </h3>
             <ul className="space-y-2.5">
               {footerLinks.kurumsal.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-brand-400">
+                  <Link
+                    href={link.href}
+                    className="text-sm text-neutral-400 transition-colors hover:text-white"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -80,11 +74,16 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold text-white">Yasal</h3>
+            <h3 className="mb-4 font-mono text-xs uppercase tracking-wider text-neutral-500">
+              {t("footer.legal")}
+            </h3>
             <ul className="space-y-2.5">
               {footerLinks.yasal.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-brand-400">
+                  <Link
+                    href={link.href}
+                    className="text-sm text-neutral-400 transition-colors hover:text-white"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -93,8 +92,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/5 pt-8 text-center text-sm text-slate-500">
-          &copy; {new Date().getFullYear()} B2B Üretim ve Tedarik Platformu. Tüm hakları saklıdır.
+        <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm text-neutral-600">
+          © {new Date().getFullYear()} {t("footer.copyright")}
         </div>
       </div>
     </footer>

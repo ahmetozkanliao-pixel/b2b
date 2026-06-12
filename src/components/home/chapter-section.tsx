@@ -11,9 +11,9 @@ interface ChapterSectionProps {
 }
 
 const variantStyles: Record<ChapterVariant, string> = {
-  dark: "gradient-hero text-white",
-  light: "bg-white text-slate-900",
-  muted: "bg-slate-50 text-slate-900",
+  dark: "chapter-bg-dark section-divider text-white",
+  light: "chapter-bg-light section-divider text-white",
+  muted: "chapter-bg-muted section-divider text-white",
 };
 
 export function ChapterSection({

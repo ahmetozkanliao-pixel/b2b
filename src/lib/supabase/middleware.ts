@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { DEMO_SESSION_COOKIE, isDemoMode } from "@/lib/demo/config";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 function hasDemoSession(request: NextRequest) {
   const raw = request.cookies.get(DEMO_SESSION_COOKIE)?.value;
@@ -19,10 +20,12 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith(p)
   );
 
-  if (isDemoMode()) {
-    const loggedIn = hasDemoSession(request);
+  // Demo oturumu veya demo modu: Edge'de DEMO_MODE bazen okunmaz; cookie varsa öncelik ver.
+  const demoLoggedIn = hasDemoSession(request);
+  const useDemoAuth = demoLoggedIn || isDemoMode();
 
-    if (isProtected && !loggedIn) {
+  if (useDemoAuth) {
+    if (isProtected && !demoLoggedIn) {
       const url = request.nextUrl.clone();
       url.pathname = "/giris";
       url.searchParams.set("redirect", request.nextUrl.pathname);
@@ -30,7 +33,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     if (
-      loggedIn &&
+      demoLoggedIn &&
       (request.nextUrl.pathname === "/giris" || request.nextUrl.pathname === "/kayit")
     ) {
       const url = request.nextUrl.clone();
@@ -41,8 +44,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = getSupabaseUrl();
+  const supabaseKey = getSupabaseAnonKey();
 
   if (!supabaseUrl || !supabaseKey) {
     return NextResponse.next({ request });
@@ -51,8 +54,8 @@ export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {

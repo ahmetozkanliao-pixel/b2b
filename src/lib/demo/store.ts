@@ -1,11 +1,13 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
-import type { Category, Company, Listing, Message, NewsArticle, Notification, PortfolioItem } from "@/types";
+import type { Category, Company, CompanyType, Listing, Message, NewsArticle, Notification, PortfolioItem } from "@/types";
 import { isInlineImageData, processLogoField } from "./logo-storage";
 import { isInlineImageData as isListingInlineImage, processListingImageField } from "./listing-image-storage";
 import { slugify } from "@/lib/utils";
-import { createInitialDemoStore } from "./seed";
-import type { DemoApplication, DemoChatRoom, DemoSettings, DemoStore } from "./types";
+import { DEMO_USERS } from "./config";
+import { createInitialDemoStore, DEFAULT_DEMO_SETTINGS } from "./seed";
+import type { DemoApplication, DemoChatRoom, DemoRegisteredUser, DemoSettings, DemoStore } from "./types";
+import type { UserRole } from "@/types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const STORE_FILE = path.join(DATA_DIR, "demo-store.json");
@@ -33,6 +35,7 @@ function ensureStore(): DemoStore {
   if (!store.portfolio) store.portfolio = createInitialDemoStore().portfolio;
   if (!store.news) store.news = createInitialDemoStore().news;
   if (!store.categories) store.categories = createInitialDemoStore().categories;
+  if (!store.registeredUsers) store.registeredUsers = [];
 
   mergeProducerSeedData(store);
   mergeCategoriesSeed(store);
@@ -867,4 +870,93 @@ export function getAllDemoListingsAdmin(): Listing[] {
   return [...store.listings].sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
+}
+
+export function findRegisteredDemoUserByEmail(email: string): DemoRegisteredUser | null {
+  const store = ensureStore();
+  return (
+    store.registeredUsers.find((u) => u.email.toLowerCase() === email.toLowerCase()) ?? null
+  );
+}
+
+export function getRegisteredDemoUserById(id: string): DemoRegisteredUser | null {
+  const store = ensureStore();
+  return store.registeredUsers.find((u) => u.id === id) ?? null;
+}
+
+export function getRegisteredDemoUserByToken(token: string): DemoRegisteredUser | null {
+  const store = ensureStore();
+  return store.registeredUsers.find((u) => u.verification_token === token) ?? null;
+}
+
+export function registerDemoUser(input: {
+  email: string;
+  password: string;
+  full_name: string;
+  role: UserRole;
+  company_name: string;
+  verification_token: string;
+}): DemoRegisteredUser {
+  const store = ensureStore();
+  const normalizedEmail = input.email.toLowerCase().trim();
+
+  if (DEMO_USERS.some((u) => u.email.toLowerCase() === normalizedEmail)) {
+    throw new Error("Bu e-posta adresi zaten kayıtlı.");
+  }
+  if (store.registeredUsers.some((u) => u.email.toLowerCase() === normalizedEmail)) {
+    throw new Error("Bu e-posta adresi zaten kayıtlı.");
+  }
+
+  const userId = createId("user");
+  const companyId = createId("company");
+  const now = new Date().toISOString();
+
+  const company: Company = {
+    id: companyId,
+    owner_id: userId,
+    name: input.company_name.trim(),
+    type: input.role as CompanyType,
+    status: "pending",
+    description: null,
+    logo_url: null,
+    website: null,
+    tax_number: null,
+    address: null,
+    city: null,
+    phone: null,
+    email: normalizedEmail,
+    verified: false,
+    slug: slugify(input.company_name),
+    created_at: now,
+  };
+
+  const user: DemoRegisteredUser = {
+    id: userId,
+    email: normalizedEmail,
+    password: input.password,
+    full_name: input.full_name.trim(),
+    role: input.role,
+    company_id: companyId,
+    email_verified: false,
+    verification_token: input.verification_token,
+    created_at: now,
+  };
+
+  store.companies[companyId] = company;
+  store.registeredUsers.push(user);
+  store.settings[userId] = { ...DEFAULT_DEMO_SETTINGS };
+  saveStore(store);
+
+  return user;
+}
+
+export function verifyRegisteredDemoUser(token: string): DemoRegisteredUser | null {
+  const store = ensureStore();
+  const user = store.registeredUsers.find((u) => u.verification_token === token);
+  if (!user) return null;
+
+  user.email_verified = true;
+  user.verification_token = "";
+  saveStore(store);
+  return user;
 }

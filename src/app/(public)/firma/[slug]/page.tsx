@@ -58,11 +58,11 @@ export default async function CompanyProfilePage({
 
     return (
       <>
-        <div className="border-b border-slate-200/80 bg-white">
+        <div className="border-b border-white/10 bg-black">
           <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6 lg:px-8">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700"
+              className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
               Ana Sayfa
@@ -115,11 +115,11 @@ export default async function CompanyProfilePage({
 
   return (
     <>
-      <div className="border-b border-slate-200/80 bg-white">
+      <div className="border-b border-white/10 bg-black">
         <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6 lg:px-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700"
+            className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Ana Sayfa

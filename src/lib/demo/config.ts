@@ -1,10 +1,12 @@
 import type { Category, Company, Listing, UserRole } from "@/types";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 export function isDemoMode() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+  const url = getSupabaseUrl();
+  const key = getSupabaseAnonKey();
   return (
     process.env.DEMO_MODE === "true" ||
+    process.env.NEXT_PUBLIC_DEMO_MODE === "true" ||
     url.includes("placeholder") ||
     key.includes("placeholder")
   );

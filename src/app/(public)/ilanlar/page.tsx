@@ -25,9 +25,12 @@ export default async function ListingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-gray-900">Aktif İlanlar</h1>
-      <p className="mt-2 text-gray-500">Güncel üretim ve tedarik talepleri</p>
+    <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+      <div className="relative">
+        <p className="editorial-label">İlanlar</p>
+        <h1 className="editorial-heading mt-3 text-3xl sm:text-4xl">Aktif İlanlar</h1>
+        <p className="mt-3 text-neutral-400">Güncel üretim ve tedarik talepleri</p>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {listings.length > 0 ? (
@@ -35,10 +38,11 @@ export default async function ListingsPage() {
             <ListingCard key={listing.id} listing={listing} categories={categories} />
           ))
         ) : (
-          <p className="col-span-full py-12 text-center text-gray-500">
+          <p className="col-span-full py-12 text-center text-neutral-500">
             Henüz aktif ilan bulunmuyor.
           </p>
         )}
+      </div>
       </div>
     </div>
   );

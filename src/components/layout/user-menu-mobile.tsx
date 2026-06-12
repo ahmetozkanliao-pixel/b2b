@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import type { UserRole } from "@/types";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 interface SessionUser {
   full_name: string;
@@ -12,13 +13,8 @@ interface SessionUser {
   dashboardPath: string;
 }
 
-const roleLabels: Record<UserRole, string> = {
-  demand_owner: "Talep Sahibi",
-  producer: "Üretici",
-  admin: "Admin",
-};
-
 export function UserMenuMobile({ transparent }: { transparent: boolean }) {
+  const { t } = useI18n();
   const [user, setUser] = useState<SessionUser | null>(null);
   const [totalUnread, setTotalUnread] = useState(0);
   const pathname = usePathname();
@@ -44,10 +40,10 @@ export function UserMenuMobile({ transparent }: { transparent: boolean }) {
             transparent ? "text-slate-300" : "text-slate-600"
           }`}
         >
-          Giriş Yap
+          {t("nav.login")}
         </Link>
-        <Link href="/kayit" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-brand-400">
-          Kayıt Ol
+        <Link href="/kayit" className="rounded-lg px-4 py-2.5 text-sm font-medium text-white">
+          {t("nav.register")}
         </Link>
       </>
     );
@@ -64,7 +60,7 @@ export function UserMenuMobile({ transparent }: { transparent: boolean }) {
           {user.full_name}
         </p>
         <p className={`text-xs ${transparent ? "text-slate-400" : "text-slate-500"}`}>
-          {roleLabels[user.role]}
+          {t(`roles.${user.role}`)}
         </p>
       </div>
       <Link
@@ -73,7 +69,7 @@ export function UserMenuMobile({ transparent }: { transparent: boolean }) {
           transparent ? "text-slate-300 hover:bg-white/5" : "text-slate-600 hover:bg-slate-50"
         }`}
       >
-        Panele Git
+        {t("nav.goToPanel")}
       </Link>
       <Link
         href="/dashboard/firma"
@@ -81,7 +77,7 @@ export function UserMenuMobile({ transparent }: { transparent: boolean }) {
           transparent ? "text-slate-300 hover:bg-white/5" : "text-slate-600 hover:bg-slate-50"
         }`}
       >
-        Firma Profili
+        {t("nav.companyProfile")}
       </Link>
       {user.role !== "admin" && (
         <Link
@@ -92,10 +88,10 @@ export function UserMenuMobile({ transparent }: { transparent: boolean }) {
         >
           <span className="flex items-center gap-2">
             <MessageCircle className="h-4 w-4" />
-            Mesajlar
+            {t("nav.messages")}
           </span>
           {totalUnread > 0 && (
-            <span className="rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold text-white">
+            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
               {totalUnread}
             </span>
           )}

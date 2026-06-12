@@ -13,11 +13,11 @@ export default async function NewsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="text-center sm:text-left">
-        <p className="section-label">Güncel</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <p className="editorial-label">Güncel</p>
+        <h1 className="editorial-heading mt-4 text-4xl sm:text-5xl">
           Haberler
         </h1>
-        <p className="mt-4 text-lg text-slate-500">
+        <p className="mt-4 text-lg text-neutral-400">
           Platformdan ve üretim sektöründen son gelişmeler
         </p>
       </div>

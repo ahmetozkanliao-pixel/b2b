@@ -31,9 +31,9 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-black">
       <Header />
-      <div className="flex pt-[4.25rem]">
+      <div className="flex pt-14">
         <Sidebar
           role={session.role}
           userName={session.full_name}
@@ -47,7 +47,7 @@ export default async function DashboardLayout({
             userEmail={session.email}
             companyName={companyName}
           />
-          <main className="flex-1 overflow-auto">
+          <main className="panel-content flex-1 overflow-auto bg-neutral-950">
             <div className="p-4 sm:p-6 lg:p-8">{children}</div>
           </main>
         </div>

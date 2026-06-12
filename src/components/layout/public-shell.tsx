@@ -12,7 +12,9 @@ export function PublicShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className={cn("min-h-screen", !isHome && "pt-[4.25rem]")}>{children}</main>
+      <main className={cn("public-content bg-ambient min-h-screen", !isHome && "pt-14")}>
+        {children}
+      </main>
       <Footer />
     </>
   );

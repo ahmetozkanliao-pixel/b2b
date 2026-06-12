@@ -11,9 +11,9 @@ export default function RegisterPage({
   searchParams: Promise<{ tip?: string }>;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-card">
-      <h1 className="text-2xl font-bold text-slate-900">Kayıt Ol</h1>
-      <p className="mt-2 text-sm text-slate-500">
+    <div className="auth-card">
+      <h1 className="text-2xl font-semibold text-white">Kayıt Ol</h1>
+      <p className="mt-2 text-sm text-neutral-400">
         Platforma katılarak üretim süreçlerinizi yönetin
       </p>
       <RegisterForm searchParams={searchParams} />

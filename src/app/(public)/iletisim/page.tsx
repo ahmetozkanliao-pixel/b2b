@@ -19,7 +19,7 @@ export default function ContactPage() {
       <p>Sorularınız ve önerileriniz için bizimle iletişime geçin.</p>
 
       {sent ? (
-        <div className="mt-6 rounded-lg bg-green-50 p-4 text-green-700">
+        <div className="mt-6 rounded-lg border border-white/10 bg-white/5 p-4 text-neutral-300">
           Mesajınız alındı. En kısa sürede size dönüş yapacağız.
         </div>
       ) : (
@@ -32,7 +32,7 @@ export default function ContactPage() {
         </form>
       )}
 
-      <div className="mt-8 space-y-2 text-sm text-gray-600">
+      <div className="mt-8 space-y-2 text-sm text-neutral-400">
         <p><strong>E-posta:</strong> info@b2buretim.com</p>
         <p><strong>Telefon:</strong> +90 (212) 000 00 00</p>
         <p><strong>Adres:</strong> İstanbul, Türkiye</p>
