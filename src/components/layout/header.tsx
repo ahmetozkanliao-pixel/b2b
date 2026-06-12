@@ -69,25 +69,27 @@ export function Header() {
           <UserMenu transparent={transparent} />
         </div>
 
-        <button
-          className={cn(
-            "rounded-lg p-2 md:hidden",
-            transparent
-              ? "text-white hover:bg-white/10"
-              : "text-slate-600 hover:bg-slate-100"
-          )}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Menü"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {!isDashboard && (
+          <button
+            className={cn(
+              "rounded-lg p-2 md:hidden",
+              transparent
+                ? "text-white hover:bg-white/10"
+                : "text-slate-600 hover:bg-slate-100"
+            )}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Menü"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        )}
       </div>
 
       <div
         className={cn(
           "border-t md:hidden",
           transparent ? "border-white/10 bg-primary-950/95" : "border-slate-100 bg-white",
-          mobileOpen ? "block" : "hidden"
+          !isDashboard && mobileOpen ? "block" : "hidden"
         )}
       >
         <nav className="flex flex-col gap-1 p-4">

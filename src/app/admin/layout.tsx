@@ -5,6 +5,7 @@ import { isDemoMode } from "@/lib/demo/config";
 import { getDemoUserById } from "@/lib/demo/session";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/dashboard/sidebar";
+import { PanelMobileMenu } from "@/components/dashboard/panel-mobile-menu";
 
 export default async function AdminLayout({
   children,
@@ -29,9 +30,17 @@ export default async function AdminLayout({
             userEmail={session.email}
             companyName={demoUser?.company.name}
           />
-          <main className="flex-1 overflow-auto">
-            <div className="p-6 lg:p-8">{children}</div>
-          </main>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <PanelMobileMenu
+              role="admin"
+              userName={session.full_name}
+              userEmail={session.email}
+              companyName={demoUser?.company.name}
+            />
+            <main className="flex-1 overflow-auto">
+              <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+            </main>
+          </div>
         </div>
       </div>
     );
@@ -66,9 +75,17 @@ export default async function AdminLayout({
           userEmail={user.email ?? ""}
           companyName={company?.name}
         />
-        <main className="flex-1 overflow-auto">
-          <div className="p-6 lg:p-8">{children}</div>
-        </main>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <PanelMobileMenu
+            role="admin"
+            userName={profile?.full_name ?? ""}
+            userEmail={user.email ?? ""}
+            companyName={company?.name}
+          />
+          <main className="flex-1 overflow-auto">
+            <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+          </main>
+        </div>
       </div>
     </div>
   );

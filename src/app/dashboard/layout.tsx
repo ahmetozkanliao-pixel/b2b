@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth/get-session";
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/dashboard/sidebar";
+import { PanelMobileMenu } from "@/components/dashboard/panel-mobile-menu";
 import { getDemoUserById } from "@/lib/demo/session";
 
 export default async function DashboardLayout({
@@ -39,9 +40,17 @@ export default async function DashboardLayout({
           userEmail={session.email}
           companyName={companyName}
         />
-        <main className="flex-1 overflow-auto">
-          <div className="p-6 lg:p-8">{children}</div>
-        </main>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <PanelMobileMenu
+            role={session.role}
+            userName={session.full_name}
+            userEmail={session.email}
+            companyName={companyName}
+          />
+          <main className="flex-1 overflow-auto">
+            <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+          </main>
+        </div>
       </div>
     </div>
   );
