@@ -172,6 +172,7 @@ export function RegisterForm({
       <Input
         id="fullName"
         label={t("auth.fullName")}
+        variant="dark"
         value={fullName}
         onChange={(e) => setFullName(e.target.value)}
         placeholder={t("auth.fullName")}
@@ -180,6 +181,7 @@ export function RegisterForm({
       <Input
         id="companyName"
         label={t("auth.companyName")}
+        variant="dark"
         value={companyName}
         onChange={(e) => setCompanyName(e.target.value)}
         placeholder={t("auth.companyName")}
@@ -189,6 +191,7 @@ export function RegisterForm({
         id="email"
         label={t("auth.email")}
         type="email"
+        variant="dark"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="ornek@sirket.com"
@@ -198,6 +201,7 @@ export function RegisterForm({
         id="password"
         label={t("auth.passwordField")}
         type="password"
+        variant="dark"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="En az 6 karakter"

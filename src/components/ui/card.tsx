@@ -7,15 +7,16 @@ interface CardProps {
   variant?: "light" | "dark";
 }
 
-export function Card({ children, className, hover, variant = "dark" }: CardProps) {
+export function Card({ children, className, hover, variant = "light" }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-xl text-neutral-100",
+        "rounded-xl",
         variant === "dark"
-          ? "gradient-box shadow-card"
-          : "border border-neutral-200 bg-white text-neutral-900 shadow-card",
-        hover && "gradient-box-hover",
+          ? "gradient-box text-neutral-100 shadow-card"
+          : "border border-primary-100 bg-white text-slate-900 shadow-soft",
+        hover && variant === "dark" && "gradient-box-hover",
+        hover && variant === "light" && "transition-shadow hover:shadow-card-hover",
         className
       )}
     >
@@ -34,12 +35,7 @@ export function CardContent({ children, className }: { children: React.ReactNode
 
 export function CardFooter({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div
-      className={cn(
-        "border-t border-transparent p-6 [border-image:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)_1]",
-        className
-      )}
-    >
+    <div className={cn("border-t border-primary-100 p-6", className)}>
       {children}
     </div>
   );

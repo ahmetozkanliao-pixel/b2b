@@ -8,12 +8,14 @@ interface LanguageSwitcherProps {
   className?: string;
   compact?: boolean;
   transparent?: boolean;
+  onDark?: boolean;
 }
 
 export function LanguageSwitcher({
   className,
   compact = false,
   transparent = false,
+  onDark = false,
 }: LanguageSwitcherProps) {
   const { locale, setLocale, t } = useI18n();
 
@@ -31,9 +33,11 @@ export function LanguageSwitcher({
         <span
           className={cn(
             "mr-1 text-xs font-medium uppercase tracking-wider",
-            transparent
-              ? "text-neutral-500 dark:text-white/50"
-              : "text-slate-400"
+            onDark
+              ? "text-slate-400"
+              : transparent
+                ? "text-neutral-500"
+                : "text-slate-400"
           )}
         >
           {t("language.switchLabel")}
@@ -49,12 +53,16 @@ export function LanguageSwitcher({
             className={cn(
               "rounded-lg px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors",
               active
-                ? transparent
-                  ? "bg-neutral-900/10 text-neutral-900 dark:bg-white/15 dark:text-white"
-                  : "bg-brand-50 text-brand-700"
-                : transparent
-                  ? "text-neutral-500 hover:bg-neutral-900/5 hover:text-neutral-900 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                ? onDark
+                  ? "bg-brand-500/25 text-brand-100 ring-1 ring-brand-400/30"
+                  : transparent
+                    ? "bg-neutral-900/10 text-neutral-900"
+                    : "bg-brand-50 text-brand-700"
+                : onDark
+                  ? "text-slate-400 hover:bg-white/5 hover:text-white"
+                  : transparent
+                    ? "text-neutral-500 hover:bg-neutral-900/5 hover:text-neutral-900"
+                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
             )}
             aria-pressed={active}
           >

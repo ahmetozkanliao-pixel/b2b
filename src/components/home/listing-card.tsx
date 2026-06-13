@@ -60,7 +60,7 @@ export function ListingCard({ listing, categories }: ListingCardProps) {
 
         <Link
           href={`/ilanlar/${listing.id}`}
-          className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-white transition-colors hover:text-neutral-300"
+          className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-600 transition-colors hover:text-brand-700"
         >
           {t("common.viewDetails")}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

@@ -22,18 +22,19 @@ export function Logo({
   size = "md",
   showText = true,
   href = "/",
-  variant: _variant = "dark",
+  variant = "dark",
   className,
 }: LogoProps) {
   const { t } = useI18n();
   const s = sizes[size];
-  const textColor = "text-neutral-900 dark:text-white";
+  const isLight = variant === "light";
+  const textColor = isLight ? "text-white" : "text-slate-900";
 
   const content = (
     <div className={cn("flex items-center gap-2.5", className)}>
       <div
         className={cn(
-          "flex items-center justify-center rounded-md border border-neutral-300 bg-neutral-900 font-semibold text-white dark:border-white/20 dark:bg-white dark:text-black",
+          "flex items-center justify-center rounded-xl gradient-brand font-bold text-white shadow-soft",
           s.box
         )}
       >
@@ -41,11 +42,16 @@ export function Logo({
       </div>
       {showText && (
         <div className="flex flex-col leading-tight">
-          <span className={cn("font-semibold tracking-tight", s.text, textColor)}>
+          <span className={cn("font-bold tracking-tight", s.text, textColor)}>
             {t("logo.tagline")}
           </span>
           {size !== "sm" && (
-            <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-500 dark:text-neutral-500">
+            <span
+              className={cn(
+                "text-[10px] font-medium uppercase tracking-widest",
+                isLight ? "text-brand-300" : "text-slate-400"
+              )}
+            >
               {t("logo.subtitle")}
             </span>
           )}

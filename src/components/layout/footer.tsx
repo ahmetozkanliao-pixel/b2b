@@ -27,7 +27,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t border-neutral-200 bg-white text-neutral-600 dark:border-white/10 dark:bg-black dark:text-neutral-400">
+    <footer className="border-t border-neutral-200 bg-white text-neutral-600">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
@@ -46,7 +46,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                    className="text-sm text-slate-600 transition-colors hover:text-brand-600"
                   >
                     {link.label}
                   </Link>
@@ -64,7 +64,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                    className="text-sm text-slate-600 transition-colors hover:text-brand-600"
                   >
                     {link.label}
                   </Link>
@@ -82,7 +82,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                    className="text-sm text-slate-600 transition-colors hover:text-brand-600"
                   >
                     {link.label}
                   </Link>
@@ -92,7 +92,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-neutral-200 pt-8 text-center text-sm text-neutral-500 dark:border-white/10 dark:text-neutral-600">
+        <div className="mt-12 border-t border-neutral-200 pt-8 text-center text-sm text-neutral-500">
           © {new Date().getFullYear()} {t("footer.copyright")}
         </div>
       </div>

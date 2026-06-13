@@ -7,18 +7,20 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: "bg-gradient-to-b from-white to-neutral-200 text-black hover:from-neutral-100 hover:to-neutral-300 shadow-soft",
-  brand: "bg-gradient-to-b from-white to-neutral-200 text-black hover:from-neutral-100 hover:to-neutral-300 shadow-soft",
-  secondary: "gradient-box gradient-box-hover text-white",
-  outline: "gradient-box gradient-box-hover text-white",
-  ghost: "text-neutral-400 hover:bg-white/5 hover:text-white",
-  danger: "bg-gradient-to-b from-red-600 to-red-700 text-white hover:from-red-500 hover:to-red-600",
+  primary: "bg-primary-800 text-white hover:bg-primary-900 shadow-soft",
+  brand: "gradient-brand text-white hover:opacity-90 shadow-soft",
+  secondary:
+    "bg-white text-primary-800 border border-slate-200 hover:bg-slate-50 shadow-soft",
+  outline:
+    "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50",
+  ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+  danger: "bg-red-600 text-white hover:bg-red-700",
 };
 
 const sizes = {
   sm: "px-3.5 py-2 text-sm rounded-lg",
-  md: "px-5 py-2.5 text-sm rounded-lg",
-  lg: "px-6 py-3 text-sm rounded-lg",
+  md: "px-5 py-2.5 text-sm rounded-xl",
+  lg: "px-7 py-3.5 text-base rounded-xl",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -26,8 +28,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={cn(
-        "inline-flex items-center justify-center gap-2 font-medium transition-all duration-300",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+        "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],

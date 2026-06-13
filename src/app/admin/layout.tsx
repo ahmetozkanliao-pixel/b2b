@@ -21,7 +21,7 @@ export default async function AdminLayout({
     const demoUser = getDemoUserById(session.id);
 
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-primary-950">
         <Header />
         <div className="flex pt-14">
           <Sidebar
@@ -37,7 +37,7 @@ export default async function AdminLayout({
               userEmail={session.email}
               companyName={demoUser?.company.name}
             />
-            <main className="panel-content flex-1 overflow-auto bg-neutral-950">
+            <main className="panel-content panel-main flex-1 overflow-auto">
               <div className="p-4 sm:p-6 lg:p-8">{children}</div>
             </main>
           </div>
@@ -66,7 +66,7 @@ export default async function AdminLayout({
     .maybeSingle();
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-primary-950">
       <Header />
       <div className="flex pt-14">
         <Sidebar
@@ -82,7 +82,7 @@ export default async function AdminLayout({
             userEmail={user.email ?? ""}
             companyName={company?.name}
           />
-          <main className="panel-content flex-1 overflow-auto bg-neutral-950">
+          <main className="panel-content panel-main flex-1 overflow-auto">
             <div className="p-4 sm:p-6 lg:p-8">{children}</div>
           </main>
         </div>

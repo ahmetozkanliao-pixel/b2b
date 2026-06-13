@@ -19,7 +19,7 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
         className="fixed right-0 top-1/2 z-40 hidden -translate-y-1/2 lg:block"
         aria-label={t("home.chapters.sections")}
       >
-        <nav className="chapter-nav-rail flex flex-col gap-0.5 rounded-l-xl border border-r-0 border-white/10 bg-black/90 py-3 pl-2 pr-3 backdrop-blur-xl">
+        <nav className="chapter-nav-rail flex flex-col gap-0.5 rounded-l-xl border border-r-0 border-neutral-200 bg-white/95 py-3 pl-2 pr-3 backdrop-blur-xl">
           <p className="mb-2 px-2 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">
             {t("home.chapters.sections")}
           </p>
@@ -35,7 +35,7 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
                 title={label}
                 className={cn(
                   "group flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left transition-all duration-300",
-                  isActive ? "bg-white/10" : "hover:bg-white/5"
+                  isActive ? "bg-brand-50" : "hover:bg-neutral-50"
                 )}
                 aria-current={isActive ? "true" : undefined}
               >
@@ -43,8 +43,8 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
                   className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-md font-mono text-[10px] tabular-nums transition-colors",
                     isActive
-                      ? "bg-white text-black"
-                      : "bg-white/5 text-neutral-500 group-hover:bg-white/10"
+                      ? "bg-brand-500 text-white"
+                      : "bg-neutral-100 text-neutral-500 group-hover:bg-neutral-200"
                   )}
                 >
                   {chapter.number}
@@ -52,7 +52,7 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
                 <span
                   className={cn(
                     "min-w-0 text-[10px] font-medium uppercase leading-tight tracking-wide transition-colors",
-                    isActive ? "text-white" : "text-neutral-500 group-hover:text-neutral-300"
+                    isActive ? "text-brand-700" : "text-neutral-500 group-hover:text-neutral-700"
                   )}
                 >
                   <span className="hidden xl:inline">{label}</span>
@@ -65,7 +65,7 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
       </aside>
 
       <nav
-        className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/90 px-3 py-2 backdrop-blur-xl lg:hidden"
+        className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-neutral-200 bg-white/95 px-3 py-2 backdrop-blur-xl lg:hidden"
         aria-label={t("home.chapters.sections")}
       >
         {chapters.map((chapter) => {
@@ -77,7 +77,7 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
               onClick={() => onNavigate(chapter.id)}
               className={cn(
                 "rounded-full transition-all duration-300",
-                isActive ? "h-2.5 w-6 bg-white" : "h-2 w-2 bg-neutral-600 hover:bg-neutral-400"
+                isActive ? "h-2.5 w-6 bg-brand-500" : "h-2 w-2 bg-neutral-300 hover:bg-neutral-400"
               )}
               aria-label={t(chapter.labelKey)}
               aria-current={isActive ? "true" : undefined}

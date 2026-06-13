@@ -32,14 +32,7 @@ export default async function RootLayout({
   const locale = await getLocale();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("b2b-theme");if(t==="dark")document.documentElement.classList.add("dark")}catch(e){}})();`,
-          }}
-        />
-      </head>
+    <html lang={locale}>
       <body className={`${inter.className} ${inter.variable} font-sans antialiased`}>
         <AppProviders initialLocale={locale}>{children}</AppProviders>
       </body>

@@ -6,11 +6,6 @@ export const tr: Dictionary = {
     en: "English",
     switchLabel: "Dil",
   },
-  theme: {
-    switchLabel: "Tema",
-    light: "Gündüz modu",
-    dark: "Gece modu",
-  },
   common: {
     menu: "Menü",
     panel: "Panel",

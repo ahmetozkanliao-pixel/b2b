@@ -19,14 +19,34 @@ export function Hero() {
     <section
       id="giris"
       data-chapter="giris"
-      className="relative flex min-h-screen flex-col overflow-hidden bg-ambient"
+      className="surface-dark relative flex min-h-screen flex-col overflow-hidden gradient-hero"
     >
-      <div className="resend-grid absolute inset-0" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 section-ambient" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(160,160,180,0.1),transparent_50%),radial-gradient(ellipse_at_70%_80%,rgba(100,100,120,0.07),transparent_45%)]"
+        className="hero-orb hero-orb-delay-1 -left-20 top-20 h-72 w-72 bg-brand-500/25"
         aria-hidden
       />
+      <div
+        className="hero-orb hero-orb-delay-2 -right-16 top-1/3 h-96 w-96 bg-primary-400/20"
+        aria-hidden
+      />
+      <div
+        className="hero-orb hero-orb-delay-3 bottom-20 left-1/3 h-64 w-64 bg-emerald-500/15"
+        aria-hidden
+      />
+
+      <div
+        className="hero-grid-move absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+          backgroundSize: "48px 48px",
+        }}
+        aria-hidden
+      />
+
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(20,184,166,0.18),transparent_55%)]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(42,68,112,0.35),transparent_60%)]" aria-hidden />
+      <div className="resend-grid absolute inset-0" aria-hidden />
 
       <div className="relative mx-auto flex flex-1 w-full max-w-7xl flex-col justify-center px-4 pb-28 pt-[5.5rem] sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -35,22 +55,19 @@ export function Hero() {
               {t("home.hero.label")}
             </p>
 
-            <h1 className="hero-fade-up hero-fade-up-2 editorial-heading-light mt-5 text-4xl sm:text-5xl lg:text-6xl xl:text-[3.5rem]">
+            <h1 className="hero-fade-up hero-fade-up-2 mt-5 text-balance text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[3.5rem]">
               <span className="block">{t("home.hero.title1")}</span>
-              <span className="block text-neutral-400">{t("home.hero.title2")}</span>
+              <span className="hero-gradient-text block">{t("home.hero.title2")}</span>
               <span className="block">{t("home.hero.title3")}</span>
             </h1>
 
-            <p className="hero-fade-up hero-fade-up-3 mt-6 max-w-xl text-base leading-relaxed text-neutral-400 sm:text-lg">
+            <p className="hero-fade-up hero-fade-up-3 mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
               {t("home.hero.subtitle")}
             </p>
 
             <div className="hero-fade-up hero-fade-up-4 mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/kayit?tip=talep" className="w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  className="group h-11 w-full min-w-[200px] rounded-lg bg-white px-6 text-sm font-medium text-black hover:bg-neutral-200 sm:w-auto"
-                >
+                <Button size="lg" className="group h-11 w-full min-w-[200px] sm:w-auto">
                   {t("home.hero.ctaDemand")}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Button>
@@ -59,7 +76,7 @@ export function Hero() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-11 w-full min-w-[200px] rounded-lg border-white/15 bg-transparent px-6 text-sm font-medium text-white hover:border-white/30 hover:bg-white/5 sm:w-auto"
+                  className="h-11 w-full min-w-[200px] border-white/20 bg-white/5 text-white hover:border-white/30 hover:bg-white/10 sm:w-auto"
                 >
                   {t("home.hero.ctaProducer")}
                 </Button>
@@ -70,7 +87,7 @@ export function Hero() {
               {stats.map((stat) => (
                 <div key={stat.label}>
                   <p className="text-xl font-semibold text-white sm:text-2xl">{stat.value}</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-wider text-neutral-500 sm:text-xs">
+                  <p className="mt-1 text-[10px] uppercase tracking-wider text-slate-400 sm:text-xs">
                     {stat.label}
                   </p>
                 </div>
@@ -86,7 +103,7 @@ export function Hero() {
 
       <a
         href="#platform"
-        className="hero-fade-up hero-fade-up-6 absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-neutral-500 transition-colors hover:text-white"
+        className="hero-fade-up hero-fade-up-6 absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-slate-400 transition-colors hover:text-brand-300"
         aria-label={t("home.chapters.scrollToPlatform")}
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.2em]">

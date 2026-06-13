@@ -169,6 +169,7 @@ export function LoginForm() {
         id="email"
         label={t("auth.email")}
         type="email"
+        variant="dark"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="demo@talep.com veya demo@uretici.com"
@@ -178,6 +179,7 @@ export function LoginForm() {
         id="password"
         label={t("auth.passwordField")}
         type="password"
+        variant="dark"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="••••••••"

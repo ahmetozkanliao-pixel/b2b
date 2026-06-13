@@ -42,9 +42,9 @@ export function BenefitsChapter() {
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
         <ScrollReveal className="max-w-3xl">
           <p className="editorial-label">{t("home.benefits.label")}</p>
-          <h2 className="editorial-heading-light mt-6 text-4xl sm:text-5xl lg:text-6xl">
+          <h2 className="editorial-heading-light mt-6 text-4xl text-white sm:text-5xl lg:text-6xl">
             {t("home.benefits.titleLine1")}
-            <span className="block text-neutral-500">{t("home.benefits.titleLine2")}</span>
+            <span className="block text-slate-400">{t("home.benefits.titleLine2")}</span>
           </h2>
         </ScrollReveal>
 

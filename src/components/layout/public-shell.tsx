@@ -12,7 +12,7 @@ export function PublicShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className={cn("public-content bg-ambient min-h-screen", !isHome && "pt-14")}>
+      <main className={cn("public-content min-h-screen", !isHome && "bg-page pt-14")}>
         {children}
       </main>
       <Footer />

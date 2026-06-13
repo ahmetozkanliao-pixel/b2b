@@ -31,7 +31,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-primary-950">
       <Header />
       <div className="flex pt-14">
         <Sidebar
@@ -47,7 +47,7 @@ export default async function DashboardLayout({
             userEmail={session.email}
             companyName={companyName}
           />
-          <main className="panel-content flex-1 overflow-auto bg-neutral-950">
+          <main className="panel-content panel-main flex-1 overflow-auto">
             <div className="p-4 sm:p-6 lg:p-8">{children}</div>
           </main>
         </div>

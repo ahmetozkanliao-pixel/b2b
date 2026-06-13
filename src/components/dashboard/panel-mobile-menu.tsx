@@ -67,19 +67,17 @@ export function PanelMobileMenu({
 
   return (
     <div className="lg:hidden">
-      <div className="sticky top-14 z-40 flex items-center justify-between border-b border-white/10 bg-black px-4 py-3">
+      <div className="panel-sidebar sticky top-14 z-40 flex items-center justify-between border-b px-4 py-3">
         <div className="min-w-0">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-neutral-500">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-brand-300">
             {t("common.panel")}
           </p>
-          <p className="truncate text-sm font-medium text-white">
-            {activeLabel}
-          </p>
+          <p className="truncate text-sm font-medium text-white">{activeLabel}</p>
         </div>
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-neutral-300 transition-colors hover:bg-white/10"
+          className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-brand-500/15"
           aria-label={t("common.openPanelMenu")}
         >
           <Menu className="h-4 w-4" />
@@ -91,17 +89,17 @@ export function PanelMobileMenu({
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
-            className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-primary-950/70 backdrop-blur-[2px]"
             onClick={() => setOpen(false)}
             aria-label={t("common.closeMenu")}
           />
-          <div className="absolute inset-y-0 left-0 flex w-[min(20rem,88vw)] flex-col border-r border-white/10 bg-black shadow-2xl">
+          <div className="panel-sidebar absolute inset-y-0 left-0 flex w-[min(20rem,88vw)] flex-col border-r shadow-2xl">
             <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
               <span className="font-medium text-white">{t("common.panelMenu")}</span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-lg p-2 text-neutral-400 hover:bg-white/5"
+                className="rounded-lg p-2 text-slate-400 hover:bg-white/5"
                 aria-label={t("common.closeMenu")}
               >
                 <X className="h-5 w-5" />
@@ -112,26 +110,24 @@ export function PanelMobileMenu({
               <Link
                 href={role === "admin" ? "/admin" : "/dashboard/firma"}
                 onClick={() => setOpen(false)}
-                className="mx-4 mt-4 flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 transition-colors hover:border-white/20"
+                className="mx-4 mt-4 flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3 transition-colors hover:border-brand-400/30"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white text-sm font-semibold text-black">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md gradient-brand text-sm font-semibold text-white">
                   {getInitials(userName)}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">
-                    {userName}
-                  </p>
+                  <p className="truncate text-sm font-medium text-white">{userName}</p>
                   {companyName ? (
-                    <p className="truncate text-xs text-neutral-500">{companyName}</p>
+                    <p className="truncate text-xs text-slate-400">{companyName}</p>
                   ) : (
-                    <p className="truncate text-xs text-neutral-500">{userEmail}</p>
+                    <p className="truncate text-xs text-slate-400">{userEmail}</p>
                   )}
                 </div>
               </Link>
             )}
 
             <div className="px-4 pt-2">
-              <LanguageSwitcher transparent />
+              <LanguageSwitcher transparent onDark />
             </div>
 
             <nav className="flex-1 space-y-1 overflow-y-auto p-4">
@@ -146,8 +142,8 @@ export function PanelMobileMenu({
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
                       isActive
-                        ? "bg-white/10 text-white"
-                        : "text-neutral-400 hover:bg-white/5 hover:text-white"
+                        ? "bg-brand-500/20 text-brand-100 ring-1 ring-brand-400/25"
+                        : "text-slate-400 hover:bg-white/5 hover:text-white"
                     )}
                   >
                     <link.icon className="h-4 w-4 shrink-0" />
@@ -161,7 +157,7 @@ export function PanelMobileMenu({
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
               >
                 <LogOut className="h-5 w-5" />
                 {t("common.logout")}
