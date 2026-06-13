@@ -113,7 +113,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
       <div
         className={cn(
           "h-9 w-24 animate-pulse rounded-full",
-          transparent ? "bg-white/10" : "bg-slate-100"
+          transparent ? "bg-neutral-900/5 dark:bg-white/10" : "bg-slate-100"
         )}
       />
     );
@@ -127,7 +127,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
           className={cn(
             "px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors",
             transparent
-              ? "text-white/80 hover:text-white"
+              ? "text-neutral-700 hover:text-neutral-900 dark:text-white/80 dark:hover:text-white"
               : "text-slate-600 hover:text-primary-800"
           )}
         >
@@ -138,7 +138,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
             className={cn(
               "inline-flex h-9 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-wider transition-colors",
               transparent
-                ? "border border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"
+                ? "border border-neutral-300 bg-neutral-900/5 text-neutral-900 backdrop-blur-sm hover:bg-neutral-900/10 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
                 : "gradient-brand text-white shadow-soft hover:opacity-90"
             )}
           >
@@ -157,7 +157,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
         className={cn(
           "flex items-center gap-2 rounded-full py-1.5 pl-1.5 pr-3 transition-colors",
           transparent
-            ? "bg-white/10 text-white hover:bg-white/15"
+            ? "bg-neutral-900/5 text-neutral-900 hover:bg-neutral-900/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
             : "bg-slate-100 text-slate-900 hover:bg-slate-200/80"
         )}
         aria-expanded={open}
@@ -176,7 +176,7 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
           <span
             className={cn(
               "block text-[10px] font-medium",
-              transparent ? "text-white/60" : "text-slate-500"
+              transparent ? "text-neutral-500 dark:text-white/60" : "text-slate-500"
             )}
           >
             {t(`roles.${user.role}`)}
@@ -186,15 +186,15 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
           className={cn(
             "h-4 w-4 transition-transform",
             open && "rotate-180",
-            transparent ? "text-white/70" : "text-slate-500"
+            transparent ? "text-neutral-600 dark:text-white/70" : "text-slate-500"
           )}
         />
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-xl border border-white/10 bg-neutral-950 shadow-xl">
-          <div className="border-b border-white/10 bg-white/[0.03] px-4 py-3">
-            <p className="truncate text-sm font-medium text-white">{user.full_name}</p>
+        <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl dark:border-white/10 dark:bg-neutral-950">
+          <div className="border-b border-neutral-200 bg-neutral-50 px-4 py-3 dark:border-white/10 dark:bg-white/[0.03]">
+            <p className="truncate text-sm font-medium text-neutral-900 dark:text-white">{user.full_name}</p>
             <p className="truncate text-xs text-neutral-500">{user.email}</p>
             {user.companyName && (
               <p className="mt-1 truncate text-xs font-medium text-neutral-400">{user.companyName}</p>
@@ -237,11 +237,11 @@ export function UserMenu({ transparent = false }: UserMenuProps) {
               onClick={() => setOpen(false)}
             />
           </div>
-          <div className="border-t border-white/10 p-2">
+          <div className="border-t border-neutral-200 p-2 dark:border-white/10">
             <button
               type="button"
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/5 dark:hover:text-white"
             >
               <LogOut className="h-4 w-4" />
               {t("common.logout")}
@@ -270,7 +270,7 @@ function MenuLink({
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/5 dark:hover:text-white"
     >
       <Icon className="h-4 w-4 text-neutral-500" />
       <span className="flex-1">{label}</span>

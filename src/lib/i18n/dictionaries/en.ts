@@ -6,6 +6,11 @@ export const en: Dictionary = {
     en: "English",
     switchLabel: "Language",
   },
+  theme: {
+    switchLabel: "Theme",
+    light: "Light mode",
+    dark: "Dark mode",
+  },
   common: {
     menu: "Menu",
     panel: "Panel",

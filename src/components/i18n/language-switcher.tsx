@@ -31,7 +31,9 @@ export function LanguageSwitcher({
         <span
           className={cn(
             "mr-1 text-xs font-medium uppercase tracking-wider",
-            transparent ? "text-white/50" : "text-slate-400"
+            transparent
+              ? "text-neutral-500 dark:text-white/50"
+              : "text-slate-400"
           )}
         >
           {t("language.switchLabel")}
@@ -48,10 +50,10 @@ export function LanguageSwitcher({
               "rounded-lg px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors",
               active
                 ? transparent
-                  ? "bg-white/15 text-white"
+                  ? "bg-neutral-900/10 text-neutral-900 dark:bg-white/15 dark:text-white"
                   : "bg-brand-50 text-brand-700"
                 : transparent
-                  ? "text-white/60 hover:bg-white/10 hover:text-white"
+                  ? "text-neutral-500 hover:bg-neutral-900/5 hover:text-neutral-900 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white"
                   : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
             )}
             aria-pressed={active}
