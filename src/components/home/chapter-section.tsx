@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type ChapterVariant = "dark" | "light" | "muted";
+type ChapterVariant = "dark" | "light" | "muted" | "white";
 
 interface ChapterSectionProps {
   id: string;
@@ -14,6 +14,7 @@ const variantStyles: Record<ChapterVariant, string> = {
   dark: "chapter-bg-dark surface-dark section-divider text-slate-200",
   light: "chapter-bg-light section-divider text-slate-900",
   muted: "chapter-bg-muted section-divider text-slate-900",
+  white: "chapter-bg-white section-divider text-slate-900",
 };
 
 export function ChapterSection({

@@ -16,13 +16,13 @@ export function NewsSection({ articles }: NewsSectionProps) {
   const { t } = useI18n();
 
   return (
-    <ChapterSection id="haberler" variant="muted" className="!min-h-0">
-      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+    <ChapterSection id="haberler" variant="dark" className="!min-h-0">
+      <div className="resend-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
         <ScrollReveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>
             <p className="editorial-label">{t("home.news.label")}</p>
-            <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
+            <h2 className="editorial-heading-light mt-4 text-4xl text-white sm:text-5xl lg:text-6xl">
               {t("home.news.title")}
             </h2>
             <p className="mt-4 max-w-md text-base leading-relaxed text-neutral-400 sm:text-lg">
@@ -30,7 +30,10 @@ export function NewsSection({ articles }: NewsSectionProps) {
             </p>
           </div>
           <Link href="/haberler" className="hidden sm:block">
-            <Button variant="outline" className="rounded-lg px-6">
+            <Button
+              variant="outline"
+              className="rounded-lg border-white/20 bg-white/5 px-6 text-white hover:border-white/30 hover:bg-white/10"
+            >
               {t("common.allNews")}
             </Button>
           </Link>
@@ -42,7 +45,10 @@ export function NewsSection({ articles }: NewsSectionProps) {
 
         <div className="mt-10 text-center sm:hidden">
           <Link href="/haberler">
-            <Button variant="outline" className="rounded-full px-6">
+            <Button
+              variant="outline"
+              className="rounded-lg border-white/20 bg-white/5 px-6 text-white hover:border-white/30 hover:bg-white/10"
+            >
               {t("common.allNews")}
             </Button>
           </Link>

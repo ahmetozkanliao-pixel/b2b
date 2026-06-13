@@ -56,12 +56,12 @@ export function CompaniesShowcase({ demand, producers }: CompaniesShowcaseProps)
   if (demand.length === 0 && producers.length === 0) return null;
 
   return (
-    <ChapterSection id="firmalar" variant="light" className="!min-h-0">
-      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+    <ChapterSection id="firmalar" variant="dark" className="!min-h-0">
+      <div className="resend-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
         <ScrollReveal className="mx-auto max-w-3xl text-center">
           <p className="editorial-label">{t("home.companies.references")}</p>
-          <h2 className="editorial-heading mt-4 text-4xl sm:text-5xl lg:text-6xl">
+          <h2 className="editorial-heading-light mt-4 text-4xl text-white sm:text-5xl lg:text-6xl">
             {t("home.companies.title")}
           </h2>
           <p className="mt-6 text-base leading-relaxed text-neutral-400 sm:text-lg">

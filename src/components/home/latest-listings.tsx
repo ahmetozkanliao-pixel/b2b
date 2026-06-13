@@ -66,8 +66,7 @@ export function LatestListings() {
   const { t } = useI18n();
 
   return (
-    <ChapterSection id="ilanlar" variant="light" className="!min-h-0">
-      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+    <ChapterSection id="ilanlar" variant="white" className="!min-h-0">
       <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
         <ScrollReveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>

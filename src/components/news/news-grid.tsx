@@ -37,15 +37,15 @@ export function NewsGrid({ articles }: NewsGridProps) {
             <p className="font-mono text-[11px] uppercase tracking-wide text-neutral-500">
               {article.published_at && formatDate(article.published_at)}
             </p>
-            <h3 className="mt-2 line-clamp-2 text-lg font-medium text-white transition-colors group-hover:text-neutral-300">
+            <h3 className="mt-2 line-clamp-2 text-lg font-medium text-slate-900 transition-colors group-hover:text-brand-600">
               {article.title}
             </h3>
-            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-400">
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">
               {article.summary}
             </p>
             <Link
               href={`/haberler/${article.slug}`}
-              className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-white transition-colors hover:text-neutral-300"
+              className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-600 transition-colors hover:text-brand-700"
             >
               Devamını Oku
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

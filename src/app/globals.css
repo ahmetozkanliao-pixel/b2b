@@ -143,6 +143,10 @@
     background: linear-gradient(180deg, #e2e8f0 0%, #f0f4fa 45%, #f8fafc 80%, #ffffff 100%);
   }
 
+  .chapter-bg-white {
+    background: #ffffff;
+  }
+
   .section-divider {
     position: relative;
   }

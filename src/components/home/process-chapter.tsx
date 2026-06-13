@@ -77,15 +77,15 @@ export function ProcessChapter() {
   const phase = phases[activePhase];
 
   return (
-    <ChapterSection id="surec" variant="muted">
-      <div className="resend-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+    <ChapterSection id="surec" variant="dark">
+      <div className="resend-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="lg:grid lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
             <p className="editorial-label">{t("home.process.label")}</p>
-            <h2 className="editorial-heading mt-6 text-4xl sm:text-5xl lg:text-6xl">
+            <h2 className="editorial-heading-light mt-6 text-4xl text-white sm:text-5xl lg:text-6xl">
               {t("home.process.titleLine1")}
-              <span className="block text-neutral-500">{t("home.process.titleLine2")}</span>
+              <span className="hero-gradient-text block">{t("home.process.titleLine2")}</span>
             </h2>
             <p className="mt-6 max-w-md text-base leading-relaxed text-neutral-400 sm:text-lg">
               {t("home.process.description")}
@@ -115,7 +115,10 @@ export function ProcessChapter() {
             </div>
 
             <Link href="/nasil-calisir" className="mt-10 hidden lg:inline-block">
-              <Button variant="outline" className="rounded-lg px-6">
+              <Button
+                variant="outline"
+                className="rounded-lg border-white/20 bg-white/5 px-6 text-white hover:border-white/30 hover:bg-white/10"
+              >
                 {t("home.process.viewAllSteps")}
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -152,7 +155,10 @@ export function ProcessChapter() {
 
         <div className="mt-10 text-center lg:hidden">
           <Link href="/nasil-calisir">
-            <Button variant="outline" className="rounded-lg px-6">
+            <Button
+              variant="outline"
+              className="rounded-lg border-white/20 bg-white/5 px-6 text-white hover:border-white/30 hover:bg-white/10"
+            >
               {t("home.process.viewAllSteps")}
             </Button>
           </Link>
