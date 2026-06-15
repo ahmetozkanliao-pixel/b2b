@@ -6,13 +6,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import { Building2, Factory, Shield } from "lucide-react";
+import { Building2, Factory, Shield, Crown } from "lucide-react";
 import { useI18n } from "@/components/i18n/i18n-provider";
+import {
+  DEMO_ADMIN_USER,
+  DEMO_DEMAND_USER,
+  DEMO_PRODUCER_FREE_USER,
+  DEMO_PRODUCER_USER,
+} from "@/lib/demo/config";
 
 const DEMO_ACCOUNTS = {
-  demand: { email: "demo@talep.com", password: "Talep2026!" },
-  producer: { email: "demo@uretici.com", password: "Uretici2026!" },
-  admin: { email: "demo@admin.com", password: "Admin2026!" },
+  demand: { email: DEMO_DEMAND_USER.email, password: DEMO_DEMAND_USER.password },
+  producerFree: {
+    email: DEMO_PRODUCER_FREE_USER.email,
+    password: DEMO_PRODUCER_FREE_USER.password,
+  },
+  producerPro: { email: DEMO_PRODUCER_USER.email, password: DEMO_PRODUCER_USER.password },
+  admin: { email: DEMO_ADMIN_USER.email, password: DEMO_ADMIN_USER.password },
 };
 
 export function LoginForm() {
@@ -97,16 +107,16 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="gradient-box rounded-lg p-4">
-          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
-            <Building2 className="h-4 w-4 text-neutral-400" />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+            <Building2 className="h-4 w-4 text-brand-600" />
             {t("auth.demoDemand")}
           </div>
-          <p className="text-xs leading-relaxed text-neutral-400">
-            <strong className="text-neutral-200">{DEMO_ACCOUNTS.demand.email}</strong>
+          <p className="text-xs leading-relaxed text-slate-600">
+            <strong className="text-slate-800">{DEMO_ACCOUNTS.demand.email}</strong>
             <br />
-            {t("auth.password")}: <strong className="text-neutral-200">{DEMO_ACCOUNTS.demand.password}</strong>
+            {t("auth.password")}: <strong className="text-slate-800">{DEMO_ACCOUNTS.demand.password}</strong>
           </p>
           <Button
             type="button"
@@ -120,37 +130,63 @@ export function LoginForm() {
           </Button>
         </div>
 
-        <div className="gradient-box rounded-lg p-4">
-          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
-            <Factory className="h-4 w-4 text-neutral-400" />
-            {t("auth.demoProducerCompany")}
+        <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+            <Factory className="h-4 w-4 text-brand-600" />
+            Tedarikçi (Ücretsiz)
           </div>
-          <p className="text-xs leading-relaxed text-neutral-400">
-            <strong className="text-neutral-200">{DEMO_ACCOUNTS.producer.email}</strong>
+          <p className="text-xs leading-relaxed text-slate-600">
+            Ayarlardan Pro&apos;ya yükseltmeyi deneyin.
             <br />
-            {t("auth.password")}: <strong className="text-neutral-200">{DEMO_ACCOUNTS.producer.password}</strong>
+            <strong className="text-slate-800">{DEMO_ACCOUNTS.producerFree.email}</strong>
+            <br />
+            {t("auth.password")}:{" "}
+            <strong className="text-slate-800">{DEMO_ACCOUNTS.producerFree.password}</strong>
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-3 w-full border-brand-200 bg-white"
+            onClick={() => loginWithDemo(DEMO_ACCOUNTS.producerFree)}
+            disabled={loading}
+          >
+            Ücretsiz Tedarikçi Giriş
+          </Button>
+        </div>
+
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+            <Crown className="h-4 w-4 text-brand-600" />
+            Tedarikçi (Pro)
+          </div>
+          <p className="text-xs leading-relaxed text-slate-600">
+            <strong className="text-slate-800">{DEMO_ACCOUNTS.producerPro.email}</strong>
+            <br />
+            {t("auth.password")}:{" "}
+            <strong className="text-slate-800">{DEMO_ACCOUNTS.producerPro.password}</strong>
           </p>
           <Button
             type="button"
             variant="outline"
             size="sm"
             className="mt-3 w-full"
-            onClick={() => loginWithDemo(DEMO_ACCOUNTS.producer)}
+            onClick={() => loginWithDemo(DEMO_ACCOUNTS.producerPro)}
             disabled={loading}
           >
-            {t("auth.demoLoginProducer")}
+            Pro Tedarikçi Giriş
           </Button>
         </div>
 
-        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:col-span-2 lg:col-span-1">
-          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white">
-            <Shield className="h-4 w-4 text-neutral-400" />
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
+            <Shield className="h-4 w-4 text-brand-600" />
             {t("auth.demoAdmin")}
           </div>
-          <p className="text-xs leading-relaxed text-neutral-400">
-            <strong className="text-neutral-200">{DEMO_ACCOUNTS.admin.email}</strong>
+          <p className="text-xs leading-relaxed text-slate-600">
+            <strong className="text-slate-800">{DEMO_ACCOUNTS.admin.email}</strong>
             <br />
-            {t("auth.password")}: <strong className="text-neutral-200">{DEMO_ACCOUNTS.admin.password}</strong>
+            {t("auth.password")}: <strong className="text-slate-800">{DEMO_ACCOUNTS.admin.password}</strong>
           </p>
           <Button
             type="button"
@@ -169,17 +205,15 @@ export function LoginForm() {
         id="email"
         label={t("auth.email")}
         type="email"
-        variant="dark"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="demo@talep.com veya demo@uretici.com"
+        placeholder="demo@tedarikci.com"
         required
       />
       <Input
         id="password"
         label={t("auth.passwordField")}
         type="password"
-        variant="dark"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="••••••••"
@@ -187,20 +221,20 @@ export function LoginForm() {
       />
 
       {info && (
-        <p className="rounded-lg border border-white/10 bg-white/5 p-3 text-sm text-neutral-300">{info}</p>
+        <p className="rounded-lg border border-brand-200 bg-brand-50 p-3 text-sm text-brand-800">{info}</p>
       )}
 
       {error && (
-        <p className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>
+        <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>
       )}
 
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? t("auth.signingIn") : t("auth.loginButton")}
       </Button>
 
-      <p className="text-center text-sm text-neutral-500">
+      <p className="text-center text-sm text-slate-600">
         {t("auth.noAccount")}{" "}
-        <Link href="/kayit" className="font-medium text-white hover:text-neutral-300">
+        <Link href="/kayit" className="font-medium text-brand-600 hover:text-brand-700">
           {t("auth.registerLink")}
         </Link>
       </p>

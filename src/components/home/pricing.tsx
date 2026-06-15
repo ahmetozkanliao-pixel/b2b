@@ -2,6 +2,10 @@ import Link from "next/link";
 import { Check, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  PRODUCER_PRO_MONTHLY_PRICE,
+  PRODUCER_PRO_YEARLY_PRICE,
+} from "@/lib/membership";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +34,8 @@ const producerPlans = [
   },
   {
     name: "Pro",
-    price: 799,
+    price: PRODUCER_PRO_MONTHLY_PRICE,
+    yearlyPrice: PRODUCER_PRO_YEARLY_PRICE,
     features: [
       "Sınırsız ilana teklif",
       "Profil sayfası ve paylaşım",
@@ -47,7 +52,7 @@ function PlanCard({
   plan,
   type,
 }: {
-  plan: (typeof demandPlans)[0];
+  plan: (typeof demandPlans)[0] | (typeof producerPlans)[0];
   type: "demand" | "producer";
 }) {
   return (
@@ -73,6 +78,11 @@ function PlanCard({
           </span>
           {plan.price > 0 && <span className="text-sm text-neutral-500">/ay</span>}
         </div>
+        {"yearlyPrice" in plan && plan.yearlyPrice != null && (
+          <p className="mt-1 text-sm text-neutral-500">
+            veya {formatCurrency(plan.yearlyPrice)}/yıl
+          </p>
+        )}
       </CardHeader>
       <CardContent>
         <ul className="space-y-3">
@@ -114,7 +124,7 @@ export function Pricing() {
 
         <div className="mt-16">
           <h3 className="mb-2 text-center text-lg font-medium text-neutral-300">
-            Talep Sahibi Firma
+            Müşteri
           </h3>
           <p className="mb-6 text-center text-sm text-neutral-500">
             Tamamen ücretsiz — herhangi bir ücret alınmaz
@@ -128,7 +138,7 @@ export function Pricing() {
 
         <div className="mt-16">
           <h3 className="mb-6 text-center text-lg font-medium text-neutral-300">
-            Üretici Firma
+            Tedarikçi
           </h3>
           <div className="mx-auto grid max-w-2xl gap-6 sm:grid-cols-2">
             {producerPlans.map((plan) => (

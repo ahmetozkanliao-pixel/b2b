@@ -63,25 +63,27 @@ export function ListingCard({ listing, categories, variant = "light" }: ListingC
             />
             <span>{formatDate(listing.created_at, locale)}</span>
           </div>
-          <div
-            className={cn(
-              "flex items-center gap-2 font-medium",
-              isDark ? "text-neutral-300" : "text-slate-800"
-            )}
-          >
-            <Wallet
-              className={cn("h-4 w-4 shrink-0", isDark ? "text-neutral-400" : "text-slate-500")}
-            />
-            <span>
-              {formatBudget(
-                listing.budget_min,
-                listing.budget_max,
-                locale,
-                t("common.notSpecified"),
-                locale === "en" ? "Up to" : "En fazla"
+          {(listing.budget_min || listing.budget_max) && (
+            <div
+              className={cn(
+                "flex items-center gap-2 font-medium",
+                isDark ? "text-neutral-300" : "text-slate-800"
               )}
-            </span>
-          </div>
+            >
+              <Wallet
+                className={cn("h-4 w-4 shrink-0", isDark ? "text-neutral-400" : "text-slate-500")}
+              />
+              <span>
+                {formatBudget(
+                  listing.budget_min,
+                  listing.budget_max,
+                  locale,
+                  t("common.notSpecified"),
+                  locale === "en" ? "Up to" : "En fazla"
+                )}
+              </span>
+            </div>
+          )}
         </div>
 
         <Link

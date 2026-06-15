@@ -1,4 +1,8 @@
-import { PRODUCER_PLAN_FEATURES, PRODUCER_PRO_PRICE } from "@/lib/membership";
+import {
+  PRODUCER_PLAN_FEATURES,
+  PRODUCER_PRO_MONTHLY_PRICE,
+  PRODUCER_PRO_YEARLY_PRICE,
+} from "@/lib/membership";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
@@ -7,14 +11,14 @@ export default function AdminMembershipPage() {
   const plans = [
     {
       key: "free" as const,
-      target: "Üretici",
+      target: "Tedarikçi",
       price: "Ücretsiz",
       data: PRODUCER_PLAN_FEATURES.free,
     },
     {
       key: "pro" as const,
-      target: "Üretici",
-      price: `₺${PRODUCER_PRO_PRICE}/ay`,
+      target: "Tedarikçi",
+      price: `₺${PRODUCER_PRO_MONTHLY_PRICE}/ay · ₺${PRODUCER_PRO_YEARLY_PRICE}/yıl`,
       data: PRODUCER_PLAN_FEATURES.pro,
     },
   ];
@@ -27,8 +31,8 @@ export default function AdminMembershipPage() {
       <Card className="mt-6 border-primary-100 bg-primary-50/50">
         <CardContent className="py-4">
           <p className="text-sm text-primary-800">
-            <strong>Talep sahipleri</strong> için üyelik ücretsizdir ve firma profili her zaman aktiftir.
-            Üretici firmalar Basic (ücretsiz) veya Pro plan arasında seçim yapabilir.
+            <strong>Müşteriler</strong> için üyelik ücretsizdir ve firma profili her zaman aktiftir.
+            Tedarikçi firmalar Basic (ücretsiz) veya Pro plan arasında seçim yapabilir.
           </p>
         </CardContent>
       </Card>

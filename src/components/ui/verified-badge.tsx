@@ -19,7 +19,7 @@ export function VerifiedBadge({
 
   const label =
     type === "producer"
-      ? "Doğrulanmış Üretici"
+      ? "Doğrulanmış Tedarikçi"
       : type === "demand"
         ? "Doğrulanmış Firma"
         : "Doğrulanmış";

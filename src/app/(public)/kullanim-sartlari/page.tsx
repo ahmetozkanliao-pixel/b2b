@@ -14,7 +14,7 @@ export default function TermsPage() {
       </p>
       <h2>Genel Koşullar</h2>
       <p>
-        Platform, kurumsal firmalar ile üretici firmaları buluşturmak amacıyla
+        Platform, müşteriler ile tedarikçi firmaları buluşturmak amacıyla
         sunulmaktadır. Kullanıcılar doğru ve güncel bilgi sağlamakla yükümlüdür.
       </p>
       <h2>Kullanıcı Sorumlulukları</h2>

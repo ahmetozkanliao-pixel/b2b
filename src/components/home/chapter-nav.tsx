@@ -43,7 +43,7 @@ export function ChapterNav({ chapters, activeId, onNavigate }: ChapterNavProps) 
                   className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-md font-mono text-[10px] tabular-nums transition-colors",
                     isActive
-                      ? "bg-brand-500 text-white"
+                      ? "bg-brand-500 keep-white"
                       : "bg-neutral-100 text-neutral-500 group-hover:bg-neutral-200"
                   )}
                 >

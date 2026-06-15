@@ -90,7 +90,7 @@ export default async function MessagesPage() {
       <p className="mt-1 text-gray-500">
         {totalUnread > 0
           ? `${totalUnread} okunmamış mesaj`
-          : "Onaylanan başvurularınızın mesaj odaları"}
+          : "Onaylanan tekliflerinizin mesaj odaları"}
       </p>
 
       <div className="mt-6 space-y-3">
@@ -144,7 +144,7 @@ export default async function MessagesPage() {
         ) : (
           <Card>
             <CardContent className="py-12 text-center text-gray-500">
-              Henüz aktif mesaj odanız bulunmuyor. Başvurular onaylandığında mesajlaşma başlar.
+              Henüz aktif mesaj odanız bulunmuyor. Teklifler onaylandığında mesajlaşma başlar.
             </CardContent>
           </Card>
         )}

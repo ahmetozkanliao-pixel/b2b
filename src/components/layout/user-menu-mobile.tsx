@@ -14,7 +14,17 @@ interface SessionUser {
   dashboardPath: string;
 }
 
-export function UserMenuMobile({ transparent }: { transparent: boolean }) {
+interface UserMenuMobileProps {
+  transparent?: boolean;
+  compact?: boolean;
+  onNavigate?: () => void;
+}
+
+export function UserMenuMobile({
+  transparent,
+  compact = false,
+  onNavigate,
+}: UserMenuMobileProps) {
   const { t } = useI18n();
   const [user, setUser] = useState<SessionUser | null>(null);
   const [totalUnread, setTotalUnread] = useState(0);
@@ -33,67 +43,84 @@ export function UserMenuMobile({ transparent }: { transparent: boolean }) {
   }, [pathname]);
 
   const linkClass = cn(
-    "rounded-xl px-4 py-2.5 text-sm font-medium",
+    "block rounded-xl px-4 py-2.5 text-sm font-medium",
     transparent
-      ? "text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900"
+      ? "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
       : "text-slate-600 hover:bg-slate-50"
   );
 
   if (!user) {
+    if (compact) {
+      return (
+        <div className="flex items-center gap-2">
+          <Link
+            href="/giris"
+            className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700 hover:text-brand-600"
+          >
+            {t("nav.login")}
+          </Link>
+          <Link
+            href="/kayit"
+            className="inline-flex h-8 items-center rounded-full gradient-brand px-3 text-[10px] font-semibold uppercase tracking-wider text-white shadow-soft hover:opacity-90"
+          >
+            {t("nav.register")}
+          </Link>
+        </div>
+      );
+    }
+
     return (
-      <>
+      <div className="flex flex-col gap-2">
         <Link
           href="/giris"
+          onClick={onNavigate}
           className={cn(
-            "rounded-xl px-4 py-2.5 text-sm font-semibold",
-            transparent ? "text-neutral-700" : "text-slate-600"
+            linkClass,
+            "border border-primary-100 bg-white text-center font-semibold text-slate-800"
           )}
         >
           {t("nav.login")}
         </Link>
         <Link
           href="/kayit"
-          className="rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600"
+          onClick={onNavigate}
+          className="block rounded-xl gradient-brand px-4 py-2.5 text-center text-sm font-semibold text-white shadow-soft hover:opacity-90"
         >
           {t("nav.register")}
         </Link>
-      </>
+      </div>
+    );
+  }
+
+  if (compact) {
+    return (
+      <Link
+        href={user.dashboardPath}
+        className="inline-flex h-8 items-center rounded-full bg-brand-50 px-3 text-[10px] font-semibold uppercase tracking-wider text-brand-700"
+      >
+        {t("nav.goToPanel")}
+      </Link>
     );
   }
 
   return (
     <>
-      <div
-        className={cn(
-          "rounded-xl px-4 py-3",
-          transparent ? "bg-neutral-900/5" : "bg-slate-50"
-        )}
-      >
-        <p
-          className={cn(
-            "text-sm font-semibold",
-            transparent ? "text-neutral-900" : "text-slate-900"
-          )}
-        >
-          {user.full_name}
-        </p>
-        <p
-          className={cn(
-            "text-xs",
-            transparent ? "text-neutral-500" : "text-slate-500"
-          )}
-        >
-          {t(`roles.${user.role}`)}
-        </p>
+      <div className="rounded-xl bg-slate-50 px-4 py-3">
+        <p className="text-sm font-semibold text-slate-900">{user.full_name}</p>
+        <p className="text-xs text-slate-500">{t(`roles.${user.role}`)}</p>
       </div>
-      <Link href={user.dashboardPath} className={linkClass}>
+      <Link href={user.dashboardPath} onClick={onNavigate} className={linkClass}>
         {t("nav.goToPanel")}
       </Link>
-      <Link href="/dashboard/firma" className={linkClass}>
+      <Link href="/dashboard/firma" onClick={onNavigate} className={linkClass}>
         {t("nav.companyProfile")}
       </Link>
       {user.role !== "admin" && (
-        <Link href="/dashboard/mesajlar" className={cn(linkClass, "flex items-center justify-between")}>
+        <Link
+          href="/dashboard/mesajlar"
+          onClick={onNavigate}
+          className={cn(linkClass, "flex items-center justify-between")}
+        >
           <span className="flex items-center gap-2">
             <MessageCircle className="h-4 w-4" />
             {t("nav.messages")}

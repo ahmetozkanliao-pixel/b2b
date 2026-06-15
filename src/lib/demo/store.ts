@@ -229,35 +229,50 @@ function mergeListingSeedData(store: DemoStore) {
   }
 }
 
+const FREE_DEMO_SUPPLIER_COMPANY_ID = "demo-supplier-free-co";
+
+function syncFreeDemoSupplierPlanFromSeed(store: DemoStore) {
+  const seedCompany = createInitialDemoStore().companies[FREE_DEMO_SUPPLIER_COMPANY_ID];
+  const company = store.companies[FREE_DEMO_SUPPLIER_COMPANY_ID];
+  if (!seedCompany || !company) return;
+
+  company.membership_plan = "free";
+  company.profile_public = false;
+}
+
 function mergeProducerSeedData(store: DemoStore) {
   const initial = createInitialDemoStore();
-  const producerCompanyId = "producer-003";
+  const producerCompanyIds = ["producer-003", FREE_DEMO_SUPPLIER_COMPANY_ID];
 
-  const seedCompany = initial.companies[producerCompanyId];
-  if (!store.companies[producerCompanyId]) {
-    store.companies[producerCompanyId] = seedCompany;
-  } else if (seedCompany?.category_ids && !store.companies[producerCompanyId].category_ids?.length) {
-    store.companies[producerCompanyId].category_ids = seedCompany.category_ids;
-  }
-
-  const producerUserId = "demo-producer-001";
-  if (!store.settings[producerUserId]) {
-    store.settings[producerUserId] = initial.settings[producerUserId];
-  }
-
-  for (const notif of initial.notifications.filter((n) => n.user_id === producerUserId)) {
-    if (!store.notifications.some((n) => n.id === notif.id)) {
-      store.notifications.push(notif);
+  for (const producerCompanyId of producerCompanyIds) {
+    const seedCompany = initial.companies[producerCompanyId];
+    if (!store.companies[producerCompanyId]) {
+      store.companies[producerCompanyId] = seedCompany;
+    } else if (seedCompany?.category_ids && !store.companies[producerCompanyId].category_ids?.length) {
+      store.companies[producerCompanyId].category_ids = seedCompany.category_ids;
     }
   }
 
-  for (const app of initial.applications.filter((a) => a.applicant_id === producerUserId)) {
-    if (!store.applications.some((a) => a.id === app.id)) {
-      store.applications.push(app);
+  const producerUserIds = ["demo-producer-001", "demo-supplier-free-001"];
+  for (const producerUserId of producerUserIds) {
+    if (!store.settings[producerUserId]) {
+      store.settings[producerUserId] = initial.settings[producerUserId] ?? initial.settings["demo-producer-001"];
+    }
+
+    for (const notif of initial.notifications.filter((n) => n.user_id === producerUserId)) {
+      if (!store.notifications.some((n) => n.id === notif.id)) {
+        store.notifications.push(notif);
+      }
+    }
+
+    for (const app of initial.applications.filter((a) => a.applicant_id === producerUserId)) {
+      if (!store.applications.some((a) => a.id === app.id)) {
+        store.applications.push(app);
+      }
     }
   }
 
-  for (const room of initial.chatRooms.filter((r) => r.producer_company_id === producerCompanyId)) {
+  for (const room of initial.chatRooms.filter((r) => producerCompanyIds.includes(r.producer_company_id))) {
     if (!store.chatRooms.some((r) => r.id === room.id)) {
       store.chatRooms.push(room);
     }
@@ -266,6 +281,8 @@ function mergeProducerSeedData(store: DemoStore) {
   if (!store.catalogs?.length) {
     store.catalogs = initial.catalogs;
   }
+
+  syncFreeDemoSupplierPlanFromSeed(store);
 
   for (const [id, seedCompany] of Object.entries(initial.companies)) {
     if (!store.companies[id]) {
@@ -365,6 +382,13 @@ export function getDemoCompany(companyId: string): Company | null {
 export function getPublicDemoCompanies(): Company[] {
   const store = ensureStore();
   return Object.values(store.companies);
+}
+
+export function resetFreeDemoSupplierPlan() {
+  const store = ensureStore();
+  syncFreeDemoSupplierPlanFromSeed(store);
+  saveStore(store);
+  return store.companies[FREE_DEMO_SUPPLIER_COMPANY_ID] ?? null;
 }
 
 export function updateDemoCompany(companyId: string, data: Partial<Company>) {
@@ -933,6 +957,14 @@ export function registerDemoUser(input: {
   full_name: string;
   role: UserRole;
   company_name: string;
+  phone: string;
+  website: string;
+  address: string;
+  country: string;
+  city: string;
+  tax_number: string;
+  national_id: string;
+  category_ids: string[];
   verification_token: string;
 }): DemoRegisteredUser {
   const store = ensureStore();
@@ -957,13 +989,15 @@ export function registerDemoUser(input: {
     status: "pending",
     description: null,
     logo_url: null,
-    website: null,
-    tax_number: null,
-    address: null,
-    city: null,
-    phone: null,
+    website: input.website.trim(),
+    tax_number: input.tax_number.trim(),
+    address: input.address.trim(),
+    city: input.city.trim(),
+    country: input.country.trim(),
+    phone: input.phone.trim(),
     email: normalizedEmail,
     verified: false,
+    category_ids: input.category_ids,
     slug: slugify(input.company_name),
     created_at: now,
   };
@@ -975,6 +1009,7 @@ export function registerDemoUser(input: {
     full_name: input.full_name.trim(),
     role: input.role,
     company_id: companyId,
+    national_id: input.national_id.trim(),
     email_verified: false,
     verification_token: input.verification_token,
     created_at: now,

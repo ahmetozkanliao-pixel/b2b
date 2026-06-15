@@ -82,8 +82,8 @@ export function ApplyForm({
     await supabase.from("notifications").insert({
       user_id: listingOwnerId,
       type: "new_application",
-      title: "Yeni Başvuru",
-      message: "İlanınıza yeni bir üretici başvurusu geldi.",
+      title: "Yeni Teklif",
+      message: "İlanınıza yeni bir tedarikçi teklifi geldi.",
       link: "/dashboard/basvurular",
     });
 
@@ -124,7 +124,7 @@ export function ApplyForm({
         <div className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
           <p>{error}</p>
           {upgradeRequired && (
-            <Link href="/dashboard/ayarlar" className="mt-2 inline-block font-semibold text-brand-600 hover:text-brand-700">
+            <Link href="/dashboard/uyelik/satin-al" className="mt-2 inline-block font-semibold text-brand-600 hover:text-brand-700">
               Pro&apos;ya yükselt →
             </Link>
           )}

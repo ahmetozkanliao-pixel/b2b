@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 
 const roleLabels = {
-  demand_owner: "Talep Sahibi",
-  producer: "Üretici",
+  demand_owner: "Müşteri",
+  producer: "Tedarikçi",
   admin: "Admin",
 } as const;
 

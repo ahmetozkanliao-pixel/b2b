@@ -37,8 +37,8 @@ export default async function AdminReportsPage() {
         { label: "Toplam firma", value: stats.totalCompanies },
         { label: "Onay bekleyen", value: stats.pendingCompanies },
         { label: "Onaylı", value: stats.approvedCompanies },
-        { label: "Talep sahibi", value: stats.demandOwners },
-        { label: "Üretici", value: stats.producers },
+        { label: "Müşteri", value: stats.demandOwners },
+        { label: "Tedarikçi", value: stats.producers },
       ],
     },
     {

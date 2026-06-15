@@ -36,7 +36,7 @@ export default async function NewListingPage() {
         <CardHeader>
           <h1 className="text-2xl font-bold text-gray-900">Yeni İlan Oluştur</h1>
           <p className="text-sm text-gray-500">
-            Adım adım ilerleyerek üretim ihtiyacınızı tanımlayın
+            Adım adım ilerleyerek ihtiyacınızı tanımlayın — fiyat bilgisi tedarikçilerden gelecek
           </p>
         </CardHeader>
         <CardContent>

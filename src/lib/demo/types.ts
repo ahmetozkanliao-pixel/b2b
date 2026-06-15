@@ -7,6 +7,7 @@ export interface DemoRegisteredUser {
   full_name: string;
   role: UserRole;
   company_id: string;
+  national_id: string;
   email_verified: boolean;
   verification_token: string;
   created_at: string;

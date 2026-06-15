@@ -52,7 +52,7 @@ export function DealActions({
     const confirmed =
       status === "agreed"
         ? window.confirm(
-            "Anlaşıldı olarak işaretlerseniz ilan yayından kalkar ve diğer bekleyen başvurular reddedilir. Devam etmek istiyor musunuz?"
+            "Anlaşıldı olarak işaretlerseniz ilan yayından kalkar ve diğer bekleyen teklifler reddedilir. Devam etmek istiyor musunuz?"
           )
         : window.confirm("Anlaşma sağlanamadı olarak işaretlemek istediğinize emin misiniz?");
 
@@ -99,7 +99,7 @@ export function DealActions({
         user_id: applicantUserId,
         type: "deal_agreed",
         title: "Anlaşma Sağlandı",
-        message: "Talep sahibi ile anlaştınız. İlan kapatıldı.",
+        message: "Müşteri ile anlaştınız. İlan kapatıldı.",
         link: "/dashboard/basvurularim",
       });
     } else {
@@ -107,7 +107,7 @@ export function DealActions({
         user_id: applicantUserId,
         type: "deal_failed",
         title: "Anlaşma Sağlanamadı",
-        message: "Talep sahibi anlaşma sağlanamadı olarak işaretledi.",
+        message: "Müşteri anlaşma sağlanamadı olarak işaretledi.",
         link: "/dashboard/basvurularim",
       });
     }
@@ -123,7 +123,7 @@ export function DealActions({
         <div className="flex-1">
           <p className="text-sm font-medium text-amber-900">Anlaşma durumu</p>
           <p className="mt-1 text-sm text-amber-800">
-            Görüşmeler sonrasında bu üretici ile anlaşıp anlaşmadığınızı işaretleyin.
+            Görüşmeler sonrasında bu tedarikçi ile anlaşıp anlaşmadığınızı işaretleyin.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Button

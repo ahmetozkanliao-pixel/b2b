@@ -45,9 +45,9 @@ export async function PATCH(request: Request) {
         id: createId("notif"),
         user_id: company.owner_id,
         type: verified ? "company_verified" : "company_unverified",
-        title: verified ? "Doğrulanmış Üretici Rozeti" : "Doğrulama Kaldırıldı",
+        title: verified ? "Doğrulanmış Tedarikçi Rozeti" : "Doğrulama Kaldırıldı",
         message: verified
-          ? "Firmanız admin tarafından doğrulanmış üretici olarak işaretlendi."
+          ? "Firmanız admin tarafından doğrulanmış tedarikçi olarak işaretlendi."
           : "Firmanızın doğrulama rozeti kaldırıldı.",
         link: "/dashboard/firma",
         is_read: false,

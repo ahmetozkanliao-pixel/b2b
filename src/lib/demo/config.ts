@@ -35,6 +35,12 @@ export const DEMO_PRODUCER_USER = {
   password: "Uretici2026!",
 } as const;
 
+export const DEMO_PRODUCER_FREE_USER = {
+  id: "demo-supplier-free-001",
+  email: "demo@tedarikci.com",
+  password: "Tedarikci2026!",
+} as const;
+
 export const DEMO_ADMIN_USER = {
   id: "demo-admin-001",
   email: "demo@admin.com",
@@ -70,6 +76,39 @@ export const DEMO_USERS: DemoUser[] = [
       founded_year: 2010,
       employee_count: "100-250",
       profile_public: true,
+      membership_plan: "free",
+      created_at: new Date().toISOString(),
+    },
+  },
+  {
+    id: DEMO_PRODUCER_FREE_USER.id,
+    email: DEMO_PRODUCER_FREE_USER.email,
+    password: DEMO_PRODUCER_FREE_USER.password,
+    full_name: "Ayşe Demir",
+    role: "producer",
+    company: {
+      id: "demo-supplier-free-co",
+      owner_id: DEMO_PRODUCER_FREE_USER.id,
+      name: "Ege Tekstil Tedarik",
+      type: "producer",
+      status: "approved",
+      description:
+        "Tekstil ve konfeksiyon tedarikinde B2B çözümler sunuyoruz. Ücretsiz planda aylık 10 ilana teklif verebilir, Pro ile sınırsız erişim ve profil sayfası açabilirsiniz.",
+      category_ids: ["sub-textile-knit", "sub-textile-dye"],
+      logo_url: null,
+      website: "https://ege-tekstil-tedarik.com",
+      tax_number: "1122334455",
+      address: "Organize Sanayi Bölgesi, Denizli",
+      city: "Denizli",
+      phone: "+90 258 000 00 00",
+      email: DEMO_PRODUCER_FREE_USER.email,
+      verified: false,
+      slug: "ege-tekstil-tedarik",
+      tagline: "Tekstil tedarik ortağınız",
+      cover_image_url: null,
+      founded_year: 2018,
+      employee_count: "10-50",
+      profile_public: false,
       membership_plan: "free",
       created_at: new Date().toISOString(),
     },

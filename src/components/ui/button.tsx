@@ -7,14 +7,14 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: "bg-primary-800 text-white hover:bg-primary-900 shadow-soft",
-  brand: "gradient-brand text-white hover:opacity-90 shadow-soft",
+  primary: "bg-primary-800 text-white hover:bg-primary-900 shadow-soft [&_svg]:text-white",
+  brand: "gradient-brand text-white hover:opacity-90 shadow-soft [&_svg]:text-white",
   secondary:
     "bg-white text-primary-800 border border-slate-200 hover:bg-slate-50 shadow-soft",
   outline:
     "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50",
   ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
-  danger: "bg-red-600 text-white hover:bg-red-700",
+  danger: "bg-red-600 text-white hover:bg-red-700 [&_svg]:text-white",
 };
 
 const sizes = {

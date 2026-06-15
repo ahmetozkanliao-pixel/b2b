@@ -31,13 +31,13 @@ export default async function DashboardPage() {
 
   const demandStats = [
     { label: "Aktif İlanlar", value: String(stats.activeListings), icon: FileText, href: "/dashboard/ilanlar" },
-    { label: "Bekleyen Başvurular", value: String(stats.pendingApplications), icon: Send, href: "/dashboard/basvurular" },
+    { label: "Bekleyen Teklifler", value: String(stats.pendingApplications), icon: Send, href: "/dashboard/basvurular" },
     { label: "Aktif Mesajlar", value: String(stats.activeChats), icon: MessageCircle, href: "/dashboard/mesajlar" },
     { label: "Okunmamış Bildirim", value: String(stats.unreadNotifications), icon: Bell, href: "/dashboard/bildirimler" },
   ];
 
   const producerStats = [
-    { label: "Başvurularım", value: String(stats.pendingApplications + stats.approvedApplications), icon: Send, href: "/dashboard/basvurularim" },
+    { label: "Tekliflerim", value: String(stats.pendingApplications + stats.approvedApplications), icon: Send, href: "/dashboard/basvurularim" },
     { label: "Onaylanan", value: String(stats.approvedApplications), icon: CheckCircle, href: "/dashboard/basvurularim" },
     { label: "Aktif Mesajlar", value: String(stats.activeChats), icon: MessageCircle, href: "/dashboard/mesajlar" },
     { label: "Açık İlanlar", value: String(stats.activeListings), icon: FileText, href: "/dashboard/ilanlar" },
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
     <div>
       {session!.isDemo && (
         <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Demo modundasınız ({isProducer ? "Üretici Firma" : "Talep Sahibi"}). Tüm panel özellikleri aktiftir.
+          Demo modundasınız ({isProducer ? "Tedarikçi" : "Müşteri"}). Tüm panel özellikleri aktiftir.
         </div>
       )}
 
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
                 <Button>İlanları Keşfet</Button>
               </Link>
               <Link href="/dashboard/basvurularim">
-                <Button variant="outline">Başvurularım</Button>
+                <Button variant="outline">Tekliflerim</Button>
               </Link>
               <Link href="/dashboard/mesajlar">
                 <Button variant="outline">Mesajlar</Button>
@@ -104,7 +104,7 @@ export default async function DashboardPage() {
                 <Button>Yeni İlan Oluştur</Button>
               </Link>
               <Link href="/dashboard/basvurular">
-                <Button variant="outline">Başvuruları İncele</Button>
+                <Button variant="outline">Teklifleri İncele</Button>
               </Link>
               <Link href="/dashboard/mesajlar">
                 <Button variant="outline">Mesajlara Git</Button>

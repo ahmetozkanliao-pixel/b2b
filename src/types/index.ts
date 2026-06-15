@@ -16,6 +16,7 @@ export interface Profile {
   email: string;
   full_name: string | null;
   phone: string | null;
+  national_id: string | null;
   avatar_url: string | null;
   role: UserRole;
   created_at: string;
@@ -33,6 +34,7 @@ export interface Company {
   tax_number: string | null;
   address: string | null;
   city: string | null;
+  country?: string | null;
   phone: string | null;
   email: string | null;
   verified: boolean;

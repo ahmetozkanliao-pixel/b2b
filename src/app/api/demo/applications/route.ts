@@ -58,7 +58,7 @@ export async function PATCH(request: Request) {
       listing_id: app.listing_id,
       listing_title: app.listing_title,
       demand_company_id: session.companyId,
-      demand_company_name: demandCompany?.name || "Talep Sahibi",
+      demand_company_name: demandCompany?.name || "Müşteri",
       producer_company_id: app.producer_company_id,
       producer_name: app.producer_name,
       created_at: new Date().toISOString(),

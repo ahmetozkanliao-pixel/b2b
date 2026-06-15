@@ -61,6 +61,54 @@ export function getPanelNavLinks(role: UserRole): PanelNavLink[] {
   return demandLinks;
 }
 
+const bottomNavHrefs: Record<UserRole, string[]> = {
+  demand_owner: [
+    "/dashboard",
+    "/dashboard/ilanlar",
+    "/dashboard/basvurular",
+    "/dashboard/mesajlar",
+    "/dashboard/firma",
+    "/dashboard/bildirimler",
+  ],
+  producer: [
+    "/dashboard",
+    "/dashboard/ilanlar",
+    "/dashboard/basvurularim",
+    "/dashboard/mesajlar",
+    "/dashboard/firma",
+    "/dashboard/bildirimler",
+  ],
+  admin: ["/admin", "/admin/kullanicilar", "/admin/firmalar", "/admin/ilanlar"],
+};
+
+const bottomNavShortLabels: Partial<Record<string, string>> = {
+  "panel.nav.overview": "panel.nav.overviewShort",
+  "panel.nav.companyProfile": "panel.nav.companyShort",
+  "panel.nav.myListings": "panel.nav.listingsShort",
+  "panel.nav.exploreListings": "panel.nav.listingsShort",
+  "panel.nav.applications": "panel.nav.offersShort",
+  "panel.nav.myApplications": "panel.nav.offersShort",
+  "panel.nav.messages": "panel.nav.messagesShort",
+  "panel.nav.notifications": "panel.nav.notificationsShort",
+};
+
+export function getPanelBottomNavLinks(role: UserRole): PanelNavLink[] {
+  const hrefs = bottomNavHrefs[role];
+  const all = getPanelNavLinks(role);
+  return hrefs
+    .map((href) => all.find((link) => link.href === href))
+    .filter((link): link is PanelNavLink => Boolean(link));
+}
+
+export function getPanelMoreNavLinks(role: UserRole): PanelNavLink[] {
+  const bottomHrefs = new Set(bottomNavHrefs[role]);
+  return getPanelNavLinks(role).filter((link) => !bottomHrefs.has(link.href));
+}
+
+export function getPanelBottomNavLabelKey(labelKey: string): string {
+  return bottomNavShortLabels[labelKey] ?? labelKey;
+}
+
 export function isPanelNavLinkActive(pathname: string, href: string): boolean {
   return (
     pathname === href ||

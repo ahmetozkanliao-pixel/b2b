@@ -50,11 +50,11 @@ export function ApplicationActions({
       .eq("id", applicationId);
 
     const notificationType = status === "approved" ? "application_approved" : "application_rejected";
-    const title = status === "approved" ? "Başvurunuz Onaylandı" : "Başvurunuz Reddedildi";
+    const title = status === "approved" ? "Teklifiniz Onaylandı" : "Teklifiniz Reddedildi";
     const message =
       status === "approved"
-        ? "Tebrikler! Başvurunuz onaylandı. Mesajlaşmaya başlayabilirsiniz."
-        : "Başvurunuz reddedildi.";
+        ? "Tebrikler! Teklifiniz onaylandı. Mesajlaşmaya başlayabilirsiniz."
+        : "Teklifiniz reddedildi.";
 
     await supabase.from("notifications").insert({
       user_id: applicantUserId,

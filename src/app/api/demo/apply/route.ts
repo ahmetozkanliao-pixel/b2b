@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   const session = await getSession();
   if (!session || session.role !== "producer" || !session.companyId) {
-    return NextResponse.json({ error: "Sadece üretici firmalar başvurabilir." }, { status: 401 });
+    return NextResponse.json({ error: "Sadece tedarikçi firmalar başvurabilir." }, { status: 401 });
   }
 
   const body = await request.json();
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     status: "pending",
     created_at: new Date().toISOString(),
     listing_title: listing.title,
-    producer_name: producerCompany?.name || producer?.company.name || "Üretici",
+    producer_name: producerCompany?.name || producer?.company.name || "Tedarikçi",
     producer_city: producerCompany?.city || producer?.company.city || "",
   };
 

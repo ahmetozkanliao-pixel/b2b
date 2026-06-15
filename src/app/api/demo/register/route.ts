@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import { isDemoMode } from "@/lib/demo/config";
 import { registerDemoUser } from "@/lib/demo/store";
 import { sendVerificationEmail } from "@/lib/email/send-verification-email";
+import {
+  normalizeRegistrationPayload,
+  validateRegistrationPayload,
+} from "@/lib/auth/registration";
 
 export async function POST(request: Request) {
   if (!isDemoMode()) {
@@ -11,31 +15,16 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const email = (body.email as string)?.trim();
-    const password = body.password as string;
-    const full_name = (body.full_name as string)?.trim();
-    const company_name = (body.company_name as string)?.trim();
-    const role = body.role as "demand_owner" | "producer";
+    const validationError = validateRegistrationPayload(body);
 
-    if (!email || !password || !full_name || !company_name) {
-      return NextResponse.json({ error: "Tüm alanları doldurun." }, { status: 400 });
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json({ error: "Şifre en az 6 karakter olmalıdır." }, { status: 400 });
-    }
-
-    if (role !== "demand_owner" && role !== "producer") {
-      return NextResponse.json({ error: "Geçersiz hesap türü." }, { status: 400 });
-    }
-
+    const payload = normalizeRegistrationPayload(body);
     const token = randomUUID();
     const user = registerDemoUser({
-      email,
-      password,
-      full_name,
-      role,
-      company_name,
+      ...payload,
       verification_token: token,
     });
 

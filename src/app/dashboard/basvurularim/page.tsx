@@ -43,8 +43,8 @@ export default async function MyApplicationsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Başvurularım</h1>
-      <p className="mt-1 text-gray-500">Yaptığınız ilan başvurularını takip edin</p>
+      <h1 className="text-2xl font-bold text-gray-900">Tekliflerim</h1>
+      <p className="mt-1 text-gray-500">Verdiğiniz teklifleri takip edin</p>
 
       <div className="mt-6 space-y-4">
         {applications.length > 0 ? (
@@ -88,7 +88,7 @@ export default async function MyApplicationsPage() {
         ) : (
           <Card>
             <CardContent className="py-12 text-center text-gray-500">
-              Henüz başvuru yapmadınız.{" "}
+              Henüz teklif vermediniz.{" "}
               <Link href="/dashboard/ilanlar" className="text-primary-600 hover:underline">
                 İlanları keşfedin
               </Link>

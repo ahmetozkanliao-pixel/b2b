@@ -8,8 +8,8 @@ export function LoginPageContent() {
 
   return (
     <div className="auth-card">
-      <h1 className="text-2xl font-semibold text-white">{t("auth.loginTitle")}</h1>
-      <p className="mt-2 text-sm text-neutral-400">{t("auth.loginSubtitle2")}</p>
+      <h1 className="text-2xl font-semibold text-slate-900">{t("auth.loginTitle")}</h1>
+      <p className="mt-2 text-sm text-slate-600">{t("auth.loginSubtitle2")}</p>
       <LoginForm />
     </div>
   );

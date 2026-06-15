@@ -86,10 +86,10 @@ export default async function CompanyPage() {
               <h2 className="font-semibold text-slate-900">Profil sayfası Pro üyelikte</h2>
               <p className="mt-1 text-sm text-slate-600">
                 Herkese açık profil linki, önceki işler galerisi ve profil paylaşımı
-                yalnızca Pro üreticilerde kullanılabilir. Ücretsiz planda aylık 10 ilana
+                yalnızca Pro tedarikçilerde kullanılabilir. Ücretsiz planda aylık 10 ilana
                 teklif verebilir ve temel destek alabilirsiniz.
               </p>
-              <Link href="/dashboard/ayarlar" className="mt-4 inline-block">
+              <Link href="/dashboard/uyelik/satin-al" className="mt-4 inline-block">
                 <Button size="sm">
                   <Crown className="h-4 w-4" />
                   Pro&apos;ya Yükselt

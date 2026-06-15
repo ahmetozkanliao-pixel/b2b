@@ -3,12 +3,28 @@ import { DEMO_CATEGORIES, DEMO_LISTINGS_SEED, DEMO_USERS } from "./config";
 import type { DemoApplication, DemoCatalog, DemoChatRoom, DemoSettings, DemoStore } from "./types";
 
 const demandUser = DEMO_USERS[0];
-const producerUser = DEMO_USERS[1];
+const producerFreeUser = DEMO_USERS[1];
+const producerUser = DEMO_USERS[2];
 
 const now = new Date();
 const hoursAgo = (h: number) => new Date(now.getTime() - h * 3600000).toISOString();
 
 export const DEMO_APPLICATIONS_SEED: DemoApplication[] = [
+  {
+    id: "app-free-001",
+    listing_id: "listing-demo-002",
+    producer_company_id: producerFreeUser.company.id,
+    applicant_id: producerFreeUser.id,
+    cover_letter:
+      "Plastik enjeksiyon kalıbı konusunda 8 yıllık deneyimimiz var. Numune ve teknik çizim paylaşımına hazırız.",
+    proposed_budget: 62000,
+    proposed_delivery: "40 gün",
+    status: "pending",
+    created_at: hoursAgo(12),
+    listing_title: "Plastik Enjeksiyon Kalıp Üretimi",
+    producer_name: producerFreeUser.company.name,
+    producer_city: producerFreeUser.company.city!,
+  },
   {
     id: "app-001",
     listing_id: "listing-demo-001",
@@ -110,7 +126,7 @@ export const DEMO_NOTIFICATIONS_SEED: Notification[] = [
     id: "notif-002",
     user_id: demandUser.id,
     type: "new_application",
-    title: "Yeni Başvuru",
+    title: "Yeni Teklif",
     message: "Anadolu Metal San. ilanınıza başvurdu.",
     link: "/dashboard/basvurular",
     is_read: false,
@@ -120,7 +136,7 @@ export const DEMO_NOTIFICATIONS_SEED: Notification[] = [
     id: "notif-003",
     user_id: demandUser.id,
     type: "new_application",
-    title: "Yeni Başvuru",
+    title: "Yeni Teklif",
     message: "Marmara Metal San. ilanınıza başvurdu.",
     link: "/dashboard/basvurular",
     is_read: false,
@@ -151,8 +167,8 @@ export const DEMO_NOTIFICATIONS_SEED: Notification[] = [
     id: "notif-p02",
     user_id: producerUser.id,
     type: "application_approved",
-    title: "Başvurunuz Onaylandı",
-    message: "Paslanmaz Çelik Boru Üretimi ilanına yaptığınız başvuru onaylandı!",
+    title: "Teklifiniz Onaylandı",
+    message: "Paslanmaz Çelik Boru Üretimi ilanına verdiğiniz teklif onaylandı!",
     link: "/dashboard/mesajlar/room-001",
     is_read: true,
     created_at: hoursAgo(36),
@@ -235,7 +251,7 @@ export const DEMO_PORTFOLIO_SEED: PortfolioItem[] = [
     company_id: demandUser.company.id,
     title: "Tekstil Hammadde Tedariki",
     description: "Yıllık 80.000 metre kumaş tedarik anlaşması koordinasyonu.",
-    image_url: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1523381210434-95eabe85d79e?w=600&h=400&fit=crop",
     year: 2024,
     client_name: "İç Proje",
     created_at: hoursAgo(350),
@@ -258,11 +274,11 @@ export const DEMO_NEWS_SEED: NewsArticle[] = [
   },
   {
     id: "news-002",
-    title: "Üretici Firmalar İçin Yeni Özellikler",
+    title: "Tedarikçi Firmalar İçin Yeni Özellikler",
     slug: "uretici-yeni-ozellikler",
     summary: "Pro üyelik, profil sayfası ve gelişmiş raporlar eklendi.",
     content:
-      "Üretici firmalar artık Pro üyelikle herkese açık profil sayfası oluşturabilir, önceki işlerini paylaşabilir ve gelişmiş raporlara erişebilir.\n\nÜcretsiz planda aylık 10 ilana teklif verme imkânı sunulmaya devam ediyor.",
+      "Tedarikçi firmalar artık Pro üyelikle herkese açık profil sayfası oluşturabilir, önceki işlerini paylaşabilir ve gelişmiş raporlara erişebilir.\n\nÜcretsiz planda aylık 10 ilana teklif verme imkânı sunulmaya devam ediyor.",
     cover_image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=1200&h=600&fit=crop",
     published_at: "2026-05-25T14:00:00Z",
     created_at: "2026-05-25T14:00:00Z",
@@ -321,6 +337,7 @@ export function createInitialDemoStore(): DemoStore {
     notifications: [...DEMO_NOTIFICATIONS_SEED],
     companies: {
       [demandUser.company.id]: { ...demandUser.company },
+      [producerFreeUser.company.id]: { ...producerFreeUser.company },
       [producerUser.company.id]: { ...producerUser.company },
       "producer-001": {
         id: "producer-001",
@@ -438,7 +455,7 @@ export function createInitialDemoStore(): DemoStore {
         name: "Atlas Gıda San.",
         type: "demand_owner",
         status: "approved",
-        description: "Gıda ve ambalaj tedarikinde güvenilir kurumsal talep sahibi.",
+        description: "Gıda ve ambalaj tedarikinde güvenilir kurumsal müşteri.",
         logo_url: null,
         website: null,
         tax_number: null,
@@ -534,6 +551,7 @@ export function createInitialDemoStore(): DemoStore {
     },
     settings: {
       [demandUser.id]: { ...DEFAULT_DEMO_SETTINGS },
+      [producerFreeUser.id]: { ...DEFAULT_DEMO_SETTINGS },
       [producerUser.id]: { ...DEFAULT_DEMO_SETTINGS },
     },
     catalogs: [...DEMO_CATALOGS_SEED],

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
   const session = await getSession();
   if (!session?.companyId || session.role !== "producer") {
-    return NextResponse.json({ error: "Sadece üretici firmalar yükseltebilir." }, { status: 401 });
+    return NextResponse.json({ error: "Sadece tedarikçi firmalar yükseltebilir." }, { status: 401 });
   }
 
   const body = await request.json();

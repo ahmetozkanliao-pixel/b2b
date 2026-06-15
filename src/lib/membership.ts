@@ -3,7 +3,16 @@ import type { Company } from "@/types";
 export type ProducerPlan = "free" | "pro";
 
 export const PRODUCER_FREE_MONTHLY_APPLICATION_LIMIT = 10;
-export const PRODUCER_PRO_PRICE = 799;
+export const PRODUCER_PRO_MONTHLY_PRICE = 999;
+export const PRODUCER_PRO_YEARLY_PRICE = 9999;
+/** Aylık Pro fiyatı (geriye dönük uyumluluk) */
+export const PRODUCER_PRO_PRICE = PRODUCER_PRO_MONTHLY_PRICE;
+
+export type ProducerBillingCycle = "monthly" | "yearly";
+
+export function getProducerProPrice(cycle: ProducerBillingCycle): number {
+  return cycle === "yearly" ? PRODUCER_PRO_YEARLY_PRICE : PRODUCER_PRO_MONTHLY_PRICE;
+}
 
 export const PRODUCER_PLAN_FEATURES = {
   free: {
@@ -18,7 +27,7 @@ export const PRODUCER_PLAN_FEATURES = {
     ],
     missing: [
       "Profil sayfası",
-      "Öne çıkan başvuru",
+      "Öne çıkan teklif",
       "Gelişmiş raporlar",
       "Öncelikli destek",
     ],
@@ -31,7 +40,7 @@ export const PRODUCER_PLAN_FEATURES = {
     features: [
       "Sınırsız ilana teklif",
       "Profil sayfası ve paylaşım",
-      "Öne çıkan başvuru rozeti",
+      "Öne çıkan teklif rozeti",
       "Gelişmiş raporlar",
       "Öncelikli destek",
     ],

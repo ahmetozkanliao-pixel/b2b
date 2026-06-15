@@ -31,8 +31,6 @@ function buildInitialForm(listing: Listing, categories: Category[]) {
     description: listing.description,
     technical_details: listing.technical_details || "",
     image_url: listing.image_url || "",
-    budget_min: listing.budget_min != null ? String(listing.budget_min) : "",
-    budget_max: listing.budget_max != null ? String(listing.budget_max) : "",
     delivery_time: listing.delivery_time || "",
     city: listing.city || "",
     application_deadline: listing.application_deadline?.slice(0, 10) || "",
@@ -43,9 +41,8 @@ const STEPS = [
   { id: 1, title: "Başlık", description: "İlan başlığını girin" },
   { id: 2, title: "Kategori", description: "Ana ve alt kategori seçin" },
   { id: 3, title: "Detaylar", description: "Açıklama, teknik bilgi ve görsel" },
-  { id: 4, title: "Bütçe", description: "Bütçe aralığını belirleyin" },
-  { id: 5, title: "Teslim", description: "Teslim süresini girin" },
-  { id: 6, title: "Başvuru", description: "Son başvuru tarihi" },
+  { id: 4, title: "Teslim", description: "Teslim süresini girin" },
+  { id: 5, title: "Başvuru", description: "Son başvuru tarihi" },
 ] as const;
 
 export function ListingForm({
@@ -70,8 +67,6 @@ export function ListingForm({
       description: "",
       technical_details: "",
       image_url: "",
-      budget_min: "",
-      budget_max: "",
       delivery_time: "",
       city: "",
       application_deadline: "",
@@ -133,8 +128,8 @@ export function ListingForm({
       description: form.description.trim(),
       technical_details: form.technical_details.trim() || null,
       image_url: form.image_url || null,
-      budget_min: form.budget_min || null,
-      budget_max: form.budget_max || null,
+      budget_min: null,
+      budget_max: null,
       delivery_time: form.delivery_time.trim() || null,
       city: form.city.trim() || null,
       application_deadline: form.application_deadline || null,
@@ -167,8 +162,8 @@ export function ListingForm({
             category_id: payload.category_id || null,
             description: payload.description,
             technical_details: payload.technical_details,
-            budget_min: payload.budget_min ? parseFloat(String(payload.budget_min)) : null,
-            budget_max: payload.budget_max ? parseFloat(String(payload.budget_max)) : null,
+            budget_min: null,
+            budget_max: null,
             delivery_time: payload.delivery_time,
             city: payload.city,
             application_deadline: payload.application_deadline,
@@ -189,8 +184,8 @@ export function ListingForm({
           category_id: payload.category_id || null,
           description: payload.description,
           technical_details: payload.technical_details,
-          budget_min: payload.budget_min ? parseFloat(String(payload.budget_min)) : null,
-          budget_max: payload.budget_max ? parseFloat(String(payload.budget_max)) : null,
+          budget_min: null,
+          budget_max: null,
           delivery_time: payload.delivery_time,
           city: payload.city,
           application_deadline: payload.application_deadline,
@@ -298,27 +293,6 @@ export function ListingForm({
         )}
 
         {step === 4 && (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Input
-              id="budget_min"
-              label="Minimum Bütçe (₺)"
-              type="number"
-              value={form.budget_min}
-              onChange={(e) => updateField("budget_min", e.target.value)}
-              placeholder="50000"
-            />
-            <Input
-              id="budget_max"
-              label="Maksimum Bütçe (₺)"
-              type="number"
-              value={form.budget_max}
-              onChange={(e) => updateField("budget_max", e.target.value)}
-              placeholder="150000"
-            />
-          </div>
-        )}
-
-        {step === 5 && (
           <div className="space-y-4">
             <Input
               id="delivery_time"
@@ -337,7 +311,7 @@ export function ListingForm({
           </div>
         )}
 
-        {step === 6 && (
+        {step === 5 && (
           <div className="space-y-5">
             <Input
               id="application_deadline"

@@ -35,10 +35,10 @@ export default async function ReportsPage() {
           <BarChart3 className="mx-auto h-12 w-12 text-slate-300" />
           <h1 className="mt-4 text-xl font-bold text-slate-900">Gelişmiş Raporlar</h1>
           <p className="mt-2 text-sm text-slate-500">
-            Detaylı başvuru ve performans raporları Pro üyelikle kullanılabilir.
+            Detaylı teklif ve performans raporları Pro üyelikle kullanılabilir.
           </p>
           <Link
-            href="/dashboard/ayarlar"
+            href="/dashboard/uyelik/satin-al"
             className="mt-6 inline-flex rounded-xl gradient-brand px-5 py-2.5 text-sm font-semibold text-white"
           >
             Pro&apos;ya Yükselt
@@ -64,7 +64,7 @@ export default async function ReportsPage() {
         <h1 className="text-2xl font-bold text-slate-900">Gelişmiş Raporlar</h1>
         <Badge variant="brand">Pro</Badge>
       </div>
-      <p className="mt-1 text-slate-500">Başvuru performansınız ve teklif analizleri</p>
+      <p className="mt-1 text-slate-500">Teklif performansınız ve analizler</p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -72,7 +72,7 @@ export default async function ReportsPage() {
             <Send className="h-8 w-8 text-brand-600" />
             <div>
               <p className="text-2xl font-bold text-slate-900">{applications.length}</p>
-              <p className="text-xs text-slate-500">Toplam başvuru</p>
+              <p className="text-xs text-slate-500">Toplam teklif</p>
             </div>
           </CardContent>
         </Card>
@@ -108,7 +108,7 @@ export default async function ReportsPage() {
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <h2 className="font-semibold text-slate-900">Başvuru Durumu</h2>
+            <h2 className="font-semibold text-slate-900">Teklif Durumu</h2>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between text-sm">
@@ -139,11 +139,11 @@ export default async function ReportsPage() {
 
       <Card className="mt-6">
         <CardHeader>
-          <h2 className="font-semibold text-slate-900">Son Başvurular</h2>
+          <h2 className="font-semibold text-slate-900">Son Teklifler</h2>
         </CardHeader>
         <CardContent>
           {applications.length === 0 ? (
-            <p className="text-sm text-slate-400">Henüz başvuru yok.</p>
+            <p className="text-sm text-slate-400">Henüz teklif yok.</p>
           ) : (
             <ul className="divide-y divide-slate-100">
               {applications.slice(0, 5).map((app, i) => (

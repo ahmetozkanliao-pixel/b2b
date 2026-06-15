@@ -59,27 +59,32 @@ export function Header() {
           <UserMenu transparent={isDashboard} onDark={isDashboard} />
         </div>
 
-        {!isDashboard && (
-          <button
-            className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-900/5 md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={t("common.openMenu")}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        )}
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher transparent={isDashboard} onDark={isDashboard} />
+          {isDashboard ? (
+            <UserMenu transparent={isDashboard} onDark={isDashboard} />
+          ) : (
+            <>
+              <UserMenuMobile transparent compact />
+              <button
+                className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-900/5"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={t("common.openMenu")}
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <div
         className={cn(
-          "border-t border-neutral-200 bg-white md:hidden",
+          "relative z-[60] border-t border-neutral-200 bg-white shadow-lg md:hidden",
           !isDashboard && mobileOpen ? "block" : "hidden"
         )}
       >
         <nav className="flex flex-col gap-1 p-4">
-          <div className="mb-2 px-2">
-            <LanguageSwitcher transparent />
-          </div>
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -91,7 +96,7 @@ export function Header() {
             </Link>
           ))}
           <hr className="my-2 border-neutral-200" />
-          <UserMenuMobile transparent />
+          <UserMenuMobile transparent onNavigate={() => setMobileOpen(false)} />
         </nav>
       </div>
     </header>

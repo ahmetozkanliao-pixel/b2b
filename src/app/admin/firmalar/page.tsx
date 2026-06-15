@@ -67,7 +67,7 @@ export default async function AdminCompaniesPage() {
                       <h3 className="font-semibold text-gray-900">{company.name}</h3>
                       <Badge variant={status.variant}>{status.label}</Badge>
                       <Badge variant="info">
-                        {company.type === "demand_owner" ? "Talep Sahibi" : "Üretici"}
+                        {company.type === "demand_owner" ? "Müşteri" : "Tedarikçi"}
                       </Badge>
                       <VerifiedBadge
                         verified={company.verified}

@@ -137,8 +137,8 @@ export function SettingsForm({ isDemo, initialSettings, profile, isProducerPro }
             onChange={(v) => setSettings((s) => ({ ...s, sms_notifications: v }))}
           />
           <Toggle
-            label="Başvuru Uyarıları"
-            description="İlanlarınıza yeni başvuru geldiğinde bildirim al"
+            label="Teklif Uyarıları"
+            description="İlanlarınıza yeni teklif geldiğinde bildirim al"
             checked={settings.application_alerts}
             onChange={(v) => setSettings((s) => ({ ...s, application_alerts: v }))}
           />

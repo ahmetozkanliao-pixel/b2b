@@ -8,19 +8,19 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Platforma nasıl kayıt olabilirim?",
-    a: "Ana sayfadaki 'Kayıt Ol' butonuna tıklayarak talep sahibi veya üretici firma olarak kayıt olabilirsiniz.",
+    a: "Ana sayfadaki 'Kayıt Ol' butonuna tıklayarak müşteri veya tedarikçi olarak kayıt olabilirsiniz.",
   },
   {
     q: "İlan oluşturmak ücretli mi?",
     a: "Ücretsiz paket ile aylık 3 ilan oluşturabilirsiniz. Pro paket ile sınırsız ilan yayınlayabilirsiniz.",
   },
   {
-    q: "Üretici firmalar nasıl doğrulanır?",
+    q: "Tedarikçi firmalar nasıl doğrulanır?",
     a: "Firma kaydı sonrası admin ekibimiz firma bilgilerini ve sertifikaları inceleyerek onay sürecini tamamlar.",
   },
   {
     q: "Mesajlaşma ne zaman başlar?",
-    a: "Talep sahibi bir üretici başvurusunu onayladığında otomatik olarak mesaj odası açılır.",
+    a: "Müşteri bir tedarikçi başvurusunu onayladığında otomatik olarak mesaj odası açılır.",
   },
   {
     q: "Ödeme nasıl yapılır?",

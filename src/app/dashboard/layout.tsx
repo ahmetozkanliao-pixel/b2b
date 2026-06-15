@@ -2,8 +2,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/get-session";
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { PanelMobileMenu } from "@/components/dashboard/panel-mobile-menu";
+import { PanelBottomNav } from "@/components/dashboard/panel-bottom-nav";
 import { getDemoUserById } from "@/lib/demo/session";
 
 export default async function DashboardLayout({
@@ -33,24 +32,16 @@ export default async function DashboardLayout({
   return (
     <div className="min-h-screen bg-primary-950">
       <Header />
-      <div className="flex pt-14">
-        <Sidebar
+      <div className="flex min-h-[calc(100vh-3.5rem)] flex-col pt-14">
+        <main className="panel-content panel-main flex-1 overflow-auto pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
+          <div className="mx-auto w-full max-w-6xl p-4 sm:p-6 lg:p-8">{children}</div>
+        </main>
+        <PanelBottomNav
           role={session.role}
           userName={session.full_name}
           userEmail={session.email}
           companyName={companyName}
         />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <PanelMobileMenu
-            role={session.role}
-            userName={session.full_name}
-            userEmail={session.email}
-            companyName={companyName}
-          />
-          <main className="panel-content panel-main flex-1 overflow-auto">
-            <div className="p-4 sm:p-6 lg:p-8">{children}</div>
-          </main>
-        </div>
       </div>
     </div>
   );

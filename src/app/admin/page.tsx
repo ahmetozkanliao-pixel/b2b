@@ -138,9 +138,9 @@ export default async function AdminDashboardPage() {
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-gray-400" />
               <div>
-                <p className="text-sm text-gray-500">Talep Sahibi / Üretici</p>
+                <p className="text-sm text-gray-500">Müşteri / Tedarikçi</p>
                 <p className="font-semibold text-gray-900">
-                  {stats.demandOwners} talep · {stats.producers} üretici
+                  {stats.demandOwners} müşteri · {stats.producers} tedarikçi
                 </p>
               </div>
             </div>

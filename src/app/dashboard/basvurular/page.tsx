@@ -87,7 +87,7 @@ function buildCompareGroups(
         app.producer_name ||
         producerCompany?.name ||
         app.producer_company?.name ||
-        "Üretici Firma",
+        "Tedarikçi",
       producerCity:
         app.producer_city || producerCompany?.city || app.producer_company?.city || null,
       producerCompanyId: app.producer_company_id || producerCompany?.id || "",
@@ -176,8 +176,8 @@ export default async function ApplicationsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Başvurular</h1>
-      <p className="mt-1 text-gray-500">İlanlarınıza gelen üretici başvuruları</p>
+      <h1 className="text-2xl font-bold text-gray-900">Teklifler</h1>
+      <p className="mt-1 text-gray-500">İlanlarınıza gelen tedarikçi teklifleri</p>
 
       {applications.length > 0 && (
         <div className="mt-6">
@@ -216,10 +216,10 @@ export default async function ApplicationsPage() {
                               className="text-brand-600 hover:text-brand-700"
                               target="_blank"
                             >
-                              {producerName || "Üretici Firma"}
+                              {producerName || "Tedarikçi"}
                             </Link>
                           ) : (
-                            producerName || "Üretici Firma"
+                            producerName || "Tedarikçi"
                           )}
                         </h3>
                         <VerifiedBadge verified={verified} type="producer" />
@@ -286,7 +286,7 @@ export default async function ApplicationsPage() {
         ) : (
           <Card>
             <CardContent className="py-12 text-center text-gray-500">
-              Henüz başvuru bulunmuyor.
+              Henüz teklif bulunmuyor.
             </CardContent>
           </Card>
         )}

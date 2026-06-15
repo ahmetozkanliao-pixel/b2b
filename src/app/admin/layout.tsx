@@ -4,8 +4,36 @@ import { createClient } from "@/lib/supabase/server";
 import { isDemoMode } from "@/lib/demo/config";
 import { getDemoUserById } from "@/lib/demo/session";
 import { Header } from "@/components/layout/header";
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { PanelMobileMenu } from "@/components/dashboard/panel-mobile-menu";
+import { PanelBottomNav } from "@/components/dashboard/panel-bottom-nav";
+
+function AdminShell({
+  userName,
+  userEmail,
+  companyName,
+  children,
+}: {
+  userName: string;
+  userEmail: string;
+  companyName?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-h-screen bg-primary-950">
+      <Header />
+      <div className="flex min-h-[calc(100vh-3.5rem)] flex-col pt-14">
+        <main className="panel-content panel-main flex-1 overflow-auto pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
+          <div className="mx-auto w-full max-w-6xl p-4 sm:p-6 lg:p-8">{children}</div>
+        </main>
+        <PanelBottomNav
+          role="admin"
+          userName={userName}
+          userEmail={userEmail}
+          companyName={companyName}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default async function AdminLayout({
   children,
@@ -21,28 +49,13 @@ export default async function AdminLayout({
     const demoUser = getDemoUserById(session.id);
 
     return (
-      <div className="min-h-screen bg-primary-950">
-        <Header />
-        <div className="flex pt-14">
-          <Sidebar
-            role="admin"
-            userName={session.full_name}
-            userEmail={session.email}
-            companyName={demoUser?.company.name}
-          />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <PanelMobileMenu
-              role="admin"
-              userName={session.full_name}
-              userEmail={session.email}
-              companyName={demoUser?.company.name}
-            />
-            <main className="panel-content panel-main flex-1 overflow-auto">
-              <div className="p-4 sm:p-6 lg:p-8">{children}</div>
-            </main>
-          </div>
-        </div>
-      </div>
+      <AdminShell
+        userName={session.full_name}
+        userEmail={session.email}
+        companyName={demoUser?.company.name}
+      >
+        {children}
+      </AdminShell>
     );
   }
 
@@ -66,27 +79,12 @@ export default async function AdminLayout({
     .maybeSingle();
 
   return (
-    <div className="min-h-screen bg-primary-950">
-      <Header />
-      <div className="flex pt-14">
-        <Sidebar
-          role="admin"
-          userName={profile?.full_name ?? ""}
-          userEmail={user.email ?? ""}
-          companyName={company?.name}
-        />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <PanelMobileMenu
-            role="admin"
-            userName={profile?.full_name ?? ""}
-            userEmail={user.email ?? ""}
-            companyName={company?.name}
-          />
-          <main className="panel-content panel-main flex-1 overflow-auto">
-            <div className="p-4 sm:p-6 lg:p-8">{children}</div>
-          </main>
-        </div>
-      </div>
-    </div>
+    <AdminShell
+      userName={profile?.full_name ?? ""}
+      userEmail={user.email ?? ""}
+      companyName={company?.name}
+    >
+      {children}
+    </AdminShell>
   );
 }

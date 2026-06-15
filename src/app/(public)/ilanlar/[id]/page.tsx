@@ -120,10 +120,17 @@ export default async function ListingDetailPage({
               {listing.delivery_time}
             </div>
           )}
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Wallet className="h-4 w-4" />
-            {formatBudget(listing.budget_min, listing.budget_max)}
-          </div>
+          {(listing.budget_min || listing.budget_max) ? (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Wallet className="h-4 w-4" />
+              {formatBudget(listing.budget_min, listing.budget_max)}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Wallet className="h-4 w-4" />
+              Tedarikçilerden teklif bekleniyor
+            </div>
+          )}
         </div>
 
         <Card className="mb-8">
@@ -167,7 +174,7 @@ export default async function ListingDetailPage({
                 Aylık {PRODUCER_FREE_MONTHLY_APPLICATION_LIMIT} teklif limitinize ulaştınız.
               </p>
               <Link
-                href="/dashboard/ayarlar"
+                href="/dashboard/uyelik/satin-al"
                 className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
               >
                 Pro&apos;ya yükselt — sınırsız teklif →
@@ -200,7 +207,7 @@ export default async function ListingDetailPage({
                 href="/dashboard/basvurularim"
                 className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
               >
-                Başvurularımı Gör →
+                Tekliflerimi Gör →
               </Link>
             </CardContent>
           </Card>
@@ -209,7 +216,7 @@ export default async function ListingDetailPage({
         {!session && (
           <Card>
             <CardContent className="py-8 text-center">
-              <p className="text-gray-500">Başvurmak için üretici olarak giriş yapın.</p>
+              <p className="text-gray-500">Başvurmak için tedarikçi olarak giriş yapın.</p>
               <Link
                 href="/giris"
                 className="mt-3 inline-block font-medium text-white hover:text-neutral-300"
@@ -223,7 +230,7 @@ export default async function ListingDetailPage({
         {session?.role === "demand_owner" && (
           <Card>
             <CardContent className="py-8 text-center text-gray-500">
-              Bu sizin ilanınız. Başvuruları panelden yönetebilirsiniz.
+              Bu sizin ilanınız. Teklifleri panelden yönetebilirsiniz.
             </CardContent>
           </Card>
         )}
@@ -315,10 +322,17 @@ export default async function ListingDetailPage({
             {listing.delivery_time}
           </div>
         )}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Wallet className="h-4 w-4" />
-          {formatBudget(listing.budget_min, listing.budget_max)}
-        </div>
+        {(listing.budget_min || listing.budget_max) ? (
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Wallet className="h-4 w-4" />
+            {formatBudget(listing.budget_min, listing.budget_max)}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Wallet className="h-4 w-4" />
+            Tedarikçilerden teklif bekleniyor
+          </div>
+        )}
       </div>
 
       <Card className="mb-8">
@@ -351,7 +365,7 @@ export default async function ListingDetailPage({
       {!user && (
         <Card>
           <CardContent className="py-8 text-center">
-            <p className="text-gray-500">Başvurmak için üretici olarak giriş yapın.</p>
+            <p className="text-gray-500">Başvurmak için tedarikçi olarak giriş yapın.</p>
             <a href="/giris" className="mt-3 inline-block font-medium text-white hover:text-neutral-300">
               Giriş Yap →
             </a>

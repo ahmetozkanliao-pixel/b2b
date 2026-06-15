@@ -13,7 +13,7 @@ export default async function AdminSettingsPage() {
     { label: "Varsayılan Dil", value: "Türkçe" },
     { label: "E-posta Bildirimleri", value: "Aktif" },
     { label: "Firma Onay Süreci", value: "Manuel (admin onayı)" },
-    { label: "Üretici Başvuru Limiti", value: "Basic: 10/ay · Pro: sınırsız" },
+    { label: "Tedarikçi Başvuru Limiti", value: "Basic: 10/ay · Pro: sınırsız" },
   ];
 
   return (

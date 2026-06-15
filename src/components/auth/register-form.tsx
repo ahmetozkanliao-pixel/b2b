@@ -4,18 +4,24 @@ import { useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { CategorySelect } from "@/components/ui/category-select";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/components/i18n/i18n-provider";
+import { validateRegistrationPayload } from "@/lib/auth/registration";
 import { Building2, Factory, Mail } from "lucide-react";
+import type { Category } from "@/types";
 
 type UserType = "demand_owner" | "producer";
 
 export function RegisterForm({
   searchParams,
+  categories,
 }: {
   searchParams: Promise<{ tip?: string }>;
+  categories: Category[];
 }) {
   const params = use(searchParams);
   const router = useRouter();
@@ -23,10 +29,16 @@ export function RegisterForm({
   const initialType = params.tip === "uretici" ? "producer" : "demand_owner";
 
   const [userType, setUserType] = useState<UserType>(initialType);
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState("");
+  const [address, setAddress] = useState("");
+  const [country, setCountry] = useState("Türkiye");
+  const [city, setCity] = useState("");
+  const [taxNumber, setTaxNumber] = useState("");
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<{
@@ -34,22 +46,43 @@ export function RegisterForm({
     devVerifyUrl?: string;
   } | null>(null);
 
+  function buildPayload() {
+    const tax_number = taxNumber.replace(/\s/g, "");
+    return {
+      email,
+      password,
+      full_name: companyName.trim(),
+      role: userType,
+      company_name: companyName,
+      phone,
+      website,
+      address,
+      country,
+      city,
+      tax_number,
+      national_id: tax_number,
+      category_ids: categoryIds,
+    };
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
     setSuccess(null);
 
+    const payload = buildPayload();
+    const validationError = validateRegistrationPayload(payload);
+    if (validationError) {
+      setError(validationError);
+      setLoading(false);
+      return;
+    }
+
     const demoRes = await fetch("/api/demo/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-        full_name: fullName,
-        company_name: companyName,
-        role: userType,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const demoData = await demoRes.json();
@@ -64,7 +97,7 @@ export function RegisterForm({
     }
 
     if (demoRes.status !== 400 || demoData.error !== "Demo modu aktif değil.") {
-      setError(demoData.error || "Kayıt başarısız.");
+      setError(demoData.error || t("auth.registerFailed"));
       setLoading(false);
       return;
     }
@@ -72,14 +105,22 @@ export function RegisterForm({
     const supabase = createClient();
     const origin = window.location.origin;
     const { data, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
+      email: payload.email,
+      password: payload.password,
       options: {
         emailRedirectTo: `${origin}/auth/callback`,
         data: {
-          full_name: fullName,
-          role: userType,
-          company_name: companyName,
+          full_name: payload.full_name,
+          role: payload.role,
+          company_name: payload.company_name,
+          phone: payload.phone,
+          website: payload.website,
+          address: payload.address,
+          country: payload.country,
+          city: payload.city,
+          tax_number: payload.tax_number,
+          national_id: payload.national_id,
+          category_ids: payload.category_ids,
         },
       },
     });
@@ -91,11 +132,26 @@ export function RegisterForm({
     }
 
     if (data.user && data.session) {
+      await supabase
+        .from("profiles")
+        .update({
+          phone: payload.phone,
+          national_id: payload.national_id,
+        })
+        .eq("id", data.user.id);
+
       await supabase.from("companies").insert({
         owner_id: data.user.id,
-        name: companyName,
-        type: userType,
-        email,
+        name: payload.company_name,
+        type: payload.role,
+        email: payload.email,
+        phone: payload.phone,
+        website: payload.website,
+        address: payload.address,
+        country: payload.country,
+        city: payload.city,
+        tax_number: payload.tax_number,
+        category_ids: payload.category_ids,
       });
       router.push("/dashboard");
       router.refresh();
@@ -103,26 +159,25 @@ export function RegisterForm({
     }
 
     setSuccess({
-      message:
-        "Kayıt başarılı. E-posta adresinize doğrulama bağlantısı gönderildi. Lütfen gelen kutunuzu kontrol edin.",
+      message: t("auth.verifyEmailMessage"),
     });
     setLoading(false);
   }
 
   if (success) {
     return (
-      <div className="gradient-box mt-6 rounded-xl p-6 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5">
-          <Mail className="h-6 w-6 text-neutral-300" />
+      <div className="mt-6 rounded-xl border border-primary-100 bg-slate-50 p-6 text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-brand-200 bg-brand-50">
+          <Mail className="h-6 w-6 text-brand-600" />
         </div>
-        <h2 className="text-lg font-medium text-white">E-postanızı doğrulayın</h2>
-        <p className="mt-2 text-sm leading-relaxed text-neutral-400">{success.message}</p>
+        <h2 className="text-lg font-medium text-slate-900">{t("auth.verifyEmailTitle")}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">{success.message}</p>
         {success.devVerifyUrl && (
-          <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.02] p-3 text-left text-xs text-neutral-500">
+          <p className="mt-4 rounded-lg border border-primary-100 bg-white p-3 text-left text-xs text-slate-600">
             Demo modunda e-posta servisi yapılandırılmadı. Doğrulama bağlantısı:
             <Link
               href={success.devVerifyUrl}
-              className="mt-2 block break-all font-medium text-white hover:text-neutral-300"
+              className="mt-2 block break-all font-medium text-brand-600 hover:text-brand-700"
             >
               {success.devVerifyUrl}
             </Link>
@@ -130,96 +185,171 @@ export function RegisterForm({
         )}
         <Link
           href="/giris"
-          className="mt-6 inline-flex text-sm font-medium text-white hover:text-neutral-300"
+          className="mt-6 inline-flex text-sm font-medium text-brand-600 hover:text-brand-700"
         >
-          Giriş sayfasına dön
+          {t("auth.backToLogin")}
         </Link>
       </div>
     );
   }
 
+  const canSubmit = categoryIds.length > 0;
+
   return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+    <form onSubmit={handleSubmit} className="mt-6 space-y-5">
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
           onClick={() => setUserType("demand_owner")}
           className={cn(
-            "flex flex-col items-center gap-2 rounded-lg p-4 transition-all",
+            "flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all",
             userType === "demand_owner"
-              ? "gradient-box [background:linear-gradient(165deg,rgba(255,255,255,0.1),rgba(255,255,255,0.03))_padding-box,linear-gradient(135deg,rgba(255,255,255,0.35),rgba(255,255,255,0.08),rgba(255,255,255,0.25))_border-box]"
-              : "gradient-box gradient-box-hover"
+              ? "border-brand-400 bg-brand-50 ring-1 ring-brand-200"
+              : "border-primary-100 bg-white hover:border-primary-200"
           )}
         >
-          <Building2 className={cn("h-6 w-6", userType === "demand_owner" ? "text-white" : "text-neutral-500")} />
-          <span className="text-sm font-medium text-neutral-200">{t("auth.roleDemand")}</span>
+          <Building2 className={cn("h-6 w-6", userType === "demand_owner" ? "text-brand-600" : "text-slate-400")} />
+          <span className={cn("text-sm font-medium", userType === "demand_owner" ? "text-slate-900" : "text-slate-600")}>
+            {t("auth.roleDemand")}
+          </span>
+          <span className="text-xs leading-snug text-slate-500">{t("auth.roleDemandDesc")}</span>
         </button>
         <button
           type="button"
           onClick={() => setUserType("producer")}
           className={cn(
-            "flex flex-col items-center gap-2 rounded-lg p-4 transition-all",
+            "flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all",
             userType === "producer"
-              ? "gradient-box [background:linear-gradient(165deg,rgba(255,255,255,0.1),rgba(255,255,255,0.03))_padding-box,linear-gradient(135deg,rgba(255,255,255,0.35),rgba(255,255,255,0.08),rgba(255,255,255,0.25))_border-box]"
-              : "gradient-box gradient-box-hover"
+              ? "border-brand-400 bg-brand-50 ring-1 ring-brand-200"
+              : "border-primary-100 bg-white hover:border-primary-200"
           )}
         >
-          <Factory className={cn("h-6 w-6", userType === "producer" ? "text-white" : "text-neutral-500")} />
-          <span className="text-sm font-medium text-neutral-200">{t("auth.demoProducerCompany")}</span>
+          <Factory className={cn("h-6 w-6", userType === "producer" ? "text-brand-600" : "text-slate-400")} />
+          <span className={cn("text-sm font-medium", userType === "producer" ? "text-slate-900" : "text-slate-600")}>
+            {t("auth.roleProducer")}
+          </span>
+          <span className="text-xs leading-snug text-slate-500">{t("auth.roleProducerDesc")}</span>
         </button>
       </div>
 
-      <Input
-        id="fullName"
-        label={t("auth.fullName")}
-        variant="dark"
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}
-        placeholder={t("auth.fullName")}
-        required
-      />
-      <Input
-        id="companyName"
-        label={t("auth.companyName")}
-        variant="dark"
-        value={companyName}
-        onChange={(e) => setCompanyName(e.target.value)}
-        placeholder={t("auth.companyName")}
-        required
-      />
-      <Input
-        id="email"
-        label={t("auth.email")}
-        type="email"
-        variant="dark"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="ornek@sirket.com"
-        required
-      />
-      <Input
-        id="password"
-        label={t("auth.passwordField")}
-        type="password"
-        variant="dark"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="En az 6 karakter"
-        minLength={6}
-        required
-      />
+      <div className="space-y-4 rounded-xl border border-primary-100 bg-slate-50/60 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          {t("auth.personalInfo")}
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            id="email"
+            label={`${t("auth.email")} *`}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="ornek@sirket.com"
+            required
+          />
+          <Input
+            id="password"
+            label={`${t("auth.passwordField")} *`}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={t("auth.passwordMinHint")}
+            minLength={6}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4 rounded-xl border border-primary-100 bg-slate-50/60 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          {t("auth.companyInfo")}
+        </p>
+        <Input
+          id="companyName"
+          label={`${t("auth.companyName")} *`}
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+          required
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            id="phone"
+            label={`${t("auth.phone")} *`}
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+90 5XX XXX XX XX"
+            required
+          />
+          <Input
+            id="website"
+            label={`${t("auth.website")} *`}
+            type="url"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            placeholder="https://ornek.com"
+            required
+          />
+        </div>
+        {categories.length > 0 && (
+          <CategorySelect
+            categories={categories}
+            selected={categoryIds}
+            onChange={setCategoryIds}
+            label={t("auth.categories")}
+            hint={t("auth.categoriesHint")}
+            placeholder={t("auth.categoryPlaceholder")}
+            required
+          />
+        )}
+        <Textarea
+          id="address"
+          label={`${t("auth.address")} *`}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          rows={2}
+          required
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            id="country"
+            label={`${t("auth.country")} *`}
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            required
+          />
+          <Input
+            id="city"
+            label={`${t("auth.city")} *`}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <Input
+            id="taxNumber"
+            label={`${t("auth.taxNumber")} *`}
+            value={taxNumber}
+            onChange={(e) => setTaxNumber(e.target.value.replace(/\D/g, "").slice(0, 11))}
+            placeholder="12345678901"
+            inputMode="numeric"
+            required
+          />
+          <p className="mt-1 text-xs text-slate-500">{t("auth.taxNumberHint")}</p>
+        </div>
+      </div>
 
       {error && (
-        <p className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>
+        <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full" disabled={loading || !canSubmit}>
         {loading ? t("auth.creating") : t("auth.registerButton")}
       </Button>
 
-      <p className="text-center text-sm text-neutral-500">
+      <p className="text-center text-sm text-slate-600">
         {t("auth.hasAccount")}{" "}
-        <Link href="/giris" className="font-medium text-white hover:text-neutral-300">
+        <Link href="/giris" className="font-medium text-brand-600 hover:text-brand-700">
           {t("auth.loginButton")}
         </Link>
       </p>
