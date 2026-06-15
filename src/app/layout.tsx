@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { AppProviders } from "@/components/i18n/app-providers";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -23,6 +23,12 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: ["B2B", "production", "supply", "manufacturing", "corporate"],
   };
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export default async function RootLayout({
   children,

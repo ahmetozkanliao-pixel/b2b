@@ -48,7 +48,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(42,68,112,0.35),transparent_60%)]" aria-hidden />
       <div className="resend-grid absolute inset-0" aria-hidden />
 
-      <div className="relative mx-auto flex flex-1 w-full max-w-7xl flex-col justify-center px-4 pb-28 pt-[5.5rem] sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex flex-1 w-full max-w-7xl flex-col justify-center px-4 pb-28 pt-8 sm:px-6 sm:pt-12 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <p className="hero-fade-up hero-fade-up-1 editorial-label">

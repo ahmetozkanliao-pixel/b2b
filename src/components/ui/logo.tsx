@@ -42,13 +42,13 @@ export function Logo({
       </div>
       {showText && (
         <div className="flex flex-col leading-tight">
-          <span className={cn("font-bold tracking-tight", s.text, textColor)}>
+          <span className={cn("truncate font-bold tracking-tight", s.text, textColor)}>
             {t("logo.tagline")}
           </span>
           {size !== "sm" && (
             <span
               className={cn(
-                "text-[10px] font-medium uppercase tracking-widest",
+                "hidden text-[10px] font-medium uppercase tracking-widest sm:block",
                 isLight ? "text-brand-300" : "text-slate-400"
               )}
             >

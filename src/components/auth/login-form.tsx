@@ -108,7 +108,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-primary-100 bg-slate-50 p-4">
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-3 sm:p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
             <Building2 className="h-4 w-4 text-brand-600" />
             {t("auth.demoDemand")}
@@ -130,7 +130,7 @@ export function LoginForm() {
           </Button>
         </div>
 
-        <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-4">
+        <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-3 sm:p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
             <Factory className="h-4 w-4 text-brand-600" />
             Tedarikçi (Ücretsiz)
