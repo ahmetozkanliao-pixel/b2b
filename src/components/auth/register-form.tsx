@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -17,16 +17,15 @@ import type { Category } from "@/types";
 type UserType = "demand_owner" | "producer";
 
 export function RegisterForm({
-  searchParams,
+  initialTip,
   categories,
 }: {
-  searchParams: Promise<{ tip?: string }>;
+  initialTip?: string;
   categories: Category[];
 }) {
-  const params = use(searchParams);
   const router = useRouter();
   const { t } = useI18n();
-  const initialType = params.tip === "uretici" ? "producer" : "demand_owner";
+  const initialType = initialTip === "uretici" ? "producer" : "demand_owner";
 
   const [userType, setUserType] = useState<UserType>(initialType);
   const [email, setEmail] = useState("");

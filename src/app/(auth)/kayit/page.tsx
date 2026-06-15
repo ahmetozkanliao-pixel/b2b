@@ -11,6 +11,7 @@ export default async function RegisterPage({
 }: {
   searchParams: Promise<{ tip?: string }>;
 }) {
+  const params = await searchParams;
   const categories = await getAppCategories();
 
   return (
@@ -19,7 +20,7 @@ export default async function RegisterPage({
       <p className="mt-2 text-sm text-slate-600">
         Platforma katılarak üretim süreçlerinizi yönetin
       </p>
-      <RegisterForm searchParams={searchParams} categories={categories} />
+      <RegisterForm initialTip={params.tip} categories={categories} />
     </div>
   );
 }

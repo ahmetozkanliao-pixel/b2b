@@ -110,13 +110,13 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-primary-100 bg-slate-50 p-3 sm:p-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-2.5 sm:p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
             <Building2 className="h-4 w-4 text-brand-600" />
-            {t("auth.demoDemand")}
+            <span className="text-xs sm:text-sm">{t("auth.demoDemand")}</span>
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
+          <p className="hidden text-xs leading-relaxed text-slate-600 sm:block">
             <strong className="text-slate-800">{DEMO_ACCOUNTS.demand.email}</strong>
             <br />
             {t("auth.password")}: <strong className="text-slate-800">{DEMO_ACCOUNTS.demand.password}</strong>
@@ -125,7 +125,7 @@ export function LoginForm() {
             type="button"
             variant="outline"
             size="sm"
-            className="mt-3 w-full"
+            className="mt-2 w-full text-xs sm:mt-3 sm:text-sm"
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.demand)}
             disabled={loading}
           >
@@ -133,12 +133,12 @@ export function LoginForm() {
           </Button>
         </div>
 
-        <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-3 sm:p-4">
+        <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-2.5 sm:p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
             <Factory className="h-4 w-4 text-brand-600" />
-            Tedarikçi (Ücretsiz)
+            <span className="text-xs sm:text-sm">Tedarikçi (Ücretsiz)</span>
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
+          <p className="hidden text-xs leading-relaxed text-slate-600 sm:block">
             Ayarlardan Pro&apos;ya yükseltmeyi deneyin.
             <br />
             <strong className="text-slate-800">{DEMO_ACCOUNTS.producerFree.email}</strong>
@@ -150,7 +150,7 @@ export function LoginForm() {
             type="button"
             variant="outline"
             size="sm"
-            className="mt-3 w-full border-brand-200 bg-white"
+            className="mt-2 w-full border-brand-200 bg-white text-xs sm:mt-3 sm:text-sm"
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.producerFree)}
             disabled={loading}
           >
@@ -158,12 +158,12 @@ export function LoginForm() {
           </Button>
         </div>
 
-        <div className="rounded-lg border border-primary-100 bg-slate-50 p-4">
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-2.5 sm:p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
             <Crown className="h-4 w-4 text-brand-600" />
-            Tedarikçi (Pro)
+            <span className="text-xs sm:text-sm">Tedarikçi (Pro)</span>
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
+          <p className="hidden text-xs leading-relaxed text-slate-600 sm:block">
             <strong className="text-slate-800">{DEMO_ACCOUNTS.producerPro.email}</strong>
             <br />
             {t("auth.password")}:{" "}
@@ -173,7 +173,7 @@ export function LoginForm() {
             type="button"
             variant="outline"
             size="sm"
-            className="mt-3 w-full"
+            className="mt-2 w-full text-xs sm:mt-3 sm:text-sm"
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.producerPro)}
             disabled={loading}
           >
@@ -181,12 +181,12 @@ export function LoginForm() {
           </Button>
         </div>
 
-        <div className="rounded-lg border border-primary-100 bg-slate-50 p-4">
+        <div className="rounded-lg border border-primary-100 bg-slate-50 p-2.5 sm:p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-900">
             <Shield className="h-4 w-4 text-brand-600" />
-            {t("auth.demoAdmin")}
+            <span className="text-xs sm:text-sm">{t("auth.demoAdmin")}</span>
           </div>
-          <p className="text-xs leading-relaxed text-slate-600">
+          <p className="hidden text-xs leading-relaxed text-slate-600 sm:block">
             <strong className="text-slate-800">{DEMO_ACCOUNTS.admin.email}</strong>
             <br />
             {t("auth.password")}: <strong className="text-slate-800">{DEMO_ACCOUNTS.admin.password}</strong>
@@ -195,7 +195,7 @@ export function LoginForm() {
             type="button"
             variant="outline"
             size="sm"
-            className="mt-3 w-full"
+            className="mt-2 w-full text-xs sm:mt-3 sm:text-sm"
             onClick={() => loginWithDemo(DEMO_ACCOUNTS.admin)}
             disabled={loading}
           >

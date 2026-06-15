@@ -47,6 +47,12 @@ export function SiteAssistant() {
   const isPanel =
     pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
 
+  const isAuthPage =
+    pathname === "/giris" ||
+    pathname === "/kayit" ||
+    pathname === "/sifremi-unuttum" ||
+    pathname === "/sifre-yenile";
+
   useEffect(() => {
     fetch("/api/assistant")
       .then((res) => res.json())
@@ -248,12 +254,14 @@ export function SiteAssistant() {
           "inline-flex items-center shadow-lg transition-all duration-200",
           open
             ? "h-14 w-14 justify-center rounded-full bg-slate-800 text-white hover:bg-slate-700"
-            : "gap-2 rounded-full border border-white/80 bg-white pl-4 pr-1.5 py-1.5 text-slate-800 hover:shadow-xl"
+            : isAuthPage
+              ? "h-14 w-14 justify-center rounded-full gradient-brand text-white shadow-soft hover:opacity-90"
+              : "gap-2 rounded-full border border-white/80 bg-white pl-4 pr-1.5 py-1.5 text-slate-800 hover:shadow-xl"
         )}
         aria-label={open ? t("assistant.close") : t("assistant.open")}
         aria-expanded={open}
       >
-        {!open && (
+        {!open && !isAuthPage && (
           <span className="max-w-[9.5rem] text-left text-sm font-semibold leading-tight text-slate-800 sm:max-w-none sm:whitespace-nowrap">
             {t("assistant.fabLabel")}
           </span>
