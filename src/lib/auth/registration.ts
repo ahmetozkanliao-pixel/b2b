@@ -12,6 +12,9 @@ export interface RegistrationPayload {
   tax_number: string;
   national_id: string;
   category_ids: string[];
+  accepted_terms: boolean;
+  accepted_kvkk: boolean;
+  accepted_email_notifications: boolean;
 }
 
 export function validateRegistrationPayload(body: Partial<RegistrationPayload>): string | null {
@@ -38,11 +41,14 @@ export function validateRegistrationPayload(body: Partial<RegistrationPayload>):
   if (body.role !== "demand_owner" && body.role !== "producer") {
     return "Geçersiz hesap türü.";
   }
-  if (category_ids.length === 0) {
-    return "En az bir kategori seçmelisiniz.";
+  if (body.role === "producer" && category_ids.length === 0) {
+    return "En az bir faaliyet alanı seçmelisiniz.";
   }
   if (!/^\d{10,11}$/.test(tax_number)) {
     return "TC / vergi kimlik numarası 10 veya 11 haneli olmalıdır.";
+  }
+  if (!body.accepted_terms || !body.accepted_kvkk || !body.accepted_email_notifications) {
+    return "Kayıt için tüm onay kutularını işaretlemeniz gerekir.";
   }
 
   return null;
@@ -66,5 +72,8 @@ export function normalizeRegistrationPayload(body: Partial<RegistrationPayload>)
     tax_number,
     national_id: tax_number,
     category_ids: (body.category_ids ?? []).filter(Boolean),
+    accepted_terms: Boolean(body.accepted_terms),
+    accepted_kvkk: Boolean(body.accepted_kvkk),
+    accepted_email_notifications: Boolean(body.accepted_email_notifications),
   };
 }

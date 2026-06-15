@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { Locale } from "@/lib/i18n/config";
+import { SiteAssistant } from "@/components/assistant/site-assistant";
 import { I18nProvider } from "./i18n-provider";
 
 export function AppProviders({
@@ -11,5 +12,10 @@ export function AppProviders({
   children: ReactNode;
   initialLocale: Locale;
 }) {
-  return <I18nProvider initialLocale={initialLocale}>{children}</I18nProvider>;
+  return (
+    <I18nProvider initialLocale={initialLocale}>
+      {children}
+      <SiteAssistant />
+    </I18nProvider>
+  );
 }

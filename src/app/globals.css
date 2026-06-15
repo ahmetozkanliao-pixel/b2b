@@ -1107,6 +1107,102 @@
     box-shadow: 0 1px 3px rgba(15, 26, 48, 0.06), 0 4px 16px rgba(15, 26, 48, 0.04);
   }
 
+  .turkey-map-shell {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(20, 184, 166, 0.12), transparent 60%),
+      linear-gradient(180deg, rgba(10, 17, 32, 0.95) 0%, rgba(15, 26, 48, 0.92) 100%);
+  }
+
+  .turkey-map-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(48px);
+    pointer-events: none;
+    animation: turkey-map-float 10s ease-in-out infinite;
+  }
+
+  .turkey-map-orb-1 {
+    top: -2rem;
+    left: 10%;
+    width: 12rem;
+    height: 12rem;
+    background: rgba(20, 184, 166, 0.18);
+  }
+
+  .turkey-map-orb-2 {
+    right: 5%;
+    bottom: 0;
+    width: 14rem;
+    height: 14rem;
+    background: rgba(42, 68, 112, 0.28);
+    animation-delay: -4s;
+  }
+
+  .turkey-map-shimmer {
+    animation: turkey-map-shimmer 8s ease-in-out infinite;
+  }
+
+  .turkey-map-province {
+    cursor: pointer;
+  }
+
+  .turkey-map-province-active {
+    animation: turkey-map-pulse 2.8s ease-in-out infinite;
+  }
+
+  .turkey-map-connection {
+    stroke: rgba(94, 234, 212, 0.35);
+    stroke-width: 1.2;
+    stroke-dasharray: 6 8;
+    animation: turkey-map-dash 4s linear infinite;
+  }
+
+  .turkey-map-hub-core {
+    fill: #14b8a6;
+    stroke: #ccfbf1;
+    stroke-width: 1.5;
+  }
+
+  .turkey-map-hub-pulse {
+    fill: none;
+    stroke: rgba(20, 184, 166, 0.55);
+    stroke-width: 1.5;
+    animation: turkey-map-hub-pulse 2.4s ease-out infinite;
+  }
+
+  .turkey-map-province-hover {
+    animation: turkey-map-hover-pulse 1.2s ease-in-out infinite;
+  }
+
+  @keyframes turkey-map-hover-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.88; }
+  }
+
+  @keyframes turkey-map-float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-12px) scale(1.04); }
+  }
+
+  @keyframes turkey-map-shimmer {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.55; }
+  }
+
+  @keyframes turkey-map-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.82; }
+  }
+
+  @keyframes turkey-map-dash {
+    to { stroke-dashoffset: -28; }
+  }
+
+  @keyframes turkey-map-hub-pulse {
+    0% { r: 6; opacity: 0.9; }
+    100% { r: 18; opacity: 0; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .resend-cube,
     .hero-orb,
@@ -1115,7 +1211,13 @@
     .hero-pulse-ring,
     .hero-fade-up,
     .scroll-indicator,
-    .chapter-fade-in {
+    .chapter-fade-in,
+    .turkey-map-orb,
+    .turkey-map-shimmer,
+    .turkey-map-province-active,
+    .turkey-map-province-hover,
+    .turkey-map-connection,
+    .turkey-map-hub-pulse {
       animation: none;
     }
     .hero-fade-up,

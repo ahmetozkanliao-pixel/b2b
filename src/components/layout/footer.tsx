@@ -14,6 +14,7 @@ export function Footer() {
       { href: "/uyelik", label: t("nav.membership") },
     ],
     kurumsal: [
+      { href: "/turkiye", label: t("nav.turkey") },
       { href: "/hakkimizda", label: t("nav.about") },
       { href: "/haberler", label: t("nav.news") },
       { href: "/iletisim", label: t("nav.contact") },

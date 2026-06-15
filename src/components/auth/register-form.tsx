@@ -39,6 +39,9 @@ export function RegisterForm({
   const [city, setCity] = useState("");
   const [taxNumber, setTaxNumber] = useState("");
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedKvkk, setAcceptedKvkk] = useState(false);
+  const [acceptedEmailNotifications, setAcceptedEmailNotifications] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<{
@@ -61,8 +64,11 @@ export function RegisterForm({
       city,
       tax_number,
       national_id: tax_number,
-      category_ids: categoryIds,
-    };
+      category_ids: userType === "producer" ? categoryIds : [],
+      accepted_terms: acceptedTerms,
+    accepted_kvkk: acceptedKvkk,
+    accepted_email_notifications: acceptedEmailNotifications,
+  };
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -121,6 +127,9 @@ export function RegisterForm({
           tax_number: payload.tax_number,
           national_id: payload.national_id,
           category_ids: payload.category_ids,
+          accepted_terms: payload.accepted_terms,
+          accepted_kvkk: payload.accepted_kvkk,
+          accepted_email_notifications: payload.accepted_email_notifications,
         },
       },
     });
@@ -193,14 +202,24 @@ export function RegisterForm({
     );
   }
 
-  const canSubmit = categoryIds.length > 0;
+  const canSubmit =
+    (userType === "producer" ? categoryIds.length > 0 : true) &&
+    acceptedTerms &&
+    acceptedKvkk &&
+    acceptedEmailNotifications;
+
+  const checkboxClass =
+    "mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-brand-600 focus:ring-brand-500";
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-5">
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={() => setUserType("demand_owner")}
+          onClick={() => {
+            setUserType("demand_owner");
+            setCategoryIds([]);
+          }}
           className={cn(
             "flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all",
             userType === "demand_owner"
@@ -290,7 +309,7 @@ export function RegisterForm({
             required
           />
         </div>
-        {categories.length > 0 && (
+        {userType === "producer" && categories.length > 0 && (
           <CategorySelect
             categories={categories}
             selected={categoryIds}
@@ -298,6 +317,7 @@ export function RegisterForm({
             label={t("auth.categories")}
             hint={t("auth.categoriesHint")}
             placeholder={t("auth.categoryPlaceholder")}
+            searchPlaceholder={t("auth.categorySearchPlaceholder")}
             required
           />
         )}
@@ -337,6 +357,65 @@ export function RegisterForm({
           />
           <p className="mt-1 text-xs text-slate-500">{t("auth.taxNumberHint")}</p>
         </div>
+      </div>
+
+      <div className="space-y-3 rounded-xl border border-primary-100 bg-slate-50/60 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          {t("auth.consentTitle")}
+        </p>
+
+        <label className="flex items-start gap-3 rounded-lg border border-primary-100 bg-white p-3">
+          <input
+            type="checkbox"
+            checked={acceptedTerms}
+            onChange={(e) => setAcceptedTerms(e.target.checked)}
+            className={checkboxClass}
+            required
+          />
+          <span className="text-sm leading-relaxed text-slate-600">
+            <Link
+              href="/kullanim-sartlari"
+              target="_blank"
+              className="font-medium text-brand-600 hover:text-brand-700"
+            >
+              {t("auth.consentTermsLink")}
+            </Link>{" "}
+            {t("auth.consentReadUnderstood")}
+          </span>
+        </label>
+
+        <label className="flex items-start gap-3 rounded-lg border border-primary-100 bg-white p-3">
+          <input
+            type="checkbox"
+            checked={acceptedKvkk}
+            onChange={(e) => setAcceptedKvkk(e.target.checked)}
+            className={checkboxClass}
+            required
+          />
+          <span className="text-sm leading-relaxed text-slate-600">
+            <Link
+              href="/kvkk"
+              target="_blank"
+              className="font-medium text-brand-600 hover:text-brand-700"
+            >
+              {t("auth.consentKvkkLink")}
+            </Link>{" "}
+            {t("auth.consentReadUnderstood")}
+          </span>
+        </label>
+
+        <label className="flex items-start gap-3 rounded-lg border border-primary-100 bg-white p-3">
+          <input
+            type="checkbox"
+            checked={acceptedEmailNotifications}
+            onChange={(e) => setAcceptedEmailNotifications(e.target.checked)}
+            className={checkboxClass}
+            required
+          />
+          <span className="text-sm leading-relaxed text-slate-600">
+            {t("auth.consentEmailNotifications")}
+          </span>
+        </label>
       </div>
 
       {error && (

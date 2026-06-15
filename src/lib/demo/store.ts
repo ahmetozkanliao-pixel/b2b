@@ -142,12 +142,24 @@ function migrateLegacyCategoryIds(store: DemoStore) {
 
 function mergeCategoriesSeed(store: DemoStore) {
   const seedCategories = createInitialDemoStore().categories;
-  const existingIds = new Set(store.categories.map((c) => c.id));
   let changed = false;
 
   for (const seed of seedCategories) {
-    if (!existingIds.has(seed.id)) {
+    const existing = store.categories.find((c) => c.id === seed.id);
+    if (!existing) {
       store.categories.push(seed);
+      changed = true;
+      continue;
+    }
+
+    if (
+      existing.parent_id !== seed.parent_id ||
+      existing.name !== seed.name ||
+      existing.slug !== seed.slug
+    ) {
+      existing.parent_id = seed.parent_id;
+      existing.name = seed.name;
+      existing.slug = seed.slug;
       changed = true;
     }
   }
@@ -974,6 +986,7 @@ export function registerDemoUser(input: {
   national_id: string;
   category_ids: string[];
   verification_token: string;
+  accepted_email_notifications?: boolean;
 }): DemoRegisteredUser {
   const store = ensureStore();
   const normalizedEmail = input.email.toLowerCase().trim();
@@ -1025,7 +1038,10 @@ export function registerDemoUser(input: {
 
   store.companies[companyId] = company;
   store.registeredUsers.push(user);
-  store.settings[userId] = { ...DEFAULT_DEMO_SETTINGS };
+  store.settings[userId] = {
+    ...DEFAULT_DEMO_SETTINGS,
+    email_notifications: input.accepted_email_notifications ?? true,
+  };
   saveStore(store);
 
   return user;

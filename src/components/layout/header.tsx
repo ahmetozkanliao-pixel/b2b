@@ -25,6 +25,7 @@ export function Header() {
   const navLinks = [
     { href: "/ilanlar", label: t("nav.listings") },
     { href: "/nasil-calisir", label: t("nav.howItWorks") },
+    { href: "/turkiye", label: t("nav.turkey") },
     { href: "/haberler", label: t("nav.news") },
     { href: "/iletisim", label: t("nav.contact") },
   ];

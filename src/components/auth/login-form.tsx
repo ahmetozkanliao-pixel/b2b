@@ -39,7 +39,10 @@ export function LoginForm() {
     if (searchParams.get("verified") === "1") {
       setInfo("E-posta adresiniz doğrulandı. Artık giriş yapabilirsiniz.");
     }
-  }, [searchParams]);
+    if (searchParams.get("reset") === "1") {
+      setInfo(t("auth.resetPasswordSuccess"));
+    }
+  }, [searchParams, t]);
 
   async function loginWithDemo(credentials: { email: string; password: string }) {
     setError("");
@@ -219,6 +222,11 @@ export function LoginForm() {
         placeholder="••••••••"
         required
       />
+      <div className="-mt-1 flex justify-end">
+        <Link href="/sifremi-unuttum" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+          {t("auth.forgotPassword")}
+        </Link>
+      </div>
 
       {info && (
         <p className="rounded-lg border border-brand-200 bg-brand-50 p-3 text-sm text-brand-800">{info}</p>
