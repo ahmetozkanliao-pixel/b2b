@@ -278,6 +278,14 @@ function mergeProducerSeedData(store: DemoStore) {
     }
   }
 
+  for (const room of initial.chatRooms.filter((r) => producerCompanyIds.includes(r.producer_company_id))) {
+    for (const msg of initial.messages.filter((m) => m.room_id === room.id)) {
+      if (!store.messages.some((m) => m.id === msg.id)) {
+        store.messages.push(msg);
+      }
+    }
+  }
+
   if (!store.catalogs?.length) {
     store.catalogs = initial.catalogs;
   }

@@ -21,6 +21,7 @@ interface PanelBottomNavProps {
   userName?: string;
   userEmail?: string;
   companyName?: string;
+  initialBadges?: PanelBadges;
 }
 
 function getInitials(name: string) {
@@ -32,16 +33,42 @@ function getInitials(name: string) {
     .join("");
 }
 
+interface PanelBadges {
+  messages: number;
+  notifications: number;
+}
+
+const BADGE_BY_HREF: Record<string, keyof PanelBadges> = {
+  "/dashboard/mesajlar": "messages",
+  "/dashboard/bildirimler": "notifications",
+};
+
+function formatBadgeCount(count: number) {
+  return count > 99 ? "99+" : String(count);
+}
+
+function NavCountBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
+
+  return (
+    <span className="pointer-events-none absolute -right-2 -top-2 z-10 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold leading-none text-white shadow-[0_0_0_2px_rgb(10,17,32)] sm:h-5 sm:min-w-5 sm:text-[11px]">
+      {formatBadgeCount(count)}
+    </span>
+  );
+}
+
 export function PanelBottomNav({
   role,
   userName,
   userEmail,
   companyName,
+  initialBadges = { messages: 0, notifications: 0 },
 }: PanelBottomNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useI18n();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [badges, setBadges] = useState<PanelBadges>(initialBadges);
 
   const bottomLinks = getPanelBottomNavLinks(role);
   const moreLinks = getPanelMoreNavLinks(role);
@@ -50,6 +77,34 @@ export function PanelBottomNav({
   useEffect(() => {
     setMoreOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    setBadges(initialBadges);
+  }, [initialBadges.messages, initialBadges.notifications]);
+
+  useEffect(() => {
+    if (role === "admin") return;
+
+    let cancelled = false;
+
+    fetch("/api/auth/panel-badges", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : { messages: 0, notifications: 0 }))
+      .then((data: PanelBadges) => {
+        if (!cancelled) {
+          setBadges({
+            messages: data.messages ?? 0,
+            notifications: data.notifications ?? 0,
+          });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setBadges({ messages: 0, notifications: 0 });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, role]);
 
   useEffect(() => {
     document.body.style.overflow = moreOpen ? "hidden" : "";
@@ -69,33 +124,38 @@ export function PanelBottomNav({
   return (
     <>
       <nav
-        className="panel-bottom-nav fixed bottom-0 left-0 right-0 z-40 border-t pb-[env(safe-area-inset-bottom)]"
+        className="panel-bottom-nav fixed bottom-0 left-0 right-0 z-40 overflow-visible border-t pb-[env(safe-area-inset-bottom)]"
         aria-label={t("common.panelMenu")}
       >
-        <div className="mx-auto flex h-[3.25rem] w-full max-w-6xl items-stretch justify-around px-0 sm:h-[3.75rem] sm:px-1">
+        <div className="mx-auto flex h-[3.25rem] w-full max-w-6xl items-stretch justify-around overflow-visible px-0 sm:h-[3.75rem] sm:px-1">
           {bottomLinks.map((link) => {
             const isActive = isPanelNavLinkActive(pathname, link.href);
             const Icon = link.icon;
             const label = t(getPanelBottomNavLabelKey(link.labelKey));
+            const badgeKey = BADGE_BY_HREF[link.href];
+            const badgeCount = badgeKey ? badges[badgeKey] : 0;
+            const ariaLabel =
+              badgeCount > 0 ? `${label} (${badgeCount})` : label;
 
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                aria-label={label}
-                title={label}
+                aria-label={ariaLabel}
+                title={ariaLabel}
                 className={cn(
-                  "flex min-w-0 flex-1 flex-col items-center justify-center gap-0 px-0 py-1 transition-colors sm:gap-0.5 sm:px-0.5 sm:py-1.5",
+                  "flex min-w-0 flex-1 flex-col items-center justify-center gap-0 overflow-visible px-0 py-1 transition-colors sm:gap-0.5 sm:px-0.5 sm:py-1.5",
                   isActive ? "text-brand-300" : "text-slate-500 hover:text-slate-300"
                 )}
               >
                 <span
                   className={cn(
-                    "flex h-6 w-6 items-center justify-center rounded-lg transition-colors sm:h-8 sm:w-8 sm:rounded-xl",
+                    "relative flex h-7 w-7 shrink-0 items-center justify-center overflow-visible rounded-lg transition-colors sm:h-8 sm:w-8 sm:rounded-xl",
                     isActive && "bg-brand-500/20 ring-1 ring-brand-400/30"
                   )}
                 >
                   <Icon className={cn("h-4 w-4 sm:h-5 sm:w-5", isActive && "stroke-[2.25]")} />
+                  <NavCountBadge count={badgeCount} />
                 </span>
                 <span
                   className={cn(
@@ -191,6 +251,8 @@ export function PanelBottomNav({
               {moreLinks.map((link) => {
                 const isActive = isPanelNavLinkActive(pathname, link.href);
                 const Icon = link.icon;
+                const badgeKey = BADGE_BY_HREF[link.href];
+                const badgeCount = badgeKey ? badges[badgeKey] : 0;
 
                 return (
                   <Link
@@ -204,8 +266,16 @@ export function PanelBottomNav({
                         : "text-slate-300 hover:bg-white/5 hover:text-white"
                     )}
                   >
-                    <Icon className="h-5 w-5 shrink-0" />
-                    {t(link.labelKey)}
+                    <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                      <Icon className="h-5 w-5" />
+                      <NavCountBadge count={badgeCount} />
+                    </span>
+                    <span className="flex-1">{t(link.labelKey)}</span>
+                    {badgeCount > 0 && (
+                      <span className="rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-bold text-white">
+                        {formatBadgeCount(badgeCount)}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

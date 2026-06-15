@@ -105,8 +105,20 @@ export const DEMO_MESSAGES_SEED: Message[] = [
     file_url: null,
     file_name: null,
     offer_amount: 85000,
-    is_read: false,
+    is_read: true,
     created_at: hoursAgo(2),
+  },
+  {
+    id: "msg-004",
+    room_id: "room-001",
+    sender_id: demandUser.id,
+    type: "text",
+    content: "Teknik çizimleri ekte paylaştım, inceleyip dönüş yapar mısınız?",
+    file_url: null,
+    file_name: null,
+    offer_amount: null,
+    is_read: false,
+    created_at: hoursAgo(1),
   },
 ];
 
@@ -194,7 +206,7 @@ export const DEMO_NOTIFICATIONS_SEED: Notification[] = [
     created_at: hoursAgo(1),
   },
   {
-    id: "notif-p04",
+    id: "notif-p05",
     user_id: producerUser.id,
     type: "new_listing",
     title: "Yeni İlan",

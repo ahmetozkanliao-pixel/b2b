@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { PanelBottomNav } from "@/components/dashboard/panel-bottom-nav";
 import { getDemoUserById } from "@/lib/demo/session";
+import { getPanelBadges } from "@/lib/panel-badges";
 
 export default async function DashboardLayout({
   children,
@@ -29,6 +30,9 @@ export default async function DashboardLayout({
     companyName = company?.name ?? undefined;
   }
 
+  const initialBadges =
+    session.role === "admin" ? { messages: 0, notifications: 0 } : await getPanelBadges(session);
+
   return (
     <div className="min-h-screen bg-primary-950">
       <Header />
@@ -41,6 +45,7 @@ export default async function DashboardLayout({
           userName={session.full_name}
           userEmail={session.email}
           companyName={companyName}
+          initialBadges={initialBadges}
         />
       </div>
     </div>
