@@ -408,8 +408,9 @@ export const tr: Dictionary = {
     title: "Yardım Asistanı",
     subtitle: "SSS tabanlı · Ücretsiz",
     subtitleGemini: "SSS + Gemini destekli",
+    fabLabel: "Yapay Zeka Asistanı",
     welcome:
-      "Merhaba! Kayıt, demo hesaplar, ilan açma, kategori seçimi ve platform süreçleri hakkında yardımcı olabilirim. Bir soru yazın veya kısayollardan birini seçin.",
+      "Merhaba! Kayıt, demo hesaplar, ilan açma, kategori seçimi ve platform süreçleri hakkında yardımcı olabilirim. Sorunuzu yazmanız yeterli.",
     placeholder: "Sorunuzu yazın...",
     open: "Yardım asistanını aç",
     close: "Yardım asistanını kapat",

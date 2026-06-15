@@ -407,8 +407,9 @@ export const en: Dictionary = {
     title: "Help Assistant",
     subtitle: "FAQ-based · Free",
     subtitleGemini: "FAQ + Gemini powered",
+    fabLabel: "AI Assistant",
     welcome:
-      "Hello! I can help with registration, demo accounts, listings, categories, and how the platform works. Type a question or pick a shortcut.",
+      "Hello! I can help with registration, demo accounts, listings, categories, and how the platform works. Just type your question.",
     placeholder: "Type your question...",
     open: "Open help assistant",
     close: "Close help assistant",

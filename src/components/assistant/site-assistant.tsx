@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bot, Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useI18n } from "@/components/i18n/i18n-provider";
-import { getAssistantQuickPrompts } from "@/lib/assistant/faq";
 import { cn } from "@/lib/utils";
 
 type Message = {
@@ -47,8 +46,6 @@ export function SiteAssistant() {
 
   const isPanel =
     pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
-
-  const quickPrompts = getAssistantQuickPrompts(locale);
 
   useEffect(() => {
     fetch("/api/assistant")
@@ -210,20 +207,6 @@ export function SiteAssistant() {
           </div>
 
           <div className="border-t border-slate-100 px-3 py-2">
-            <div className="flex flex-wrap gap-1.5 pb-2">
-              {quickPrompts.map((prompt) => (
-                <button
-                  key={prompt.id}
-                  type="button"
-                  disabled={loading}
-                  onClick={() => void sendMessage(prompt.query)}
-                  className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-50"
-                >
-                  {prompt.label}
-                </button>
-              ))}
-            </div>
-
             <form onSubmit={handleSubmit} className="flex items-center gap-2">
               <input
                 ref={inputRef}
@@ -262,15 +245,27 @@ export function SiteAssistant() {
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className={cn(
-          "inline-flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200",
+          "inline-flex items-center shadow-lg transition-all duration-200",
           open
-            ? "bg-slate-800 text-white hover:bg-slate-700"
-            : "gradient-brand text-white shadow-brand-500/25 hover:opacity-90"
+            ? "h-14 w-14 justify-center rounded-full bg-slate-800 text-white hover:bg-slate-700"
+            : "gap-2 rounded-full border border-white/80 bg-white pl-4 pr-1.5 py-1.5 text-slate-800 hover:shadow-xl"
         )}
         aria-label={open ? t("assistant.close") : t("assistant.open")}
         aria-expanded={open}
       >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {!open && (
+          <span className="max-w-[9.5rem] text-left text-sm font-semibold leading-tight text-slate-800 sm:max-w-none sm:whitespace-nowrap">
+            {t("assistant.fabLabel")}
+          </span>
+        )}
+        <span
+          className={cn(
+            "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white",
+            open ? "bg-transparent" : "gradient-brand shadow-soft"
+          )}
+        >
+          {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-5 w-5" />}
+        </span>
       </button>
     </div>
   );
