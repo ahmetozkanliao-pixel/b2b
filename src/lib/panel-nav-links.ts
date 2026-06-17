@@ -90,6 +90,11 @@ const bottomNavShortLabels: Partial<Record<string, string>> = {
   "panel.nav.myApplications": "panel.nav.offersShort",
   "panel.nav.messages": "panel.nav.messagesShort",
   "panel.nav.notifications": "panel.nav.notificationsShort",
+  "panel.nav.dashboard": "panel.nav.dashboardShort",
+  "panel.nav.users": "panel.nav.usersShort",
+  "panel.nav.companyApproval": "panel.nav.companyApprovalShort",
+  "panel.nav.listingManagement": "panel.nav.listingManagementShort",
+  "panel.nav.settings": "panel.nav.settingsShort",
 };
 
 export function getPanelBottomNavLinks(role: UserRole): PanelNavLink[] {

@@ -1,19 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  BackHandler,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from "react-native";
-import { WebView } from "react-native-webview";
-import * as Device from "expo-device";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, BackHandler, Platform, SafeAreaView, StyleSheet, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import type { WebView } from "react-native-webview";
 import * as Notifications from "expo-notifications";
+import { AppWebView } from "./src/components/AppWebView";
+import { OnboardingFlow } from "./src/components/OnboardingFlow";
+import { ONBOARDING_STORAGE_KEY, WEB_BASE_URL } from "./src/config";
 
-type AppMessage = { type: "OPEN_URL"; url: string } | { type: "REQUEST_PUSH_TOKEN" };
+type AppScreen = "boot" | "onboarding" | "webview";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -26,98 +21,97 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
-  const baseUrl = useMemo(() => "https://b2b212.vercel.app", []);
   const webRef = useRef<WebView>(null);
-  const [loading, setLoading] = useState(true);
-
-  async function ensurePushPermissionAndGetToken() {
-    if (!Device.isDevice) {
-      Alert.alert("Push bildirim", "Push bildirimler emülatörde çalışmaz. Gerçek cihazda deneyin.");
-      return null;
-    }
-
-    const current = await Notifications.getPermissionsAsync();
-    let status = current.status;
-    if (status !== "granted") {
-      const requested = await Notifications.requestPermissionsAsync();
-      status = requested.status;
-    }
-
-    if (status !== "granted") {
-      Alert.alert("Bildirim izni", "Bildirim izni verilmedi.");
-      return null;
-    }
-
-    // Expo Push Token (Expo managed). Store tarafında EAS/FCM/APNs kurulumu ile native tokenlara da geçilir.
-    const token = await Notifications.getExpoPushTokenAsync();
-    return token.data;
-  }
+  const [screen, setScreen] = useState<AppScreen>("boot");
+  const [webUri, setWebUri] = useState(WEB_BASE_URL);
+  const [webCanGoBack, setWebCanGoBack] = useState(false);
 
   useEffect(() => {
-    if (Platform.OS !== "android") return;
+    let cancelled = false;
 
-    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
-      webRef.current?.goBack();
-      return true;
-    });
-    return () => sub.remove();
+    async function boot() {
+      try {
+        const done = await AsyncStorage.getItem(ONBOARDING_STORAGE_KEY);
+        if (!cancelled) {
+          setScreen(done === "1" ? "webview" : "onboarding");
+        }
+      } catch {
+        if (!cancelled) setScreen("onboarding");
+      }
+    }
+
+    void boot();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const completeOnboarding = useCallback(async () => {
+    try {
+      await AsyncStorage.setItem(ONBOARDING_STORAGE_KEY, "1");
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
+  const openWeb = useCallback((path = "") => {
+    const base = WEB_BASE_URL.replace(/\/$/, "");
+    const next = path ? `${base}${path.startsWith("/") ? path : `/${path}`}` : base;
+    setWebUri(next);
+    setScreen("webview");
   }, []);
 
   useEffect(() => {
-    // Foreground notif click behavior could be handled later for deep links.
     const sub = Notifications.addNotificationResponseReceivedListener((response) => {
-      const url = (response.notification.request.content.data as any)?.url;
+      const url = (response.notification.request.content.data as { url?: string })?.url;
       if (typeof url === "string" && url.startsWith("http")) {
-        webRef.current?.injectJavaScript(
-          `window.location.href = ${JSON.stringify(url)}; true;`
-        );
+        setWebUri(url);
+        setScreen("webview");
       }
     });
     return () => sub.remove();
   }, []);
 
+  useEffect(() => {
+    if (Platform.OS !== "android") return;
+
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (screen === "onboarding") return false;
+      if (screen === "webview" && webCanGoBack) {
+        webRef.current?.goBack();
+        return true;
+      }
+      return false;
+    });
+
+    return () => sub.remove();
+  }, [screen, webCanGoBack]);
+
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
-        <WebView
-          ref={webRef}
-          source={{ uri: baseUrl }}
-          onLoadEnd={() => setLoading(false)}
-          startInLoadingState
-          renderLoading={() => (
-            <View style={styles.loading}>
-              <ActivityIndicator size="large" />
-            </View>
-          )}
-          onMessage={async (event) => {
-            try {
-              const data = JSON.parse(event.nativeEvent.data) as AppMessage;
-              if (data.type === "OPEN_URL" && data.url) {
-                webRef.current?.injectJavaScript(
-                  `window.location.href = ${JSON.stringify(data.url)}; true;`
-                );
-              }
-              if (data.type === "REQUEST_PUSH_TOKEN") {
-                const token = await ensurePushPermissionAndGetToken();
-                if (!token) return;
+      {screen === "boot" && (
+        <View style={styles.boot}>
+          <ActivityIndicator size="large" color="#0d9488" />
+        </View>
+      )}
 
-                // Web'e token'ı verelim; web tarafında /api/... endpoint'ine kaydedilebilir.
-                webRef.current?.postMessage(
-                  JSON.stringify({ type: "PUSH_TOKEN", token })
-                );
-              }
-            } catch {
-              // ignore malformed messages
-            }
-          }}
+      {screen === "onboarding" && (
+        <OnboardingFlow
+          onComplete={() => void completeOnboarding()}
+          onLogin={() => openWeb("/giris")}
+          onRegister={() => openWeb("/kayit")}
+          onBrowse={() => openWeb()}
         />
+      )}
 
-        {loading && (
-          <View style={styles.overlayLoading}>
-            <ActivityIndicator size="large" />
-          </View>
-        )}
-      </View>
+      {screen === "webview" && (
+        <AppWebView
+          uri={webUri}
+          webRef={webRef}
+          onCanGoBackChange={setWebCanGoBack}
+        />
+      )}
+
       <StatusBar style="dark" />
     </SafeAreaView>
   );
@@ -128,19 +122,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
   },
-  container: {
-    flex: 1,
-  },
-  loading: {
+  boot: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  overlayLoading: {
-    position: "absolute",
-    inset: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.6)",
   },
 });

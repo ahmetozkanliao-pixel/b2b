@@ -9,6 +9,7 @@ export const tr: Dictionary = {
   common: {
     menu: "Menü",
     more: "Daha fazla",
+    moreShort: "Menü",
     panel: "Panel",
     panelMenu: "Panel Menüsü",
     logout: "Çıkış Yap",
@@ -100,6 +101,12 @@ export const tr: Dictionary = {
       news: "Haberler",
       membership: "Üyelik Paketleri",
       siteSettings: "Site Ayarları",
+      dashboardShort: "Panel",
+      usersShort: "Kullanıcı",
+      companyApprovalShort: "Firmalar",
+      listingManagementShort: "İlanlar",
+      categoriesShort: "Kategori",
+      settingsShort: "Ayarlar",
     },
   },
   home: {

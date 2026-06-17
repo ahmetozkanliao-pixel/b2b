@@ -9,6 +9,7 @@ export const en: Dictionary = {
   common: {
     menu: "Menu",
     more: "More",
+    moreShort: "Menu",
     panel: "Panel",
     panelMenu: "Panel Menu",
     logout: "Sign Out",
@@ -100,6 +101,12 @@ export const en: Dictionary = {
       news: "News",
       membership: "Membership Plans",
       siteSettings: "Site Settings",
+      dashboardShort: "Home",
+      usersShort: "Users",
+      companyApprovalShort: "Companies",
+      listingManagementShort: "Listings",
+      categoriesShort: "Categories",
+      settingsShort: "Settings",
     },
   },
   home: {

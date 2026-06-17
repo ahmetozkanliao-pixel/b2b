@@ -37,7 +37,7 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-primary-950">
       <Header />
       <div className="flex min-h-[calc(100vh-3.5rem)] flex-col pt-14">
-        <main className="panel-content panel-main flex-1 overflow-auto pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-[calc(4.75rem+env(safe-area-inset-bottom))]">
+        <main className="panel-content panel-main flex-1 overflow-auto pb-[calc(4rem+env(safe-area-inset-bottom))] sm:pb-[calc(4.25rem+env(safe-area-inset-bottom))]">
           <div className="mx-auto w-full max-w-6xl p-4 sm:p-6 lg:p-8">{children}</div>
         </main>
         <PanelBottomNav

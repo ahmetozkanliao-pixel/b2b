@@ -127,7 +127,7 @@ export function PanelBottomNav({
         className="panel-bottom-nav fixed bottom-0 left-0 right-0 z-40 overflow-visible border-t pb-[env(safe-area-inset-bottom)]"
         aria-label={t("common.panelMenu")}
       >
-        <div className="mx-auto flex h-[3.25rem] w-full max-w-6xl items-stretch justify-around overflow-visible px-0 sm:h-[3.75rem] sm:px-1">
+        <div className="mx-auto flex h-[4rem] w-full max-w-6xl items-stretch justify-around overflow-visible px-0 sm:h-[4.25rem] sm:px-1">
           {bottomLinks.map((link) => {
             const isActive = isPanelNavLinkActive(pathname, link.href);
             const Icon = link.icon;
@@ -144,13 +144,13 @@ export function PanelBottomNav({
                 aria-label={ariaLabel}
                 title={ariaLabel}
                 className={cn(
-                  "flex min-w-0 flex-1 flex-col items-center justify-center gap-0 overflow-visible px-0 py-1 transition-colors sm:gap-0.5 sm:px-0.5 sm:py-1.5",
+                  "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 overflow-visible px-0 py-0.5 transition-colors sm:gap-1 sm:px-0.5 sm:py-1",
                   isActive ? "text-brand-300" : "text-slate-500 hover:text-slate-300"
                 )}
               >
                 <span
                   className={cn(
-                    "relative flex h-7 w-7 shrink-0 items-center justify-center overflow-visible rounded-lg transition-colors sm:h-8 sm:w-8 sm:rounded-xl",
+                    "relative flex h-6 w-6 shrink-0 items-center justify-center overflow-visible rounded-lg transition-colors sm:h-8 sm:w-8 sm:rounded-xl",
                     isActive && "bg-brand-500/20 ring-1 ring-brand-400/30"
                   )}
                 >
@@ -159,7 +159,7 @@ export function PanelBottomNav({
                 </span>
                 <span
                   className={cn(
-                    "hidden max-w-full truncate text-[10px] font-medium leading-tight sm:block",
+                    "max-w-full truncate px-0.5 text-center text-[8px] font-medium leading-[10px] sm:text-[10px] sm:leading-tight",
                     isActive && "text-brand-200"
                   )}
                 >
@@ -173,7 +173,7 @@ export function PanelBottomNav({
             type="button"
             onClick={() => setMoreOpen(true)}
             className={cn(
-              "flex min-w-0 flex-1 flex-col items-center justify-center gap-0 px-0 py-1 transition-colors sm:gap-0.5 sm:px-0.5 sm:py-1.5",
+              "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-0 py-0.5 transition-colors sm:gap-1 sm:px-0.5 sm:py-1",
               moreActive || moreOpen
                 ? "text-brand-300"
                 : "text-slate-500 hover:text-slate-300"
@@ -192,11 +192,11 @@ export function PanelBottomNav({
             </span>
             <span
               className={cn(
-                "hidden max-w-full truncate text-[10px] font-medium leading-tight sm:block",
+                "max-w-full truncate px-0.5 text-center text-[8px] font-medium leading-[10px] sm:text-[10px] sm:leading-tight",
                 (moreActive || moreOpen) && "text-brand-200"
               )}
             >
-              {t("common.more")}
+              {t("common.moreShort")}
             </span>
           </button>
         </div>
