@@ -3,7 +3,6 @@ import { getSession } from "@/lib/auth/get-session";
 import { isDemoMode } from "@/lib/demo/config";
 import {
   addDemoMessage,
-  addDemoNotification,
   createId,
   getDemoChatRoom,
   getDemoMessages,

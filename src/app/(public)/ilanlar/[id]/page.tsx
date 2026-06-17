@@ -85,6 +85,7 @@ export default async function ListingDetailPage({
           )}
           <h1 className="mt-3 text-3xl font-bold text-gray-900">{listing.title}</h1>
           {listing.image_url && (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={listing.image_url}
               alt={listing.title}

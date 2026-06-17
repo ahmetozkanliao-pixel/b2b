@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "B2B Üretim Platformu",
+    "slug": "b2b-platform",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.ahmetozkanli.b2b",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.ahmetozkanli.b2b",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "scheme": "b2b",
+    "plugins": ["expo-notifications"],
+    "extra": {
+      "webBaseUrl": "https://b2b212.vercel.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

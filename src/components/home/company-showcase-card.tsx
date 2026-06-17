@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, BadgeCheck, Building2, Factory, MapPin } from "lucide-react";
 import { getCompanyProfilePath } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/i18n-provider";
 import type { Company } from "@/types";
 

@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import type { Locale } from "@/lib/i18n/config";
 import { SiteAssistant } from "@/components/assistant/site-assistant";
+import { MobileBridge } from "@/components/mobile/mobile-bridge";
 import { I18nProvider } from "./i18n-provider";
 
 export function AppProviders({
@@ -16,6 +17,7 @@ export function AppProviders({
     <I18nProvider initialLocale={initialLocale}>
       {children}
       <SiteAssistant />
+      <MobileBridge />
     </I18nProvider>
   );
 }

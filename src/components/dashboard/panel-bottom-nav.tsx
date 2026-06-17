@@ -80,7 +80,7 @@ export function PanelBottomNav({
 
   useEffect(() => {
     setBadges(initialBadges);
-  }, [initialBadges.messages, initialBadges.notifications]);
+  }, [initialBadges]);
 
   useEffect(() => {
     if (role === "admin") return;
