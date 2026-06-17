@@ -2,6 +2,7 @@
   "expo": {
     "name": "B2B Üretim Platformu",
     "slug": "b2b-platform",
+    "owner": "myaoz",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,12 +22,14 @@
       "predictiveBackGestureEnabled": false
     },
     "scheme": "b2b",
-    "plugins": ["expo-notifications"],
+    "plugins": [
+      "expo-notifications"
+    ],
     "extra": {
+      "webBaseUrl": "https://b2b212.vercel.app",
       "eas": {
-        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
-      },
-      "webBaseUrl": "https://b2b212.vercel.app"
+        "projectId": "1c51601c-90c0-4366-b085-ecfb906e9073"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
