@@ -23,6 +23,9 @@
     "scheme": "b2b",
     "plugins": ["expo-notifications"],
     "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      },
       "webBaseUrl": "https://b2b212.vercel.app"
     },
     "web": {
